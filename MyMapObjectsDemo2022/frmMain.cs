@@ -1078,5 +1078,53 @@ namespace MyMapObjectsDemo2022
         {
 
         }
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void moMap_LayerChanged(object sender)
+        {
+            moMap.isAlreadyRedrawLayer = true;
+            checkedListBox1.Items.Clear();
+            for (int i = 0; i < moMap.Layers.Count; i++)
+            {
+                checkedListBox1.Items.Add($"[{i}] " + moMap.Layers.GetItem(i).Name, moMap.Layers.GetItem(i).Visible);
+            }
+            moMap.isAlreadyRedrawLayer = false;
+        }
+
+        private void checkedListBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+
+        }
+
+        private void checkedListBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            moMap.isAlreadyRedrawLayer = true;
+            var currentLayerList = checkedListBox1.CheckedItems;
+            // [ true, false, true ...], index represents layer sequence
+            var currentVisibilityCondition = new List<bool>();
+            for (int i = 0; i < moMap.Layers.Count; i++)
+            {
+                currentVisibilityCondition.Add(false);
+            }
+            for (int i = 0; i < currentLayerList.Count; i++)
+            {
+                currentVisibilityCondition[Convert.ToInt32(currentLayerList[i].ToString().Split(']')[0].Split('[')[1])] = true;
+            }
+            for (int i = 0; i < moMap.Layers.Count; i++)
+            {
+                moMap.Layers.GetItem(i).Visible = currentVisibilityCondition[i];
+            }
+            moMap.isAlreadyRedrawLayer = false;
+            moMap.RedrawMap();
+        }
     }
 }

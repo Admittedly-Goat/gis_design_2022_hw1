@@ -77,6 +77,8 @@ namespace MyMapObjects
         #endregion
 
         #region 属性
+        //UI是否已经开始重新读取Layer数据。防止不停的触发LayerChanged事件，造成死循环
+        public bool isAlreadyRedrawLayer = false;
 
         /// <summary>
         /// 获取或设置绘制选择要素的颜色
@@ -119,7 +121,14 @@ namespace MyMapObjects
         [Browsable(false)]
         public moLayers Layers
         {
-            get { return _Layers; }
+            get
+            {
+                if ((isAlreadyRedrawLayer == false) && (LayerChanged != null))
+                {
+                    LayerChanged(this);
+                }
+                return _Layers;
+            }
         }
 
         /// <summary>
@@ -451,6 +460,13 @@ namespace MyMapObjects
         [Browsable(true), Description("地图比例尺发生了变化")]
         public event MapScaleChangedHandle MapScaleChanged;
 
+        public delegate void LayerChangedHandle(object sender);
+        /// <summary>
+        /// 图层发生了变化
+        /// </summary>
+        [Browsable(true), Description("图层发生了变化")]
+        public event MapScaleChangedHandle LayerChanged;
+
         public delegate void AfterTrackingLayerDrawHandle(object sender,
             moUserDrawingTool drawingTool);
         /// <summary>
@@ -545,7 +561,7 @@ namespace MyMapObjects
             _ProjectionCS = new moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
                 sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
                 sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);*/
-            
+
             string sProjCSName = "Beijing54 Lambert Conformal Conic 2SP";
             string sGeoCSName = "Beijing 1954";
             string sDatumName = "Beijing 1954";

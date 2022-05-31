@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("123");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("ObjectID", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("sdfergvergeg");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Another prop", new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("123");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("ObjectID", new System.Windows.Forms.TreeNode[] {
+            treeNode9});
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("sdfergvergeg");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Another prop", new System.Windows.Forms.TreeNode[] {
+            treeNode11});
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -83,7 +83,6 @@
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
-            this.moMap = new MyMapObjects.moMapControl();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.splitter1 = new System.Windows.Forms.Splitter();
@@ -91,6 +90,7 @@
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.panel5 = new System.Windows.Forms.Panel();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.moMap = new MyMapObjects.moMapControl();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -150,17 +150,17 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Node1";
-            treeNode1.Text = "123";
-            treeNode2.Name = "Node0";
-            treeNode2.Text = "ObjectID";
-            treeNode3.Name = "Node3";
-            treeNode3.Text = "sdfergvergeg";
-            treeNode4.Name = "Node2";
-            treeNode4.Text = "Another prop";
+            treeNode9.Name = "Node1";
+            treeNode9.Text = "123";
+            treeNode10.Name = "Node0";
+            treeNode10.Text = "ObjectID";
+            treeNode11.Name = "Node3";
+            treeNode11.Text = "sdfergvergeg";
+            treeNode12.Name = "Node2";
+            treeNode12.Text = "Another prop";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2,
-            treeNode4});
+            treeNode10,
+            treeNode12});
             this.treeView1.Size = new System.Drawing.Size(173, 664);
             this.treeView1.TabIndex = 0;
             // 
@@ -457,7 +457,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(92, 22);
+            this.toolStripButton1.Size = new System.Drawing.Size(87, 22);
             this.toolStripButton1.Text = "全范围显示";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -511,24 +511,6 @@
             this.toolStripButton6.Size = new System.Drawing.Size(53, 22);
             this.toolStripButton6.Text = "选择";
             this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
-            // 
-            // moMap
-            // 
-            this.moMap.BackColor = System.Drawing.Color.White;
-            this.moMap.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.moMap.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.moMap.FlashColor = System.Drawing.Color.Green;
-            this.moMap.Location = new System.Drawing.Point(0, 0);
-            this.moMap.Name = "moMap";
-            this.moMap.SelectionColor = System.Drawing.Color.Cyan;
-            this.moMap.Size = new System.Drawing.Size(768, 664);
-            this.moMap.TabIndex = 5;
-            this.moMap.MapScaleChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_MapScaleChanged);
-            this.moMap.AfterTrackingLayerDraw += new MyMapObjects.moMapControl.AfterTrackingLayerDrawHandle(this.moMap_AfterTrackingLayerDraw);
-            this.moMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseClick);
-            this.moMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseDown);
-            this.moMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseMove);
-            this.moMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseUp);
             // 
             // panel3
             // 
@@ -595,6 +577,29 @@
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(188, 664);
             this.checkedListBox1.TabIndex = 0;
+            this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
+            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
+            this.checkedListBox1.SelectedValueChanged += new System.EventHandler(this.checkedListBox1_SelectedValueChanged);
+            this.checkedListBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.checkedListBox1_MouseUp);
+            // 
+            // moMap
+            // 
+            this.moMap.BackColor = System.Drawing.Color.White;
+            this.moMap.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.moMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.moMap.FlashColor = System.Drawing.Color.Green;
+            this.moMap.Location = new System.Drawing.Point(0, 0);
+            this.moMap.Name = "moMap";
+            this.moMap.SelectionColor = System.Drawing.Color.Cyan;
+            this.moMap.Size = new System.Drawing.Size(768, 664);
+            this.moMap.TabIndex = 5;
+            this.moMap.MapScaleChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_MapScaleChanged);
+            this.moMap.LayerChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_LayerChanged);
+            this.moMap.AfterTrackingLayerDraw += new MyMapObjects.moMapControl.AfterTrackingLayerDrawHandle(this.moMap_AfterTrackingLayerDraw);
+            this.moMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseClick);
+            this.moMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseDown);
+            this.moMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseMove);
+            this.moMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseUp);
             // 
             // frmMain
             // 
