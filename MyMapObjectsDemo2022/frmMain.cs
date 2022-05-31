@@ -74,7 +74,7 @@ namespace MyMapObjectsDemo2022
                     new FileStream(sFileName, FileMode.Open);
                 BinaryReader sr = new BinaryReader(sStream);
                 MyMapObjects.moMapLayer sLayer =
-                    DataIOTools.LoadMapLayer(sr);
+                    DataIOTools.LoadMapLayer(sr,sFileName);
                 moMap.Layers.Add(sLayer);
                 if (moMap.Layers.Count == 1)
                 {

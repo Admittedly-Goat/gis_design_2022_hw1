@@ -11,7 +11,7 @@ namespace MyMapObjectsDemo2022
     {
         #region 程序集方法
 
-        internal static MyMapObjects.moMapLayer LoadMapLayer(BinaryReader sr)
+        internal static MyMapObjects.moMapLayer LoadMapLayer(BinaryReader sr,String filePath)
         {
             //由于GeoJSON的定义，所有数据文件都需要用WGS84经纬度来存储坐标。Lay文件使用Lambert投影存储坐标，所以需要转化成经纬度后显示
             MyMapObjects.moProjectionCS projectionLay = layCoordinateTranslateToWGS1984Object();
@@ -19,7 +19,7 @@ namespace MyMapObjectsDemo2022
             MyMapObjects.moGeometryTypeConstant sGeometryType = (MyMapObjects.moGeometryTypeConstant)sr.ReadInt32();
             MyMapObjects.moFields sFields = LoadFields(sr);
             MyMapObjects.moFeatures sFeatures = LoadFeatures(sGeometryType, sFields, sr, projectionLay);
-            MyMapObjects.moMapLayer sMapLayer = new MyMapObjects.moMapLayer("", sGeometryType, sFields);
+            MyMapObjects.moMapLayer sMapLayer = new MyMapObjects.moMapLayer(Path.GetFileName(filePath), sGeometryType, sFields);
             sMapLayer.Features = sFeatures;
             return sMapLayer;
         }
