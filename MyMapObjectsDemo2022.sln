@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMapObjectsDemo2022", "MyMapObjectsDemo2022\MyMapObjectsDemo2022.csproj", "{D22917A8-534F-415B-9F35-7B88AEF9FB92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMapObjects", "MyMapObjects\MyMapObjects.csproj", "{6ED92E2A-7EF0-4C4A-8D00-BE96C06E3F3F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D22917A8-534F-415B-9F35-7B88AEF9FB92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D22917A8-534F-415B-9F35-7B88AEF9FB92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D22917A8-534F-415B-9F35-7B88AEF9FB92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D22917A8-534F-415B-9F35-7B88AEF9FB92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ED92E2A-7EF0-4C4A-8D00-BE96C06E3F3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ED92E2A-7EF0-4C4A-8D00-BE96C06E3F3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ED92E2A-7EF0-4C4A-8D00-BE96C06E3F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ED92E2A-7EF0-4C4A-8D00-BE96C06E3F3F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
