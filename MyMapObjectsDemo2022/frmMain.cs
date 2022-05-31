@@ -40,6 +40,7 @@ namespace MyMapObjectsDemo2022
         private List<MyMapObjects.moGeometry> mMovingGeometries = new List<MyMapObjects.moGeometry>(); // 正在移动的图形的集合
         private MyMapObjects.moGeometry mEditingGeometry; // 正在编辑的图形
         private List<MyMapObjects.moPoints> mSketchingShape; // 正在描绘的图形，用一个多点集合存储
+        private int identifySelectedLayerIndex = -1; //查询功能选择的Layer
 
         #endregion
 
@@ -74,7 +75,7 @@ namespace MyMapObjectsDemo2022
                     new FileStream(sFileName, FileMode.Open);
                 BinaryReader sr = new BinaryReader(sStream);
                 MyMapObjects.moMapLayer sLayer =
-                    DataIOTools.LoadMapLayer(sr,sFileName);
+                    DataIOTools.LoadMapLayer(sr, sFileName);
                 moMap.Layers.Add(sLayer);
                 if (moMap.Layers.Count == 1)
                 {
@@ -412,11 +413,50 @@ namespace MyMapObjectsDemo2022
         //查询状态下鼠标按下
         private void OnIdentify_MouseDown(MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (checkedListBox1.SelectedIndex == -1)
             {
-                mStartMouseLocation = e.Location;
-                mIsInIdentify = true;
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
             }
+            identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
+            moMap.Refresh();
+            MyMapObjects.moRectangle sBox = GetMapRectByTwoPoints(e.Location, e.Location);
+            double sTolerance = moMap.ToMapDistance(mSelectingTolerance);
+            if (moMap.Layers.Count == 0)
+            {
+                return;
+            }
+            else
+            {
+                MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
+                MyMapObjects.moFeatures sFeatures = sLayer.SearchByBox(sBox, sTolerance);
+                // 只选择最上部的那个对象
+                if (sFeatures.Count > 0)
+                {
+                    MyMapObjects.moGeometry[] sGeometries = new MyMapObjects.moGeometry[1];
+                    sGeometries[0] = sFeatures.GetItem(sFeatures.Count-1).Geometry;
+                    treeView1.BeginUpdate();
+                    treeView1.Nodes.Clear();
+                    treeView1.Nodes.Add("要素内部ID");
+                    //比对并获取要素内部ID
+                    for(int i = 0; i < sLayer.Features.Count; i++)
+                    {
+                        if(sLayer.Features.GetItem(i)== sFeatures.GetItem(sFeatures.Count - 1))
+                        {
+                            treeView1.Nodes[0].Nodes.Add(Convert.ToString(i));
+                        }
+                    }
+                    for(int i = 0; i < sLayer.AttributeFields.Count; i++)
+                    {
+                        treeView1.Nodes.Add(sLayer.AttributeFields.GetItem(i).Name);
+                        treeView1.Nodes[i+1].Nodes.Add(sFeatures.GetItem(sFeatures.Count - 1).Attributes.GetItem(i).ToString());
+                    }
+                    treeView1.ExpandAll();
+                    treeView1.EndUpdate();
+                    moMap.FlashShapes(sGeometries, 3, 800);
+                }
+            }
+            checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
         }
 
         //选择状态下鼠标按下
@@ -502,33 +542,7 @@ namespace MyMapObjectsDemo2022
 
         private void OnIdentify_MouseUp(MouseEventArgs e)
         {
-            if (mIsInIdentify == false)
-            {
-                return;
-            }
-            mIsInIdentify = false;
-            moMap.Refresh();
-            MyMapObjects.moRectangle sBox = GetMapRectByTwoPoints(mStartMouseLocation, e.Location);
-            double sTolerance = moMap.ToMapDistance(mSelectingTolerance);
-            if (moMap.Layers.Count == 0)
-            {
-                return;
-            }
-            else
-            {
-                MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(0); //获得第一个图层
-                MyMapObjects.moFeatures sFeatures = sLayer.SearchByBox(sBox, sTolerance);
-                Int32 sSelFeatureCount = sFeatures.Count;
-                if (sSelFeatureCount > 0)
-                {
-                    MyMapObjects.moGeometry[] sGeometries = new MyMapObjects.moGeometry[sSelFeatureCount];
-                    for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
-                    {
-                        sGeometries[i] = sFeatures.GetItem(i).Geometry;
-                    }
-                    moMap.FlashShapes(sGeometries, 3, 800);
-                }
-            }
+
         }
 
         //选择状态下鼠标松开
@@ -714,14 +728,7 @@ namespace MyMapObjectsDemo2022
 
         private void OnIdentify_MouseMove(MouseEventArgs e)
         {
-            if (mIsInIdentify == false)
-            {
-                return;
-            }
-            moMap.Refresh();
-            MyMapObjects.moRectangle sRect = GetMapRectByTwoPoints(mStartMouseLocation, e.Location);
-            MyMapObjects.moUserDrawingTool sDrawingTool = moMap.GetDrawingTool();
-            sDrawingTool.DrawRectangle(sRect, mSelectingBoxSymbol);
+
         }
 
         //选择状态下鼠标移动
@@ -833,16 +840,16 @@ namespace MyMapObjectsDemo2022
             MyMapObjects.moPoint sPoint = moMap.ToMapPoint(point.X, point.Y);
             if (mShowLngLat == false)
             {
-                double sX = Math.Round(sPoint.X);
-                double sY = Math.Round(sPoint.Y);
+                double sX = Math.Round(sPoint.X,3);
+                double sY = Math.Round(sPoint.Y,3);
                 tssCoordinate.Text = "X:" + sX.ToString() + ",Y:" + sY.ToString();
             }
             else
             {
                 MyMapObjects.moPoint sLngLat = moMap.ProjectionCS.TransferToLngLat(sPoint);
-                double sX = Math.Round(sLngLat.X, 4);
-                double sY = Math.Round(sLngLat.Y, 4);
-                tssCoordinate.Text = "X:" + sX.ToString() + ",Y:" + sY.ToString();
+                double sX = Math.Round(sLngLat.X, 3);
+                double sY = Math.Round(sLngLat.Y, 3);
+                tssCoordinate.Text = "经度:" + sX.ToString() + ",纬度:" + sY.ToString();
             }
         }
 
@@ -1081,7 +1088,7 @@ namespace MyMapObjectsDemo2022
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void moMap_LayerChanged(object sender)
@@ -1125,6 +1132,16 @@ namespace MyMapObjectsDemo2022
             }
             moMap.isAlreadyRedrawLayer = false;
             moMap.RedrawMap();
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
+
+        private void tssCoordinate_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

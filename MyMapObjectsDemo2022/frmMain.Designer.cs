@@ -28,12 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("123");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("ObjectID", new System.Windows.Forms.TreeNode[] {
-            treeNode9});
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("sdfergvergeg");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Another prop", new System.Windows.Forms.TreeNode[] {
-            treeNode11});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("当前没有查询要素");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -123,6 +118,7 @@
             this.tssCoordinate.Name = "tssCoordinate";
             this.tssCoordinate.Size = new System.Drawing.Size(200, 19);
             this.tssCoordinate.Text = "#";
+            this.tssCoordinate.Click += new System.EventHandler(this.tssCoordinate_Click);
             // 
             // tssMapScale
             // 
@@ -150,19 +146,13 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode9.Name = "Node1";
-            treeNode9.Text = "123";
-            treeNode10.Name = "Node0";
-            treeNode10.Text = "ObjectID";
-            treeNode11.Name = "Node3";
-            treeNode11.Text = "sdfergvergeg";
-            treeNode12.Name = "Node2";
-            treeNode12.Text = "Another prop";
+            treeNode1.Name = "Node0";
+            treeNode1.Text = "当前没有查询要素";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode10,
-            treeNode12});
+            treeNode1});
             this.treeView1.Size = new System.Drawing.Size(173, 664);
             this.treeView1.TabIndex = 0;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // chkShowLngLat
             // 
@@ -170,9 +160,9 @@
             this.chkShowLngLat.AutoSize = true;
             this.chkShowLngLat.Location = new System.Drawing.Point(406, 719);
             this.chkShowLngLat.Name = "chkShowLngLat";
-            this.chkShowLngLat.Size = new System.Drawing.Size(96, 16);
+            this.chkShowLngLat.Size = new System.Drawing.Size(84, 16);
             this.chkShowLngLat.TabIndex = 35;
-            this.chkShowLngLat.Text = "显示地理坐标";
+            this.chkShowLngLat.Text = "显示经纬度";
             this.chkShowLngLat.UseVisualStyleBackColor = true;
             this.chkShowLngLat.CheckedChanged += new System.EventHandler(this.chkShowLngLat_CheckedChanged);
             // 
@@ -457,7 +447,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(87, 22);
+            this.toolStripButton1.Size = new System.Drawing.Size(92, 22);
             this.toolStripButton1.Text = "全范围显示";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 

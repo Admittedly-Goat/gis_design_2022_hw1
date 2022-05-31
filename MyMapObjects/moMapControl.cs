@@ -543,7 +543,7 @@ namespace MyMapObjects
         //创建默认投影坐标系统，更改为WGS1984坐标系
         private void CreateDefaultProjectionCS()
         {
-            /*string sProjCSName = "WGS_1984";
+            string sProjCSName = "WGS_1984";
             string sGeoCSName = "WGS_1984";
             string sDatumName = "WGS_1984";
             string sSpheroidName = "Krassowsky_1940";
@@ -560,8 +560,8 @@ namespace MyMapObjects
             moProjectionTypeConstant sProjType = moProjectionTypeConstant.None;
             _ProjectionCS = new moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
                 sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
-                sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);*/
-
+                sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
+            /*
             string sProjCSName = "Beijing54 Lambert Conformal Conic 2SP";
             string sGeoCSName = "Beijing 1954";
             string sDatumName = "Beijing 1954";
@@ -579,7 +579,7 @@ namespace MyMapObjects
             moProjectionTypeConstant sProjType = moProjectionTypeConstant.Lambert_Conformal_Conic_2SP;
             _ProjectionCS = new moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
                 sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
-                sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
+                sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);*/
         }
 
         //新建地图绘制参考对象
