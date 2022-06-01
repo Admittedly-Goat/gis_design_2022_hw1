@@ -390,6 +390,17 @@ namespace MyMapObjects
             }
 
         }
+
+        public void changeName(string newName)
+        {
+            _Name = newName;
+        }
+
+
+        public void changeShapeType(MyMapObjects.moGeometryTypeConstant index)
+        {
+            _ShapeType = index;
+        }
         #endregion
 
         #region 私有函数

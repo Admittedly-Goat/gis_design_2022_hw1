@@ -47,6 +47,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateLineLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateLineLayer.Designer.cs">
+      <DependentUpon>CreateLineLayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreatePointLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreatePointLayer.Designer.cs">
+      <DependentUpon>CreatePointLayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreatePolygonLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreatePolygonLayer.Designer.cs">
+      <DependentUpon>CreatePolygonLayer.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataIOTools.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -62,6 +80,15 @@
     <Compile Include="propertyTable.Designer.cs">
       <DependentUpon>propertyTable.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CreateLineLayer.resx">
+      <DependentUpon>CreateLineLayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreatePointLayer.resx">
+      <DependentUpon>CreatePointLayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreatePolygonLayer.resx">
+      <DependentUpon>CreatePolygonLayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>

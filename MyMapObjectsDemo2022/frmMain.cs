@@ -1145,5 +1145,34 @@ namespace MyMapObjectsDemo2022
         {
 
         }
+
+        private void 新建点图层ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreatePointLayer cForm = new CreatePointLayer();
+            cForm.CreateLayer +=CreateLayer;
+            cForm.ShowDialog();
+        }
+
+
+        //创建图层
+        public void CreateLayer(MyMapObjects.moMapLayer layer)
+        {
+            moMap.Layers.Add(layer);
+        }
+
+        private void 新建线图层ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateLineLayer cForm = new CreateLineLayer();
+            cForm.CreateLayer += CreateLayer;
+            cForm.ShowDialog();
+        }
+
+        private void 新建面图层ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreatePolygonLayer cForm = new CreatePolygonLayer();
+            cForm.CreateLayer += CreateLayer;
+            cForm.ShowDialog();
+        }
+
     }
 }
