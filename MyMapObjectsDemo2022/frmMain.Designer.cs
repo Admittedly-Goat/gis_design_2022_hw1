@@ -81,11 +81,11 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.moMap = new MyMapObjects.moMapControl();
             this.splitter3 = new System.Windows.Forms.Splitter();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.panel5 = new System.Windows.Forms.Panel();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.moMap = new MyMapObjects.moMapControl();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -305,6 +305,7 @@
             this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
             this.删除ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.删除ToolStripMenuItem.Text = "删除";
+            this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
             // 
             // 管理ToolStripMenuItem
             // 
@@ -319,19 +320,19 @@
             // 修改样式ToolStripMenuItem
             // 
             this.修改样式ToolStripMenuItem.Name = "修改样式ToolStripMenuItem";
-            this.修改样式ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.修改样式ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.修改样式ToolStripMenuItem.Text = "修改渲染样式";
             // 
             // 更改图层注记ToolStripMenuItem
             // 
             this.更改图层注记ToolStripMenuItem.Name = "更改图层注记ToolStripMenuItem";
-            this.更改图层注记ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.更改图层注记ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.更改图层注记ToolStripMenuItem.Text = "更改图层注记";
             // 
             // 修改名称ToolStripMenuItem
             // 
             this.修改名称ToolStripMenuItem.Name = "修改名称ToolStripMenuItem";
-            this.修改名称ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.修改名称ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.修改名称ToolStripMenuItem.Text = "更改名称";
             // 
             // 详情面板ToolStripMenuItem
@@ -353,13 +354,13 @@
             // 几何选取ToolStripMenuItem
             // 
             this.几何选取ToolStripMenuItem.Name = "几何选取ToolStripMenuItem";
-            this.几何选取ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.几何选取ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.几何选取ToolStripMenuItem.Text = "几何选取";
             // 
             // 属性选取ToolStripMenuItem
             // 
             this.属性选取ToolStripMenuItem.Name = "属性选取ToolStripMenuItem";
-            this.属性选取ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.属性选取ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.属性选取ToolStripMenuItem.Text = "属性选取";
             // 
             // 编辑ToolStripMenuItem
@@ -380,44 +381,44 @@
             this.增加新要素ToolStripMenuItem,
             this.编辑节点ToolStripMenuItem});
             this.几何编辑ToolStripMenuItem.Name = "几何编辑ToolStripMenuItem";
-            this.几何编辑ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.几何编辑ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.几何编辑ToolStripMenuItem.Text = "几何编辑";
             // 
             // 删除已选择的图形ToolStripMenuItem
             // 
             this.删除已选择的图形ToolStripMenuItem.Name = "删除已选择的图形ToolStripMenuItem";
-            this.删除已选择的图形ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.删除已选择的图形ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.删除已选择的图形ToolStripMenuItem.Text = "删除已选择";
             // 
             // 移动已选择ToolStripMenuItem
             // 
             this.移动已选择ToolStripMenuItem.Name = "移动已选择ToolStripMenuItem";
-            this.移动已选择ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.移动已选择ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.移动已选择ToolStripMenuItem.Text = "移动已选择";
             // 
             // 增加新要素ToolStripMenuItem
             // 
             this.增加新要素ToolStripMenuItem.Name = "增加新要素ToolStripMenuItem";
-            this.增加新要素ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.增加新要素ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.增加新要素ToolStripMenuItem.Text = "增加新要素";
             // 
             // 编辑节点ToolStripMenuItem
             // 
             this.编辑节点ToolStripMenuItem.Name = "编辑节点ToolStripMenuItem";
-            this.编辑节点ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.编辑节点ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.编辑节点ToolStripMenuItem.Text = "编辑图形节点";
             // 
             // 属性表ToolStripMenuItem
             // 
             this.属性表ToolStripMenuItem.Name = "属性表ToolStripMenuItem";
-            this.属性表ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.属性表ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.属性表ToolStripMenuItem.Text = "属性表与属性编辑";
             this.属性表ToolStripMenuItem.Click += new System.EventHandler(this.属性表ToolStripMenuItem_Click);
             // 
             // 坐标系统设置ToolStripMenuItem
             // 
             this.坐标系统设置ToolStripMenuItem.Name = "坐标系统设置ToolStripMenuItem";
-            this.坐标系统设置ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.坐标系统设置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.坐标系统设置ToolStripMenuItem.Text = "坐标系统设置";
             // 
             // panel2
@@ -536,6 +537,25 @@
             this.splitter1.TabIndex = 6;
             this.splitter1.TabStop = false;
             // 
+            // moMap
+            // 
+            this.moMap.BackColor = System.Drawing.Color.White;
+            this.moMap.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.moMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.moMap.FlashColor = System.Drawing.Color.Green;
+            this.moMap.Location = new System.Drawing.Point(0, 0);
+            this.moMap.Name = "moMap";
+            this.moMap.SelectionColor = System.Drawing.Color.Cyan;
+            this.moMap.Size = new System.Drawing.Size(768, 663);
+            this.moMap.TabIndex = 5;
+            this.moMap.MapScaleChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_MapScaleChanged);
+            this.moMap.LayerChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_LayerChanged);
+            this.moMap.AfterTrackingLayerDraw += new MyMapObjects.moMapControl.AfterTrackingLayerDrawHandle(this.moMap_AfterTrackingLayerDraw);
+            this.moMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseClick);
+            this.moMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseDown);
+            this.moMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseMove);
+            this.moMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseUp);
+            // 
             // splitter3
             // 
             this.splitter3.Dock = System.Windows.Forms.DockStyle.Right;
@@ -574,25 +594,6 @@
             this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
             this.checkedListBox1.SelectedValueChanged += new System.EventHandler(this.checkedListBox1_SelectedValueChanged);
             this.checkedListBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.checkedListBox1_MouseUp);
-            // 
-            // moMap
-            // 
-            this.moMap.BackColor = System.Drawing.Color.White;
-            this.moMap.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.moMap.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.moMap.FlashColor = System.Drawing.Color.Green;
-            this.moMap.Location = new System.Drawing.Point(0, 0);
-            this.moMap.Name = "moMap";
-            this.moMap.SelectionColor = System.Drawing.Color.Cyan;
-            this.moMap.Size = new System.Drawing.Size(768, 663);
-            this.moMap.TabIndex = 5;
-            this.moMap.MapScaleChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_MapScaleChanged);
-            this.moMap.LayerChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_LayerChanged);
-            this.moMap.AfterTrackingLayerDraw += new MyMapObjects.moMapControl.AfterTrackingLayerDrawHandle(this.moMap_AfterTrackingLayerDraw);
-            this.moMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseClick);
-            this.moMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseDown);
-            this.moMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseMove);
-            this.moMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseUp);
             // 
             // frmMain
             // 
