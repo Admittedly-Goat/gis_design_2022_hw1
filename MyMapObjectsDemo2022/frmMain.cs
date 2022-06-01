@@ -430,6 +430,8 @@ namespace MyMapObjectsDemo2022
             {
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
                 MyMapObjects.moFeatures sFeatures = sLayer.SearchByBox(sBox, sTolerance);
+                if (sLayer.Visible == false)
+                    return;
                 // 只选择最上部的那个对象
                 if (sFeatures.Count > 0)
                 {
