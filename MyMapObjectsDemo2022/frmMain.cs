@@ -436,22 +436,22 @@ namespace MyMapObjectsDemo2022
                 if (sFeatures.Count > 0)
                 {
                     MyMapObjects.moGeometry[] sGeometries = new MyMapObjects.moGeometry[1];
-                    sGeometries[0] = sFeatures.GetItem(sFeatures.Count-1).Geometry;
+                    sGeometries[0] = sFeatures.GetItem(sFeatures.Count - 1).Geometry;
                     treeView1.BeginUpdate();
                     treeView1.Nodes.Clear();
                     treeView1.Nodes.Add("要素内部ID");
                     //比对并获取要素内部ID
-                    for(int i = 0; i < sLayer.Features.Count; i++)
+                    for (int i = 0; i < sLayer.Features.Count; i++)
                     {
-                        if(sLayer.Features.GetItem(i)== sFeatures.GetItem(sFeatures.Count - 1))
+                        if (sLayer.Features.GetItem(i) == sFeatures.GetItem(sFeatures.Count - 1))
                         {
                             treeView1.Nodes[0].Nodes.Add(Convert.ToString(i));
                         }
                     }
-                    for(int i = 0; i < sLayer.AttributeFields.Count; i++)
+                    for (int i = 0; i < sLayer.AttributeFields.Count; i++)
                     {
                         treeView1.Nodes.Add(sLayer.AttributeFields.GetItem(i).Name);
-                        treeView1.Nodes[i+1].Nodes.Add(sFeatures.GetItem(sFeatures.Count - 1).Attributes.GetItem(i).ToString());
+                        treeView1.Nodes[i + 1].Nodes.Add(sFeatures.GetItem(sFeatures.Count - 1).Attributes.GetItem(i).ToString());
                     }
                     treeView1.ExpandAll();
                     treeView1.EndUpdate();
@@ -842,8 +842,8 @@ namespace MyMapObjectsDemo2022
             MyMapObjects.moPoint sPoint = moMap.ToMapPoint(point.X, point.Y);
             if (mShowLngLat == false)
             {
-                double sX = Math.Round(sPoint.X,3);
-                double sY = Math.Round(sPoint.Y,3);
+                double sX = Math.Round(sPoint.X, 3);
+                double sY = Math.Round(sPoint.Y, 3);
                 tssCoordinate.Text = "X:" + sX.ToString() + ",Y:" + sY.ToString();
             }
             else
@@ -1149,7 +1149,7 @@ namespace MyMapObjectsDemo2022
         private void 新建点图层ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreatePointLayer cForm = new CreatePointLayer();
-            cForm.CreateLayer +=CreateLayer;
+            cForm.CreateLayer += CreateLayer;
             cForm.ShowDialog();
         }
 
@@ -1158,6 +1158,8 @@ namespace MyMapObjectsDemo2022
         public void CreateLayer(MyMapObjects.moMapLayer layer)
         {
             moMap.Layers.Add(layer);
+            moMap.RefreshLayerList();
+            moMap.RedrawMap();
         }
 
         private void 新建线图层ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1181,7 +1183,24 @@ namespace MyMapObjectsDemo2022
                 MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
-            moMap.Layers.RemoveAt(checkedListBox1.SelectedIndex);
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            moMap.Layers.RemoveAt(selectedIndex);
+            moMap.RefreshLayerList();
+            moMap.RedrawMap();
+        }
+
+        private void 修改名称ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            ChangeNameOfLayer cForm = new ChangeNameOfLayer(moMap.Layers.GetItem(selectedIndex));
+            cForm.ShowDialog();
+            moMap.RefreshLayerList();
+            moMap.RedrawMap();
         }
     }
 }

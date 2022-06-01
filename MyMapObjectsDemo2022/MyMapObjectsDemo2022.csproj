@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeNameOfLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeNameOfLayer.Designer.cs">
+      <DependentUpon>ChangeNameOfLayer.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateLineLayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +86,9 @@
     <Compile Include="propertyTable.Designer.cs">
       <DependentUpon>propertyTable.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ChangeNameOfLayer.resx">
+      <DependentUpon>ChangeNameOfLayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CreateLineLayer.resx">
       <DependentUpon>CreateLineLayer.cs</DependentUpon>
     </EmbeddedResource>

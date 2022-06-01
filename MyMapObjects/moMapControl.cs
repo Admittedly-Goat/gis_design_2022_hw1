@@ -123,10 +123,7 @@ namespace MyMapObjects
         {
             get
             {
-                if ((isAlreadyRedrawLayer == false) && (LayerChanged != null))
-                {
-                    LayerChanged(this);
-                }
+                RefreshLayerList();
                 return _Layers;
             }
         }
@@ -212,17 +209,20 @@ namespace MyMapObjects
             for (Int32 i = 0; i <= sLayerCount - 1; i++)
             {
                 moMapLayer sLayer = _Layers.GetItem(i);
-                moRectangle sExtent = sLayer.Extent;
-                if (sExtent.IsEmpty == false)
+                if (sLayer.Visible == true)
                 {
-                    if (sExtent.MinX < sMinX)
-                        sMinX = sExtent.MinX;
-                    if (sExtent.MaxX > sMaxX)
-                        sMaxX = sExtent.MaxX;
-                    if (sExtent.MinY < sMinY)
-                        sMinY = sExtent.MinY;
-                    if (sExtent.MaxY > sMaxY)
-                        sMaxY = sExtent.MaxY;
+                    moRectangle sExtent = sLayer.Extent;
+                    if (sExtent.IsEmpty == false)
+                    {
+                        if (sExtent.MinX < sMinX)
+                            sMinX = sExtent.MinX;
+                        if (sExtent.MaxX > sMaxX)
+                            sMaxX = sExtent.MaxX;
+                        if (sExtent.MinY < sMinY)
+                            sMinY = sExtent.MinY;
+                        if (sExtent.MaxY > sMaxY)
+                            sMaxY = sExtent.MaxY;
+                    }
                 }
             }
             sFullExtent = new moRectangle(sMinX, sMaxX, sMinY, sMaxY);
@@ -449,6 +449,13 @@ namespace MyMapObjects
             }
         }
 
+        public void RefreshLayerList()
+        {
+            if ((isAlreadyRedrawLayer == false) && (LayerChanged != null))
+            {
+                LayerChanged(this);
+            }
+        }
         #endregion
 
         #region 事件

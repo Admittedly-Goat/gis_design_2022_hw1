@@ -31,5 +31,15 @@ namespace MyMapObjectsDemo2022
         {
             CreateLayer(layer);
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CreateLineLayer_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
