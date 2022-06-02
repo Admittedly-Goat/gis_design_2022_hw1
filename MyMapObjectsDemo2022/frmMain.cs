@@ -1271,6 +1271,10 @@ namespace MyMapObjectsDemo2022
             moMap.RefreshLayerList();
             moMap.RedrawTrackingShapes();
             moMap.RedrawMap();
+            if (propertyTableForm != null)
+            {
+                propertyTableForm.ReloadPropList();
+            }
         }
 
         private void 移动已选择ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1278,5 +1282,9 @@ namespace MyMapObjectsDemo2022
             btnMovePolygon_Click(sender, e);
         }
 
+        private void 增加新要素ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
