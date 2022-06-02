@@ -76,6 +76,7 @@ namespace MyMapObjectsDemo2022
             {
                 propertyGrid.Rows[selectedFeaturesIndex[i]].Selected = true;
             }
+            ShowOnlySelected = false;
         }
 
         private void propertyTable_FormClosed(object sender, FormClosedEventArgs e)
@@ -286,6 +287,7 @@ namespace MyMapObjectsDemo2022
                 }
                 RedrawMoMap();
             }
+            toolStripStatusLabel1.Text = $"已选择要素数：{Layer.SelectedFeatures.Count}";
         }
 
         private void 显示所有已选择要素ToolStripMenuItem_Click(object sender, EventArgs e)
