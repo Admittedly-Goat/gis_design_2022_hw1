@@ -14,6 +14,8 @@ namespace MyMapObjectsDemo2022
         Action frmMainSetPropertyTableNullMethod;
         Action RedrawMoMap;
         MyMapObjects.moMapLayer Layer;
+        public bool CanAffectLayerSelection = false;
+        bool ShowOnlySelected = false;
         public propertyTable(MyMapObjects.moMapLayer layer, Action frmMainSetPropertyTableNullMethod, Action redrawMoMap)
         {
             InitializeComponent();
@@ -50,6 +52,7 @@ namespace MyMapObjectsDemo2022
             {
                 return;
             }
+            List<int> selectedFeaturesIndex = new List<int>();
             for (int i = 0; i < Layer.Features.Count; i++)
             {
                 object[] values = new object[Layer.AttributeFields.Count + 1];
@@ -59,6 +62,19 @@ namespace MyMapObjectsDemo2022
                     values[j + 1] = Layer.Features.GetItem(i).Attributes.GetItem(j);
                 }
                 propertyGrid.Rows.Add(values);
+                for (int j = 0; j < Layer.SelectedFeatures.Count; j++)
+                {
+                    if (Layer.SelectedFeatures.GetItem(j) == Layer.Features.GetItem(i))
+                    {
+                        selectedFeaturesIndex.Add(i);
+                        break;
+                    }
+                }
+            }
+            propertyGrid.ClearSelection();
+            for (int i = 0; i < selectedFeaturesIndex.Count; i++)
+            {
+                propertyGrid.Rows[selectedFeaturesIndex[i]].Selected = true;
             }
         }
 
@@ -177,7 +193,7 @@ namespace MyMapObjectsDemo2022
 
         private void propertyGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            
+
         }
 
 
@@ -223,18 +239,18 @@ namespace MyMapObjectsDemo2022
                     continue;
                 }
             }
-            
+
         }
 
         private void 修改字段ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string value = Microsoft.VisualBasic.Interaction.InputBox("原字段名", "修改字段名称");
-            for(int i = 0; i < Layer.AttributeFields.Count; i++)
+            for (int i = 0; i < Layer.AttributeFields.Count; i++)
             {
                 if (Layer.AttributeFields.GetItem(i).Name == value)
                 {
                     string valueNew = Microsoft.VisualBasic.Interaction.InputBox("新字段名", "修改字段名称");
-                    for(int j = 0; j < Layer.AttributeFields.Count; j++)
+                    for (int j = 0; j < Layer.AttributeFields.Count; j++)
                     {
                         if (Layer.AttributeFields.GetItem(j).Name == valueNew)
                         {
@@ -252,6 +268,54 @@ namespace MyMapObjectsDemo2022
                 }
             }
             MessageBox.Show("没有找到字段。");
+        }
+
+        private void propertyTable_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void propertyGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            if (CanAffectLayerSelection)
+            {
+                Layer.ClearSelection();
+                for (int i = 0; i < propertyGrid.SelectedRows.Count; i++)
+                {
+                    Layer.SelectedFeatures.Add(Layer.Features.GetItem(Convert.ToInt32(propertyGrid.SelectedRows[i].Cells[0].Value)));
+                }
+                RedrawMoMap();
+            }
+        }
+
+        private void 显示所有已选择要素ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowOnlySelected = !ShowOnlySelected;
+            if (ShowOnlySelected == true)
+            {
+                ExcludeNonSelectedRow();
+            }
+            else
+            {
+                ReloadPropList();
+            }
+        }
+
+        private void ExcludeNonSelectedRow()
+        {
+            if (ShowOnlySelected == true)
+            {
+                var selectedRows = new List<DataGridViewRow>();
+                for (int i = 0; i < propertyGrid.SelectedRows.Count; i++)
+                {
+                    selectedRows.Add(propertyGrid.SelectedRows[i]);
+                }
+                propertyGrid.Rows.Clear();
+                foreach (var i in selectedRows)
+                {
+                    propertyGrid.Rows.Add(i);
+                }
+            }
         }
     }
 }

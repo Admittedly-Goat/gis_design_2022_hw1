@@ -92,6 +92,7 @@
             this.显示所有已选择要素ToolStripMenuItem.Name = "显示所有已选择要素ToolStripMenuItem";
             this.显示所有已选择要素ToolStripMenuItem.Size = new System.Drawing.Size(141, 20);
             this.显示所有已选择要素ToolStripMenuItem.Text = "显示所有/已选择要素";
+            this.显示所有已选择要素ToolStripMenuItem.Click += new System.EventHandler(this.显示所有已选择要素ToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -128,6 +129,7 @@
             this.propertyGrid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.propertyGrid_CellBeginEdit);
             this.propertyGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.propertyGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.propertyGrid_CellEndEdit);
+            this.propertyGrid.SelectionChanged += new System.EventHandler(this.propertyGrid_SelectionChanged);
             // 
             // Column1
             // 
@@ -156,6 +158,7 @@
             this.Text = "propertyTable";
             this.Deactivate += new System.EventHandler(this.propertyTable_Deactivate);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.propertyTable_FormClosed);
+            this.Load += new System.EventHandler(this.propertyTable_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);

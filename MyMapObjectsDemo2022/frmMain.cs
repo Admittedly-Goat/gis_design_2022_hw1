@@ -569,6 +569,12 @@ namespace MyMapObjectsDemo2022
             double sTolerance = moMap.ToMapDistance(mSelectingTolerance);
             moMap.SelectByBox(sBox, sTolerance, 0);
             moMap.RedrawTrackingShapes();
+            if(propertyTableForm != null)
+            {
+                propertyTableForm.CanAffectLayerSelection = false;
+                propertyTableForm.ReloadPropList();
+                propertyTableForm.CanAffectLayerSelection = true;
+            }
         }
 
         //漫游状态下鼠标松开
@@ -1231,8 +1237,16 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
-            propertyTableForm = new propertyTable(moMap.Layers.GetItem(selectedIndex), SetPropertyTableToNull,moMap.RedrawMap);
+            propertyTableForm = new propertyTable(moMap.Layers.GetItem(selectedIndex), SetPropertyTableToNull, RedrawMapForPropertyTableChange);
             propertyTableForm.Show();
+            propertyTableForm.ReloadPropList();
+            propertyTableForm.CanAffectLayerSelection = true;
+        }
+
+        private void RedrawMapForPropertyTableChange()
+        {
+            moMap.RedrawTrackingShapes();
+            moMap.RedrawMap();
         }
 
         private void 几何选取ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1249,7 +1263,7 @@ namespace MyMapObjectsDemo2022
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
             int count = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Count;
-            for(Int32 i=0;i<count;i++)
+            for (Int32 i = 0; i < count; i++)
             {
                 MyMapObjects.moFeature feature = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
                 moMap.Layers.GetItem(selectedIndex).Features.Remove(feature);
