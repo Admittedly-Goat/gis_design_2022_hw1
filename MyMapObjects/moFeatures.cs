@@ -73,6 +73,15 @@ namespace MyMapObjects
         }
 
         /// <summary>
+        /// 删除指定元素
+        /// </summary>
+        /// <param name="features"></param>
+        public void Remove(moFeature feature)
+        {
+            _Features.Remove(feature);
+        }
+
+        /// <summary>
         /// 清除所有元素
         /// </summary>
         public void Clear()

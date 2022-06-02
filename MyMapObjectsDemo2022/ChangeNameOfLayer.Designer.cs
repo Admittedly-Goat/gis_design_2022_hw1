@@ -37,10 +37,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.Location = new System.Drawing.Point(36, 58);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 16);
+            this.label1.Size = new System.Drawing.Size(88, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "新图层名称";
             // 
@@ -81,7 +81,7 @@
             this.Controls.Add(this.newLayerName);
             this.Controls.Add(this.label1);
             this.Name = "ChangeNameOfLayer";
-            this.Text = "ChangeNameOfLayer";
+            this.Text = "修改名称";
             this.Load += new System.EventHandler(this.ChangeNameOfLayer_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

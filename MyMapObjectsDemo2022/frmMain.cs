@@ -32,6 +32,7 @@ namespace MyMapObjectsDemo2022
         // 与地图操作有关的变量
         private Int32 mMapOpStyle = 0; // 0：无，1：放大，2：缩小，3：漫游，4：选择，5：查询，6：移动，7：描绘，8：编辑
         private PointF mStartMouseLocation;
+        private PointF mOriginMouseLocation;
         private bool mIsInZoomIn = true;
         private bool mIsInPan = false;
         private bool mIsInSelect = false;
@@ -407,6 +408,7 @@ namespace MyMapObjectsDemo2022
             }
             //设置变量
             mStartMouseLocation = e.Location;
+            mOriginMouseLocation = e.Location;
             mIsInMovingShapes = true;
         }
 
@@ -535,7 +537,8 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             mIsInMovingShapes = false;
-            //作相应的数据修改，不再编写
+            double sDeltaX = moMap.ToMapDistance(e.Location.X - mOriginMouseLocation.X);
+            double sDeltaY = moMap.ToMapDistance(mOriginMouseLocation.Y - e.Location.Y);
             //重绘地图
             moMap.RedrawMap();
             //清除移动图形列表
@@ -1201,6 +1204,41 @@ namespace MyMapObjectsDemo2022
             cForm.ShowDialog();
             moMap.RefreshLayerList();
             moMap.RedrawMap();
+        }
+
+        private void 属性表ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var propertyWindowForm = new propertyTable();
+            propertyWindowForm.Show();
+        }
+
+        private void 几何选取ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            btnSelect_Click(sender, e);
+        }
+
+        private void 删除已选择的图形ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            int count = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Count;
+            for(Int32 i=0;i<count;i++)
+            {
+                MyMapObjects.moFeature feature = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
+                moMap.Layers.GetItem(selectedIndex).Features.Remove(feature);
+            }
+            moMap.RefreshLayerList();
+            moMap.RedrawTrackingShapes();
+            moMap.RedrawMap();
+        }
+
+        private void 移动已选择ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            btnMovePolygon_Click(sender, e);
         }
     }
 }
