@@ -45,6 +45,10 @@ namespace MyMapObjects
         public string Name
         {
             get { return _Name; }
+            set
+            {
+                _Name = value;
+            }
         }
 
         /// <summary>

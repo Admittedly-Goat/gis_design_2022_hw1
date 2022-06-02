@@ -100,6 +100,12 @@ namespace MyMapObjects
                 return null;
         }
 
+        //设置字段
+        public void SetField(int index,moField field)
+        {
+            _Fields[index]=field;
+        }
+
         /// <summary>
         /// 追加一个字段
         /// </summary>

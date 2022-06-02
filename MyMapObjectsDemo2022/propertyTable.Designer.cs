@@ -78,12 +78,14 @@
             this.修改字段ToolStripMenuItem.Name = "修改字段ToolStripMenuItem";
             this.修改字段ToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
             this.修改字段ToolStripMenuItem.Text = "修改字段名称";
+            this.修改字段ToolStripMenuItem.Click += new System.EventHandler(this.修改字段ToolStripMenuItem_Click);
             // 
             // 排列字段顺序ToolStripMenuItem
             // 
             this.排列字段顺序ToolStripMenuItem.Name = "排列字段顺序ToolStripMenuItem";
             this.排列字段顺序ToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
             this.排列字段顺序ToolStripMenuItem.Text = "排列字段顺序";
+            this.排列字段顺序ToolStripMenuItem.Click += new System.EventHandler(this.排列字段顺序ToolStripMenuItem_Click);
             // 
             // 显示所有已选择要素ToolStripMenuItem
             // 
@@ -110,6 +112,8 @@
             // 
             // propertyGrid
             // 
+            this.propertyGrid.AllowUserToAddRows = false;
+            this.propertyGrid.AllowUserToDeleteRows = false;
             this.propertyGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.propertyGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -121,7 +125,9 @@
             this.propertyGrid.RowTemplate.Height = 23;
             this.propertyGrid.Size = new System.Drawing.Size(965, 569);
             this.propertyGrid.TabIndex = 2;
+            this.propertyGrid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.propertyGrid_CellBeginEdit);
             this.propertyGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.propertyGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.propertyGrid_CellEndEdit);
             // 
             // Column1
             // 
@@ -148,6 +154,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Name = "propertyTable";
             this.Text = "propertyTable";
+            this.Deactivate += new System.EventHandler(this.propertyTable_Deactivate);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.propertyTable_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

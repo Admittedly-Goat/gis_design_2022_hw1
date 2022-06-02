@@ -48,6 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttrSequenceChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AttrSequenceChanger.Designer.cs">
+      <DependentUpon>AttrSequenceChanger.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChangeNameOfLayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +99,9 @@
     <Compile Include="SelectAttributeType.Designer.cs">
       <DependentUpon>SelectAttributeType.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AttrSequenceChanger.resx">
+      <DependentUpon>AttrSequenceChanger.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ChangeNameOfLayer.resx">
       <DependentUpon>ChangeNameOfLayer.cs</DependentUpon>
     </EmbeddedResource>

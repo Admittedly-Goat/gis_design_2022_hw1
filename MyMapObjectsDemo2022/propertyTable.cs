@@ -168,5 +168,90 @@ namespace MyMapObjectsDemo2022
             MessageBox.Show("没有找到字段。");
             return;
         }
+
+        private void 排列字段顺序ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            (new AttrSequenceChanger(Layer)).ShowDialog();
+            ReloadPropList();
+        }
+
+        private void propertyGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
+
+
+        private void propertyTable_Deactivate(object sender, EventArgs e)
+        {
+        }
+
+        private void propertyGrid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            propertyGrid.CancelEdit();
+            var i = e.ColumnIndex - 1;
+            while (true)
+            {
+                string value = Microsoft.VisualBasic.Interaction.InputBox("新值", "修改值");
+                try
+                {
+                    if (Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dSingle)
+                    {
+                        Layer.Features.GetItem(Convert.ToInt32(propertyGrid.Rows[e.RowIndex].Cells[0].Value)).Attributes.SetItem(i, Convert.ToSingle(value));
+                    }
+                    else if (Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dDouble)
+                    {
+                        Layer.Features.GetItem(Convert.ToInt32(propertyGrid.Rows[e.RowIndex].Cells[0].Value)).Attributes.SetItem(i, Convert.ToDouble(value));
+                    }
+                    else if (Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dInt32)
+                    {
+                        Layer.Features.GetItem(Convert.ToInt32(propertyGrid.Rows[e.RowIndex].Cells[0].Value)).Attributes.SetItem(i, Convert.ToInt32(value));
+                    }
+                    else if (Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dInt64)
+                    {
+                        Layer.Features.GetItem(Convert.ToInt32(propertyGrid.Rows[e.RowIndex].Cells[0].Value)).Attributes.SetItem(i, Convert.ToInt64(value));
+                    }
+                    else if (Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dText)
+                    {
+                        Layer.Features.GetItem(Convert.ToInt32(propertyGrid.Rows[e.RowIndex].Cells[0].Value)).Attributes.SetItem(i, Convert.ToString(value));
+                    }
+                    ReloadPropList();
+                    return;
+                }
+                catch
+                {
+                    MessageBox.Show($"输入数据有误，请重新输入。该字段的类型为：{Layer.AttributeFields.GetItem(i).ValueType.ToString()}");
+                    continue;
+                }
+            }
+            
+        }
+
+        private void 修改字段ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string value = Microsoft.VisualBasic.Interaction.InputBox("原字段名", "修改字段名称");
+            for(int i = 0; i < Layer.AttributeFields.Count; i++)
+            {
+                if (Layer.AttributeFields.GetItem(i).Name == value)
+                {
+                    string valueNew = Microsoft.VisualBasic.Interaction.InputBox("新字段名", "修改字段名称");
+                    for(int j = 0; j < Layer.AttributeFields.Count; j++)
+                    {
+                        if (Layer.AttributeFields.GetItem(j).Name == valueNew)
+                        {
+                            MessageBox.Show("字段名重复。");
+                            return;
+                        }
+                    }
+                    if (valueNew == "")
+                    {
+                        MessageBox.Show("字段名无效。");
+                    }
+                    Layer.AttributeFields.GetItem(i).Name = valueNew;
+                    ReloadPropList();
+                    return;
+                }
+            }
+            MessageBox.Show("没有找到字段。");
+        }
     }
 }

@@ -1038,6 +1038,11 @@ namespace MyMapObjectsDemo2022
 
         private void toolStripButton5_Click(object sender, EventArgs e)
         {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
             btnIdentify_Click(sender, e);
         }
 
