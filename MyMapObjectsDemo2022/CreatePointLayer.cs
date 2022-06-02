@@ -33,5 +33,10 @@ namespace MyMapObjectsDemo2022
         {
             CreateLayer(layer);
         }
+
+        private void CreatePointLayer_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

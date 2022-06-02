@@ -42,7 +42,14 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moGeometry mEditingGeometry; // 正在编辑的图形
         private List<MyMapObjects.moPoints> mSketchingShape; // 正在描绘的图形，用一个多点集合存储
         private int identifySelectedLayerIndex = -1; //查询功能选择的Layer
-
+        private propertyTable propertyTableForm; //属性表对象，作为窗体的一个附属类来进行操作，不使用复杂的委托等功能。
+        private bool isPropertyTableShowing //属性表是否正在显示
+        {
+            get
+            {
+                return propertyTableForm != null;
+            }
+        }
         #endregion
 
         #region 构造函数
@@ -1009,12 +1016,6 @@ namespace MyMapObjectsDemo2022
 
         }
 
-        private void 属性表ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var propertyWindowForm = new propertyTable();
-            propertyWindowForm.Show();
-        }
-
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             btnFullExtent_Click(sender, e);
@@ -1165,6 +1166,12 @@ namespace MyMapObjectsDemo2022
             moMap.RedrawMap();
         }
 
+        private void SetPropertyTableToNull()
+        {
+            propertyTableForm = null;
+        }
+
+
         private void 新建线图层ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreateLineLayer cForm = new CreateLineLayer();
@@ -1208,8 +1215,19 @@ namespace MyMapObjectsDemo2022
 
         private void 属性表ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var propertyWindowForm = new propertyTable();
-            propertyWindowForm.Show();
+            if (isPropertyTableShowing)
+            {
+                MessageBox.Show("当前正在显示属性表，请关闭后重试。");
+                return;
+            }
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            propertyTableForm = new propertyTable(moMap.Layers.GetItem(selectedIndex), SetPropertyTableToNull,moMap.RedrawMap);
+            propertyTableForm.Show();
         }
 
         private void 几何选取ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1240,5 +1258,6 @@ namespace MyMapObjectsDemo2022
         {
             btnMovePolygon_Click(sender, e);
         }
+
     }
 }

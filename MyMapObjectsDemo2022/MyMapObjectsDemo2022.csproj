@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -86,6 +87,12 @@
     <Compile Include="propertyTable.Designer.cs">
       <DependentUpon>propertyTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="SelectAttributeType.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectAttributeType.Designer.cs">
+      <DependentUpon>SelectAttributeType.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ChangeNameOfLayer.resx">
       <DependentUpon>ChangeNameOfLayer.cs</DependentUpon>
     </EmbeddedResource>
@@ -112,6 +119,9 @@
     </Compile>
     <EmbeddedResource Include="propertyTable.resx">
       <DependentUpon>propertyTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectAttributeType.resx">
+      <DependentUpon>SelectAttributeType.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

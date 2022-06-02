@@ -32,17 +32,17 @@
             this.添加字段ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除字段ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.修改字段ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.排列字段顺序ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.显示所有已选择要素ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.propertyGrid = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.排列字段顺序ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.propertyGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -64,18 +64,26 @@
             this.添加字段ToolStripMenuItem.Name = "添加字段ToolStripMenuItem";
             this.添加字段ToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
             this.添加字段ToolStripMenuItem.Text = "添加字段";
+            this.添加字段ToolStripMenuItem.Click += new System.EventHandler(this.添加字段ToolStripMenuItem_Click);
             // 
             // 删除字段ToolStripMenuItem
             // 
             this.删除字段ToolStripMenuItem.Name = "删除字段ToolStripMenuItem";
             this.删除字段ToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
             this.删除字段ToolStripMenuItem.Text = "删除字段";
+            this.删除字段ToolStripMenuItem.Click += new System.EventHandler(this.删除字段ToolStripMenuItem_Click);
             // 
             // 修改字段ToolStripMenuItem
             // 
             this.修改字段ToolStripMenuItem.Name = "修改字段ToolStripMenuItem";
             this.修改字段ToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
             this.修改字段ToolStripMenuItem.Text = "修改字段名称";
+            // 
+            // 排列字段顺序ToolStripMenuItem
+            // 
+            this.排列字段顺序ToolStripMenuItem.Name = "排列字段顺序ToolStripMenuItem";
+            this.排列字段顺序ToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
+            this.排列字段顺序ToolStripMenuItem.Text = "排列字段顺序";
             // 
             // 显示所有已选择要素ToolStripMenuItem
             // 
@@ -100,20 +108,20 @@
             this.toolStripStatusLabel1.Text = "已选择要素数：";
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
-            // dataGridView1
+            // propertyGrid
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.propertyGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.propertyGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
             this.Column2,
             this.Column3});
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 24);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(965, 569);
-            this.dataGridView1.TabIndex = 2;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid.Location = new System.Drawing.Point(0, 24);
+            this.propertyGrid.Name = "propertyGrid";
+            this.propertyGrid.RowTemplate.Height = 23;
+            this.propertyGrid.Size = new System.Drawing.Size(965, 569);
+            this.propertyGrid.TabIndex = 2;
+            this.propertyGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // Column1
             // 
@@ -130,27 +138,22 @@
             this.Column3.HeaderText = "Column3";
             this.Column3.Name = "Column3";
             // 
-            // 排列字段顺序ToolStripMenuItem
-            // 
-            this.排列字段顺序ToolStripMenuItem.Name = "排列字段顺序ToolStripMenuItem";
-            this.排列字段顺序ToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
-            this.排列字段顺序ToolStripMenuItem.Text = "排列字段顺序";
-            // 
             // propertyTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(965, 615);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.propertyGrid);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Name = "propertyTable";
             this.Text = "propertyTable";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.propertyTable_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.propertyGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -164,7 +167,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripMenuItem 显示所有已选择要素ToolStripMenuItem;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView propertyGrid;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
