@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("当前没有查询要素");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("当前没有查询要素");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -91,6 +91,7 @@
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.panel5 = new System.Windows.Forms.Panel();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.查看操作指南ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -151,10 +152,10 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Node0";
-            treeNode1.Text = "当前没有查询要素";
+            treeNode3.Name = "Node0";
+            treeNode3.Text = "当前没有查询要素";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode3});
             this.treeView1.Size = new System.Drawing.Size(173, 664);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -456,6 +457,8 @@
             // 
             // 编辑节点ToolStripMenuItem
             // 
+            this.编辑节点ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.查看操作指南ToolStripMenuItem});
             this.编辑节点ToolStripMenuItem.Name = "编辑节点ToolStripMenuItem";
             this.编辑节点ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.编辑节点ToolStripMenuItem.Text = "编辑图形节点";
@@ -648,6 +651,13 @@
             this.checkedListBox1.SelectedValueChanged += new System.EventHandler(this.checkedListBox1_SelectedValueChanged);
             this.checkedListBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.checkedListBox1_MouseUp);
             // 
+            // 查看操作指南ToolStripMenuItem
+            // 
+            this.查看操作指南ToolStripMenuItem.Name = "查看操作指南ToolStripMenuItem";
+            this.查看操作指南ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.查看操作指南ToolStripMenuItem.Text = "查看操作指南";
+            this.查看操作指南ToolStripMenuItem.Click += new System.EventHandler(this.查看操作指南ToolStripMenuItem_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -743,6 +753,7 @@
         private System.Windows.Forms.ToolStripMenuItem 线ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 面ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 查看操作指南ToolStripMenuItem;
     }
 }
 
