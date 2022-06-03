@@ -28,7 +28,7 @@ namespace MyMapObjectsDemo2022
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("当前没有查询要素");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("当前没有查询要素");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -71,8 +71,10 @@ namespace MyMapObjectsDemo2022
             this.线ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.面ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.停止部分ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.停止全部ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.编辑节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.停止编辑ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.查看操作指南ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.坐标系统设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -91,9 +93,7 @@ namespace MyMapObjectsDemo2022
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.panel5 = new System.Windows.Forms.Panel();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.查看操作指南ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.停止部分ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.停止全部ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开节点编辑器ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -154,10 +154,10 @@ namespace MyMapObjectsDemo2022
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode3.Name = "Node0";
-            treeNode3.Text = "当前没有查询要素";
+            treeNode1.Name = "Node0";
+            treeNode1.Text = "当前没有查询要素";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode1});
             this.treeView1.Size = new System.Drawing.Size(173, 664);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -284,7 +284,7 @@ namespace MyMapObjectsDemo2022
             this.新建线图层ToolStripMenuItem,
             this.新建面图层ToolStripMenuItem});
             this.新建ToolStripMenuItem.Name = "新建ToolStripMenuItem";
-            this.新建ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.新建ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.新建ToolStripMenuItem.Text = "新建";
             this.新建ToolStripMenuItem.Click += new System.EventHandler(this.新建ToolStripMenuItem_Click);
             // 
@@ -312,7 +312,7 @@ namespace MyMapObjectsDemo2022
             // 删除ToolStripMenuItem
             // 
             this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.删除ToolStripMenuItem.Text = "删除";
             this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
             // 
@@ -323,39 +323,39 @@ namespace MyMapObjectsDemo2022
             this.更改图层注记ToolStripMenuItem,
             this.修改名称ToolStripMenuItem});
             this.管理ToolStripMenuItem.Name = "管理ToolStripMenuItem";
-            this.管理ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.管理ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.管理ToolStripMenuItem.Text = "管理";
             // 
             // 修改样式ToolStripMenuItem
             // 
             this.修改样式ToolStripMenuItem.Name = "修改样式ToolStripMenuItem";
-            this.修改样式ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.修改样式ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.修改样式ToolStripMenuItem.Text = "修改渲染样式";
             // 
             // 更改图层注记ToolStripMenuItem
             // 
             this.更改图层注记ToolStripMenuItem.Name = "更改图层注记ToolStripMenuItem";
-            this.更改图层注记ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.更改图层注记ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.更改图层注记ToolStripMenuItem.Text = "更改图层注记";
             // 
             // 修改名称ToolStripMenuItem
             // 
             this.修改名称ToolStripMenuItem.Name = "修改名称ToolStripMenuItem";
-            this.修改名称ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.修改名称ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.修改名称ToolStripMenuItem.Text = "更改名称";
             this.修改名称ToolStripMenuItem.Click += new System.EventHandler(this.修改名称ToolStripMenuItem_Click);
             // 
             // 详情面板ToolStripMenuItem
             // 
             this.详情面板ToolStripMenuItem.Name = "详情面板ToolStripMenuItem";
-            this.详情面板ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.详情面板ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.详情面板ToolStripMenuItem.Text = "图层列表";
             this.详情面板ToolStripMenuItem.Click += new System.EventHandler(this.详情面板ToolStripMenuItem_Click);
             // 
             // 属性表ToolStripMenuItem1
             // 
             this.属性表ToolStripMenuItem1.Name = "属性表ToolStripMenuItem1";
-            this.属性表ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.属性表ToolStripMenuItem1.Size = new System.Drawing.Size(126, 22);
             this.属性表ToolStripMenuItem1.Text = "属性表";
             this.属性表ToolStripMenuItem1.Click += new System.EventHandler(this.属性表ToolStripMenuItem1_Click);
             // 
@@ -398,8 +398,7 @@ namespace MyMapObjectsDemo2022
             this.移动已选择ToolStripMenuItem,
             this.增加新要素ToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.编辑节点ToolStripMenuItem,
-            this.停止编辑ToolStripMenuItem});
+            this.编辑节点ToolStripMenuItem});
             this.几何编辑ToolStripMenuItem.Name = "几何编辑ToolStripMenuItem";
             this.几何编辑ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.几何编辑ToolStripMenuItem.Text = "几何编辑";
@@ -432,21 +431,21 @@ namespace MyMapObjectsDemo2022
             // 点ToolStripMenuItem
             // 
             this.点ToolStripMenuItem.Name = "点ToolStripMenuItem";
-            this.点ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
+            this.点ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.点ToolStripMenuItem.Text = "点";
             this.点ToolStripMenuItem.Click += new System.EventHandler(this.点ToolStripMenuItem_Click);
             // 
             // 线ToolStripMenuItem
             // 
             this.线ToolStripMenuItem.Name = "线ToolStripMenuItem";
-            this.线ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
+            this.线ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.线ToolStripMenuItem.Text = "线";
             this.线ToolStripMenuItem.Click += new System.EventHandler(this.线ToolStripMenuItem_Click);
             // 
             // 面ToolStripMenuItem
             // 
             this.面ToolStripMenuItem.Name = "面ToolStripMenuItem";
-            this.面ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
+            this.面ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.面ToolStripMenuItem.Text = "面";
             this.面ToolStripMenuItem.Click += new System.EventHandler(this.面ToolStripMenuItem_Click);
             // 
@@ -459,21 +458,36 @@ namespace MyMapObjectsDemo2022
             this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem1.Text = "停止描绘";
             // 
+            // 停止部分ToolStripMenuItem
+            // 
+            this.停止部分ToolStripMenuItem.Name = "停止部分ToolStripMenuItem";
+            this.停止部分ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.停止部分ToolStripMenuItem.Text = "停止部分";
+            this.停止部分ToolStripMenuItem.Click += new System.EventHandler(this.停止部分ToolStripMenuItem_Click);
+            // 
+            // 停止全部ToolStripMenuItem
+            // 
+            this.停止全部ToolStripMenuItem.Name = "停止全部ToolStripMenuItem";
+            this.停止全部ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.停止全部ToolStripMenuItem.Text = "停止全部";
+            this.停止全部ToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
             // 编辑节点ToolStripMenuItem
             // 
             this.编辑节点ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.查看操作指南ToolStripMenuItem});
+            this.查看操作指南ToolStripMenuItem,
+            this.打开节点编辑器ToolStripMenuItem});
             this.编辑节点ToolStripMenuItem.Name = "编辑节点ToolStripMenuItem";
             this.编辑节点ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.编辑节点ToolStripMenuItem.Text = "编辑图形节点";
             this.编辑节点ToolStripMenuItem.Click += new System.EventHandler(this.编辑节点ToolStripMenuItem_Click_1);
             // 
-            // 停止编辑ToolStripMenuItem
+            // 查看操作指南ToolStripMenuItem
             // 
-            this.停止编辑ToolStripMenuItem.Name = "停止编辑ToolStripMenuItem";
-            this.停止编辑ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.停止编辑ToolStripMenuItem.Text = "停止编辑";
-            this.停止编辑ToolStripMenuItem.Click += new System.EventHandler(this.停止编辑ToolStripMenuItem_Click);
+            this.查看操作指南ToolStripMenuItem.Name = "查看操作指南ToolStripMenuItem";
+            this.查看操作指南ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.查看操作指南ToolStripMenuItem.Text = "查看操作指南";
+            this.查看操作指南ToolStripMenuItem.Click += new System.EventHandler(this.查看操作指南ToolStripMenuItem_Click);
             // 
             // 坐标系统设置ToolStripMenuItem
             // 
@@ -655,25 +669,11 @@ namespace MyMapObjectsDemo2022
             this.checkedListBox1.SelectedValueChanged += new System.EventHandler(this.checkedListBox1_SelectedValueChanged);
             this.checkedListBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.checkedListBox1_MouseUp);
             // 
-            // 查看操作指南ToolStripMenuItem
+            // 打开节点编辑器ToolStripMenuItem
             // 
-            this.查看操作指南ToolStripMenuItem.Name = "查看操作指南ToolStripMenuItem";
-            this.查看操作指南ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.查看操作指南ToolStripMenuItem.Text = "查看操作指南";
-            this.查看操作指南ToolStripMenuItem.Click += new System.EventHandler(this.查看操作指南ToolStripMenuItem_Click);
-            // 停止部分ToolStripMenuItem
-            // 
-            this.停止部分ToolStripMenuItem.Name = "停止部分ToolStripMenuItem";
-            this.停止部分ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.停止部分ToolStripMenuItem.Text = "停止部分";
-            this.停止部分ToolStripMenuItem.Click += new System.EventHandler(this.停止部分ToolStripMenuItem_Click);
-            // 
-            // 停止全部ToolStripMenuItem
-            // 
-            this.停止全部ToolStripMenuItem.Name = "停止全部ToolStripMenuItem";
-            this.停止全部ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.停止全部ToolStripMenuItem.Text = "停止全部";
-            this.停止全部ToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.打开节点编辑器ToolStripMenuItem.Name = "打开节点编辑器ToolStripMenuItem";
+            this.打开节点编辑器ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开节点编辑器ToolStripMenuItem.Text = "打开节点编辑器";
             // 
             // frmMain
             // 
@@ -765,7 +765,6 @@ namespace MyMapObjectsDemo2022
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.Splitter splitter3;
         private System.Windows.Forms.ToolStripMenuItem 属性表ToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem 停止编辑ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 点ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 线ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 面ToolStripMenuItem;
@@ -773,6 +772,7 @@ namespace MyMapObjectsDemo2022
         private System.Windows.Forms.ToolStripMenuItem 查看操作指南ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 停止部分ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 停止全部ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 打开节点编辑器ToolStripMenuItem;
     }
 }
 
