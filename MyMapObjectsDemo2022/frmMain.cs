@@ -1436,17 +1436,59 @@ namespace MyMapObjectsDemo2022
 
         private void 面ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            btnSketchPolygon_Click(sender, e);
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            if(moMap.Layers.GetItem(selectedIndex).ShapeType!=MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            {
+                MessageBox.Show("选择要素与图层不匹配！");
+                return;
+            }
+            else
+            {
+                btnSketchPolygon_Click(sender, e);
+            }  
         }
 
         private void 线ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mMapOpStyle = 9;
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+            {
+                MessageBox.Show("选择要素与图层不匹配！");
+                return;
+            }
+            else
+            {
+                mMapOpStyle = 9;
+            }
         }
 
         private void 点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mMapOpStyle = 10;
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.Point)
+            {
+                MessageBox.Show("选择要素与图层不匹配！");
+                return;
+            }
+            else
+            {
+                mMapOpStyle = 10;
+            }
         }
 
         private void btnEndPolylineSketch_Click(object sender, EventArgs e)    //停止编辑线
