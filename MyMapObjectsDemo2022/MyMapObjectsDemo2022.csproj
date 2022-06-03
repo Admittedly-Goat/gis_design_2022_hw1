@@ -111,6 +111,12 @@
     <Compile Include="SelectAttributeType.Designer.cs">
       <DependentUpon>SelectAttributeType.cs</DependentUpon>
     </Compile>
+    <Compile Include="SimpleRendererPoint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SimpleRendererPoint.designer.cs">
+      <DependentUpon>SimpleRendererPoint.cs</DependentUpon>
+    </Compile>
     <Compile Include="VertexEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +161,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectAttributeType.resx">
       <DependentUpon>SelectAttributeType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SimpleRendererPoint.resx">
+      <DependentUpon>SimpleRendererPoint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VertexEditor.resx">
       <DependentUpon>VertexEditor.cs</DependentUpon>

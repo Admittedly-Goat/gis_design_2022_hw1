@@ -374,7 +374,11 @@ namespace MyMapObjects
         private static void DrawSimpleMarker(Graphics g, Rectangle drawingArea, double dpm, moSimpleMarkerSymbol symbol)
         {
             if (symbol.Style == moSimpleMarkerSymbolStyleConstant.Circle)
-            { throw new NotImplementedException(); }
+            {
+                Pen pen = new Pen(symbol.Color);
+                g.DrawEllipse(pen, drawingArea);
+                pen.Dispose();
+            }
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.SolidCircle)
             {
                 SolidBrush sBrush = new SolidBrush(symbol.Color);
@@ -382,9 +386,25 @@ namespace MyMapObjects
                 sBrush.Dispose();
             }
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.Triangle)
-            { throw new NotImplementedException(); }
+            {
+                Pen pen = new Pen(symbol.Color);
+                Point p1 = new Point(drawingArea.X + drawingArea.Width / 2, drawingArea.Y + drawingArea.Height / 6);
+                Point p2 = new Point(drawingArea.X + drawingArea.Width / 6, drawingArea.Y + drawingArea.Height * 5 / 6);
+                Point p3 = new Point(drawingArea.X + drawingArea.Width * 5 / 6, drawingArea.Y + drawingArea.Height * 5 / 6);
+                Point[] pArr = { p1, p2, p3 };
+                g.DrawPolygon(pen, pArr);
+                pen.Dispose();
+            }
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.SolidTriangle)
-            { throw new NotImplementedException(); }
+            {
+                SolidBrush sBrush = new SolidBrush(symbol.Color);
+                Point p1 = new Point(drawingArea.X + drawingArea.Width / 2, drawingArea.Y + drawingArea.Height / 6);
+                Point p2 = new Point(drawingArea.X + drawingArea.Width / 6, drawingArea.Y + drawingArea.Height * 5 / 6);
+                Point p3 = new Point(drawingArea.X + drawingArea.Width * 5 / 6, drawingArea.Y + drawingArea.Height * 5 / 6);
+                Point[] pArr = { p1, p2, p3 };
+                g.FillPolygon(sBrush, pArr);
+                sBrush.Dispose();
+            }
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.Square)
             { throw new NotImplementedException(); }
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.SolidSquare)
