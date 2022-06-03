@@ -27,6 +27,7 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleFillSymbol mEditingPolygonSymbol; // 正在编辑的多边形符号
         private MyMapObjects.moSimpleLineSymbol mEditingLineSymbol; // 正在编辑的线段符号
         private MyMapObjects.moSimpleMarkerSymbol mEditingVertexSymbol; // 正在编辑的图形顶点符号
+        private MyMapObjects.moSimpleMarkerSymbol mEditingHighlightedVertexSymbol; // 正在编辑的高亮的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
         private bool mShowLngLat = false; // 是否显示经纬度
 
@@ -46,6 +47,7 @@ namespace MyMapObjectsDemo2022
         MyMapObjects.moSimpleLineSymbol lineSymbol = new MyMapObjects.moSimpleLineSymbol();   //描绘线
         private int identifySelectedLayerIndex = -1; //查询功能选择的Layer
         private propertyTable propertyTableForm; //属性表对象，作为窗体的一个附属类来进行操作，不使用复杂的委托等功能。
+        private VertexEditor vertexEditorForm; //顶点编辑窗体
         private bool isPropertyTableShowing //属性表是否正在显示
         {
             get
@@ -918,6 +920,10 @@ namespace MyMapObjectsDemo2022
             mElasticSymbol.Color = Color.DarkGreen;
             mElasticSymbol.Size = 0.52;
             mElasticSymbol.Style = MyMapObjects.moSimpleLineSymbolStyleConstant.Dash;
+            mEditingHighlightedVertexSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+            mEditingHighlightedVertexSymbol.Color = Color.Red;
+            mEditingVertexSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare;
+            mEditingVertexSymbol.Size = 2;
         }
 
         // 初始化描绘图形
@@ -1102,26 +1108,6 @@ namespace MyMapObjectsDemo2022
             {
                 MyMapObjects.moPoints sPoints = mSketchingShape[i];
                 drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
-            }
-        }
-
-        //绘制正在编辑的图形
-        private void DrawEditingShapes(MyMapObjects.moUserDrawingTool drawingTool)
-        {
-            if (mEditingGeometry == null)
-                return;
-            if (mEditingGeometry.GetType() == typeof(MyMapObjects.moMultiPolygon))
-            {
-                MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mEditingGeometry;
-                //绘制边界
-                drawingTool.DrawMultiPolygon(sMultiPolygon, mEditingPolygonSymbol);
-                //绘制顶点手柄
-                Int32 sPartCount = sMultiPolygon.Parts.Count;
-                for (Int32 i = 0; i <= sPartCount - 1; i++)
-                {
-                    MyMapObjects.moPoints sPoints = sMultiPolygon.Parts.GetItem(i);
-                    drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
-                }
             }
         }
 
@@ -1833,7 +1819,90 @@ namespace MyMapObjectsDemo2022
 
         private void 查看操作指南ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("首先，您需要在左侧选定一个想要编辑的图层。\n之后，在点击“选择节点并开始编辑”后，您需要在地图上点选想要编辑节点的图形，一个辅助性的新界面便会出现。\n之后，在新对话框上，您可以看到一些新的功能，包括几何选点、删除节点、删除部分等。");
+            MessageBox.Show("首先，您需要在左侧选定一个想要编辑的图层。\n之后，请选择您需要编辑的对象，之后开始编辑节点。\n之后，在新对话框上，您可以看到一些新的功能，包括几何选点、删除节点、删除部分等。");
+        }
+
+        //绘制正在编辑的图形
+        private void DrawEditingShapes(MyMapObjects.moUserDrawingTool drawingTool)
+        {
+            if (mEditingGeometry == null)
+                return;
+            if (mEditingGeometry.GetType() == typeof(MyMapObjects.moMultiPolygon))
+            {
+                MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mEditingGeometry;
+                //绘制边界
+                drawingTool.DrawMultiPolygon(sMultiPolygon, mEditingPolygonSymbol);
+                //绘制顶点手柄
+                Int32 sPartCount = sMultiPolygon.Parts.Count;
+                for (Int32 i = 0; i <= sPartCount - 1; i++)
+                {
+                    MyMapObjects.moPoints sPoints = sMultiPolygon.Parts.GetItem(i);
+                    drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
+                }
+                //绘制高亮顶点
+                if(vertexEditorForm != null)
+                {
+                    drawingTool.DrawPoints(vertexEditorForm.HighlightedPoints, mEditingHighlightedVertexSymbol);
+                }
+            }else if (mEditingGeometry.GetType() == typeof(MyMapObjects.moMultiPolyline))
+            {
+                MyMapObjects.moMultiPolyline sMultiPolyline = (MyMapObjects.moMultiPolyline)mEditingGeometry;
+                //绘制边界
+                drawingTool.DrawMultiPolyline(sMultiPolyline, mEditingPolygonSymbol.Outline);
+                //绘制顶点手柄
+                Int32 sPartCount = sMultiPolyline.Parts.Count;
+                for (Int32 i = 0; i <= sPartCount - 1; i++)
+                {
+                    MyMapObjects.moPoints sPoints = sMultiPolyline.Parts.GetItem(i);
+                    drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
+                }
+                //绘制高亮顶点
+                if (vertexEditorForm != null)
+                {
+                    drawingTool.DrawPoints(vertexEditorForm.HighlightedPoints, mEditingHighlightedVertexSymbol);
+                }
+            }else if (mEditingGeometry.GetType() == typeof(MyMapObjects.moPoint))
+            {
+                MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mEditingGeometry;
+                drawingTool.DrawPoint(sPoint, mEditingVertexSymbol);
+                //绘制高亮顶点
+                if (vertexEditorForm != null)
+                {
+                    drawingTool.DrawPoints(vertexEditorForm.HighlightedPoints, mEditingHighlightedVertexSymbol);
+                }
+            }
+        }
+
+        private void RedrawMapForVertexEditing()
+        {
+            moMap.RedrawMap();
+            moMap.RedrawTrackingShapes();
+        }
+
+        private void 打开节点编辑器ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还未选择任何的图层，请在左侧点击图层以选择。");
+                return;
+            }
+            var layerIndex = checkedListBox1.SelectedIndex;
+            //查找多边形图层
+            MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(layerIndex);
+            //是否有且只有一个选中的图形
+            if (sLayer.SelectedFeatures.Count != 1)
+            {
+                MessageBox.Show("您选中了不止一个要素或者没有选择要素，请您重新选择仅一个要素。");
+                return;
+            }
+            mEditingGeometry = sLayer.SelectedFeatures.GetItem(0).Geometry;
+            //设置操作类型
+            mMapOpStyle = 8;
+            //地图重回跟踪层
+            moMap.RedrawTrackingShapes();
+
+            var vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0));
+            vertexEditorForm.Show();
         }
     }
 }

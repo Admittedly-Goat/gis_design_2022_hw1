@@ -111,6 +111,12 @@
     <Compile Include="SelectAttributeType.Designer.cs">
       <DependentUpon>SelectAttributeType.cs</DependentUpon>
     </Compile>
+    <Compile Include="VertexEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VertexEditor.Designer.cs">
+      <DependentUpon>VertexEditor.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AttrSequenceChanger.resx">
       <DependentUpon>AttrSequenceChanger.cs</DependentUpon>
     </EmbeddedResource>
@@ -149,6 +155,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectAttributeType.resx">
       <DependentUpon>SelectAttributeType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VertexEditor.resx">
+      <DependentUpon>VertexEditor.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
