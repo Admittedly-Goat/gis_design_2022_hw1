@@ -2010,6 +2010,8 @@ namespace MyMapObjectsDemo2022
         private void CallBackNewPartMoMap()
         {
             mMapOpStyle = 21;
+
+        }
         private void 简单渲染ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             btnSimpleRenderer_Click(moMap, e);
