@@ -101,6 +101,11 @@ namespace MyMapObjects
             return sParts;
         }
 
+        public void RemoveAt(int index)
+        {
+            _Parts.RemoveAt(index);
+        }
+
         #endregion
 
 

@@ -389,6 +389,38 @@ namespace MyMapObjectsDemo2022
             else if (mMapOpStyle == 8) //编辑
             {
 
+            }else if (mMapOpStyle == 20)
+            {
+                OnEditingVertex_MouseDown(e);
+            }else if(mMapOpStyle == 21)
+            {
+                var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+                if (vertexEditorForm != null)
+                {
+                    vertexEditorForm.HighlightedPoints.Add(newPoint);
+                    vertexEditorForm.NewPart.Add(newPoint);
+                    RedrawMapForVertexEditing();
+                    if (vertexEditorForm.RemainingPartPointNumber == 1)
+                    {
+                        mMapOpStyle = -1;
+                        vertexEditorForm.RemainingPartPointNumber = 0;
+                        vertexEditorForm.AddPartCallBack();
+                    }
+                    else
+                    {
+                        vertexEditorForm.RemainingPartPointNumber--;
+                    }
+                }
+            }
+        }
+
+        private void OnEditingVertex_MouseDown(MouseEventArgs e)
+        {
+            var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+            if (vertexEditorForm != null)
+            {
+                vertexEditorForm.MoveVertexCallBack(newPoint);
+                mMapOpStyle = -1;
             }
         }
 
@@ -922,8 +954,8 @@ namespace MyMapObjectsDemo2022
             mElasticSymbol.Style = MyMapObjects.moSimpleLineSymbolStyleConstant.Dash;
             mEditingHighlightedVertexSymbol = new MyMapObjects.moSimpleMarkerSymbol();
             mEditingHighlightedVertexSymbol.Color = Color.Red;
-            mEditingVertexSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare;
-            mEditingVertexSymbol.Size = 2;
+            mEditingHighlightedVertexSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare;
+            mEditingHighlightedVertexSymbol.Size = 4;
         }
 
         // 初始化描绘图形
@@ -1943,8 +1975,18 @@ namespace MyMapObjectsDemo2022
             //地图重回跟踪层
             moMap.RedrawTrackingShapes();
 
-            var vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0));
+            vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0),CallBackMovingVertex,CallBackNewPartMoMap);
             vertexEditorForm.Show();
+        }
+
+        private void CallBackMovingVertex()
+        {
+            mMapOpStyle = 20;
+        }
+
+        private void CallBackNewPartMoMap()
+        {
+            mMapOpStyle = 21;
         }
     }
 }
