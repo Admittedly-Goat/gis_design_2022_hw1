@@ -571,7 +571,7 @@ namespace MyMapObjectsDemo2022
             double sTolerance = moMap.ToMapDistance(mSelectingTolerance);
             moMap.SelectByBox(sBox, sTolerance, 0);
             moMap.RedrawTrackingShapes();
-            if(propertyTableForm != null)
+            if (propertyTableForm != null)
             {
                 propertyTableForm.CanAffectLayerSelection = false;
                 propertyTableForm.ReloadPropList();
@@ -1340,6 +1340,7 @@ namespace MyMapObjectsDemo2022
             propertyTableForm.Show();
             propertyTableForm.ReloadPropList();
             propertyTableForm.CanAffectLayerSelection = true;
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         private void RedrawMapForPropertyTableChange()
@@ -1383,7 +1384,7 @@ namespace MyMapObjectsDemo2022
 
         private void 增加新要素ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void 编辑节点ToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -1393,7 +1394,7 @@ namespace MyMapObjectsDemo2022
 
         private void 停止编辑ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
             btnEndEdit_Click(sender, e);
         }
 
@@ -1495,6 +1496,303 @@ namespace MyMapObjectsDemo2022
         private void 停止部分ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             btnEndPart_Click(sender, e);
+        }
+
+        private void 属性选取ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还未选择任何的对象，点击左侧列表中的条目即可选取。");
+                return;
+            }
+            var selectedIndex = checkedListBox1.SelectedIndex;
+            SelectAttributeFields selectAttributeFieldsForm = new SelectAttributeFields(moMap.Layers.GetItem(selectedIndex));
+            selectAttributeFieldsForm.ShowDialog();
+            int selectedAttributeIndex = selectAttributeFieldsForm.SelectedFieldIndex;
+            int operatorType = -1;
+            if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dText)
+            {
+                MessageBox.Show("该字段为文本型，仅支持等于判断，已为您选择此操作类型。");
+                operatorType = 5;
+            }
+            else
+            {
+                OperatorTypeSelection operatorTypeSelection = new OperatorTypeSelection();
+                operatorTypeSelection.ShowDialog();
+                operatorType = operatorTypeSelection.OperatorType;
+            }
+            string selectValue = Microsoft.VisualBasic.Interaction.InputBox("请输入值");
+            for (int i = 0; i < moMap.Layers.Count; i++)
+            {
+                moMap.Layers.GetItem(i).SelectedFeatures.Clear();
+            }
+            try
+            {
+                for (int i = 0; i < moMap.Layers.GetItem(selectedIndex).Features.Count; i++)
+                {
+                    object featureValue = moMap.Layers.GetItem(selectedIndex).Features.GetItem(i).Attributes.GetItem(selectedAttributeIndex);
+                    if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt16)
+                    {
+                        var featureValueConverted = Convert.ToInt16(featureValue);
+                        var selectedValueConverted = Convert.ToInt16(selectValue);
+                        if (operatorType == 0)
+                        {
+                            if (featureValueConverted > selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 1)
+                        {
+                            if (featureValueConverted < selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 2)
+                        {
+                            if (featureValueConverted == selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 3)
+                        {
+                            if (featureValueConverted >= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 4)
+                        {
+                            if (featureValueConverted <= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 5)
+                        {
+                            if (featureValueConverted != selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                    }
+                    else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt32)
+                    {
+                        var featureValueConverted = Convert.ToInt32(featureValue);
+                        var selectedValueConverted = Convert.ToInt32(selectValue);
+                        if (operatorType == 0)
+                        {
+                            if (featureValueConverted > selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 1)
+                        {
+                            if (featureValueConverted < selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 2)
+                        {
+                            if (featureValueConverted == selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 3)
+                        {
+                            if (featureValueConverted >= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 4)
+                        {
+                            if (featureValueConverted <= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 5)
+                        {
+                            if (featureValueConverted != selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                    }
+                    else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt64)
+                    {
+                        var featureValueConverted = Convert.ToInt64(featureValue);
+                        var selectedValueConverted = Convert.ToInt64(selectValue);
+                        if (operatorType == 0)
+                        {
+                            if (featureValueConverted > selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 1)
+                        {
+                            if (featureValueConverted < selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 2)
+                        {
+                            if (featureValueConverted == selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 3)
+                        {
+                            if (featureValueConverted >= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 4)
+                        {
+                            if (featureValueConverted <= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 5)
+                        {
+                            if (featureValueConverted != selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                    }
+                    else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dSingle)
+                    {
+                        var featureValueConverted = Convert.ToSingle(featureValue);
+                        var selectedValueConverted = Convert.ToSingle(selectValue);
+                        if (operatorType == 0)
+                        {
+                            if (featureValueConverted > selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 1)
+                        {
+                            if (featureValueConverted < selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 2)
+                        {
+                            if (featureValueConverted == selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 3)
+                        {
+                            if (featureValueConverted >= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 4)
+                        {
+                            if (featureValueConverted <= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 5)
+                        {
+                            if (featureValueConverted != selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                    }
+                    else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dDouble)
+                    {
+                        var featureValueConverted = Convert.ToDouble(featureValue);
+                        var selectedValueConverted = Convert.ToDouble(selectValue);
+                        if (operatorType == 0)
+                        {
+                            if (featureValueConverted > selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 1)
+                        {
+                            if (featureValueConverted < selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 2)
+                        {
+                            if (featureValueConverted == selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 3)
+                        {
+                            if (featureValueConverted >= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 4)
+                        {
+                            if (featureValueConverted <= selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                        else if (operatorType == 5)
+                        {
+                            if (featureValueConverted != selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                    }
+                    else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dText)
+                    {
+                        var featureValueConverted = Convert.ToString(featureValue);
+                        var selectedValueConverted = Convert.ToString(selectValue);
+                        if (operatorType == 5)
+                        {
+                            if (featureValueConverted != selectedValueConverted)
+                            {
+                                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("输入的值有误，请重新选择。");
+            }
+            moMap.RedrawMap();
+            moMap.RedrawTrackingShapes();
+            checkedListBox1.SelectedIndex = selectedIndex;
+            if (propertyTableForm != null)
+            {
+                propertyTableForm.CanAffectLayerSelection = false;
+                propertyTableForm.ReloadPropList();
+                propertyTableForm.CanAffectLayerSelection = true;
+            }
         }
     }
 }

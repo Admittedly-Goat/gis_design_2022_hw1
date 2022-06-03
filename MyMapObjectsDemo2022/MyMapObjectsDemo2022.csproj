@@ -85,6 +85,12 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="OperatorTypeSelection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperatorTypeSelection.Designer.cs">
+      <DependentUpon>OperatorTypeSelection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="propertyTable.cs">
@@ -92,6 +98,12 @@
     </Compile>
     <Compile Include="propertyTable.Designer.cs">
       <DependentUpon>propertyTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectAttributeFields.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectAttributeFields.Designer.cs">
+      <DependentUpon>SelectAttributeFields.cs</DependentUpon>
     </Compile>
     <Compile Include="SelectAttributeType.cs">
       <SubType>Form</SubType>
@@ -117,6 +129,9 @@
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OperatorTypeSelection.resx">
+      <DependentUpon>OperatorTypeSelection.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -128,6 +143,9 @@
     </Compile>
     <EmbeddedResource Include="propertyTable.resx">
       <DependentUpon>propertyTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectAttributeFields.resx">
+      <DependentUpon>SelectAttributeFields.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SelectAttributeType.resx">
       <DependentUpon>SelectAttributeType.cs</DependentUpon>

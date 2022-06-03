@@ -303,7 +303,7 @@ namespace MyMapObjectsDemo2022
             }
         }
 
-        private void ExcludeNonSelectedRow()
+        public  void ExcludeNonSelectedRow()
         {
             if (ShowOnlySelected == true)
             {
