@@ -1,4 +1,4 @@
-namespace MyMapObjectsDemo2022
+﻿namespace MyMapObjectsDemo2022
 {
     partial class frmMain
     {
@@ -28,7 +28,7 @@ namespace MyMapObjectsDemo2022
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("当前没有查询要素");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("当前没有查询要素");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -92,8 +92,7 @@ namespace MyMapObjectsDemo2022
             this.panel5 = new System.Windows.Forms.Panel();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.查看操作指南ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.停止部分ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.停止全部ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.选择要素并打开编辑界面ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -154,10 +153,10 @@ namespace MyMapObjectsDemo2022
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode3.Name = "Node0";
-            treeNode3.Text = "当前没有查询要素";
+            treeNode4.Name = "Node0";
+            treeNode4.Text = "当前没有查询要素";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode4});
             this.treeView1.Size = new System.Drawing.Size(173, 664);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -432,37 +431,36 @@ namespace MyMapObjectsDemo2022
             // 点ToolStripMenuItem
             // 
             this.点ToolStripMenuItem.Name = "点ToolStripMenuItem";
-            this.点ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
+            this.点ToolStripMenuItem.Size = new System.Drawing.Size(87, 22);
             this.点ToolStripMenuItem.Text = "点";
             this.点ToolStripMenuItem.Click += new System.EventHandler(this.点ToolStripMenuItem_Click);
             // 
             // 线ToolStripMenuItem
             // 
             this.线ToolStripMenuItem.Name = "线ToolStripMenuItem";
-            this.线ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
+            this.线ToolStripMenuItem.Size = new System.Drawing.Size(87, 22);
             this.线ToolStripMenuItem.Text = "线";
             this.线ToolStripMenuItem.Click += new System.EventHandler(this.线ToolStripMenuItem_Click);
             // 
             // 面ToolStripMenuItem
             // 
             this.面ToolStripMenuItem.Name = "面ToolStripMenuItem";
-            this.面ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
+            this.面ToolStripMenuItem.Size = new System.Drawing.Size(87, 22);
             this.面ToolStripMenuItem.Text = "面";
             this.面ToolStripMenuItem.Click += new System.EventHandler(this.面ToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.停止部分ToolStripMenuItem,
-            this.停止全部ToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem1.Text = "停止描绘";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // 编辑节点ToolStripMenuItem
             // 
             this.编辑节点ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.查看操作指南ToolStripMenuItem});
+            this.查看操作指南ToolStripMenuItem,
+            this.选择要素并打开编辑界面ToolStripMenuItem});
             this.编辑节点ToolStripMenuItem.Name = "编辑节点ToolStripMenuItem";
             this.编辑节点ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.编辑节点ToolStripMenuItem.Text = "编辑图形节点";
@@ -661,19 +659,12 @@ namespace MyMapObjectsDemo2022
             this.查看操作指南ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.查看操作指南ToolStripMenuItem.Text = "查看操作指南";
             this.查看操作指南ToolStripMenuItem.Click += new System.EventHandler(this.查看操作指南ToolStripMenuItem_Click);
-            // 停止部分ToolStripMenuItem
             // 
-            this.停止部分ToolStripMenuItem.Name = "停止部分ToolStripMenuItem";
-            this.停止部分ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.停止部分ToolStripMenuItem.Text = "停止部分";
-            this.停止部分ToolStripMenuItem.Click += new System.EventHandler(this.停止部分ToolStripMenuItem_Click);
+            // 选择要素并打开编辑界面ToolStripMenuItem
             // 
-            // 停止全部ToolStripMenuItem
-            // 
-            this.停止全部ToolStripMenuItem.Name = "停止全部ToolStripMenuItem";
-            this.停止全部ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.停止全部ToolStripMenuItem.Text = "停止全部";
-            this.停止全部ToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.选择要素并打开编辑界面ToolStripMenuItem.Name = "选择要素并打开编辑界面ToolStripMenuItem";
+            this.选择要素并打开编辑界面ToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.选择要素并打开编辑界面ToolStripMenuItem.Text = "选择要素并打开编辑界面";
             // 
             // frmMain
             // 
@@ -771,8 +762,7 @@ namespace MyMapObjectsDemo2022
         private System.Windows.Forms.ToolStripMenuItem 面ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 查看操作指南ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 停止部分ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 停止全部ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 选择要素并打开编辑界面ToolStripMenuItem;
     }
 }
 
