@@ -16,7 +16,7 @@ namespace MyMapObjects
         private double _mpu = 1.0;                      //1个地图坐标单位代表的米数，一般为1.
 
         private const double mcMaxMapScale = 10000000000;    //地图显示比例尺倒数的最大值,100亿
-        private const double mcMinMapScale = 100;
+        private const double mcMinMapScale = 10;
 
         #endregion
 

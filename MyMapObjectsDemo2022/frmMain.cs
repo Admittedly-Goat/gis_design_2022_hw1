@@ -41,6 +41,7 @@ namespace MyMapObjectsDemo2022
         private List<MyMapObjects.moGeometry> mMovingGeometries = new List<MyMapObjects.moGeometry>(); // 正在移动的图形的集合
         private MyMapObjects.moGeometry mEditingGeometry; // 正在编辑的图形
         private List<MyMapObjects.moPoints> mSketchingShape; // 正在描绘的图形，用一个多点集合存储
+        MyMapObjects.moSimpleMarkerSymbol pSymbol = new MyMapObjects.moSimpleMarkerSymbol();  //描绘点
         private int identifySelectedLayerIndex = -1; //查询功能选择的Layer
         private propertyTable propertyTableForm; //属性表对象，作为窗体的一个附属类来进行操作，不使用复杂的委托等功能。
         private bool isPropertyTableShowing //属性表是否正在显示
@@ -638,7 +639,7 @@ namespace MyMapObjectsDemo2022
             {
 
             }
-            else if (mMapOpStyle == 7) //描绘
+            else if (mMapOpStyle == 7) //描绘多边形
             {
                 OnSketch_MouseClick(e);
             }
@@ -646,6 +647,21 @@ namespace MyMapObjectsDemo2022
             {
 
             }
+            else if(mMapOpStyle==10)  //描绘点
+            {
+                OnSketchPoint_MouseClick(e);
+            }
+        }
+
+
+        private void OnSketchPoint_MouseClick(MouseEventArgs e)
+        {
+            //将屏幕坐标转换为地图坐标并加入描绘图形
+            MyMapObjects.moPoint sPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+            mSketchingShape.Last().Add(sPoint);
+            //地图控件重绘跟踪图层
+            MyMapObjects.moUserDrawingTool dTool = moMap.GetDrawingTool();
+            dTool.DrawPoints(mSketchingShape.Last(), pSymbol);
         }
 
         private void OnSketch_MouseClick(MouseEventArgs e)
@@ -706,6 +722,8 @@ namespace MyMapObjectsDemo2022
         private void OnSketch_MouseMove(MouseEventArgs e)
         {
             MyMapObjects.moPoint sCurPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+            if (mSketchingShape.Count == 0)
+                return;
             MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
             Int32 sPointCount = sLastPart.Count;
             if (sPointCount == 0)
@@ -906,6 +924,38 @@ namespace MyMapObjectsDemo2022
             return sLayer;
         }
 
+        //获取一个线图层
+        private MyMapObjects.moMapLayer GetLineLayer()
+        {
+            Int32 sLayerCount = moMap.Layers.Count;
+            MyMapObjects.moMapLayer sLayer = null;
+            for (Int32 i = 0; i <= sLayerCount - 1; i++)
+            {
+                if (moMap.Layers.GetItem(i).ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    sLayer = moMap.Layers.GetItem(i);
+                    break;
+                }
+            }
+            return sLayer;
+        }
+
+        //获取一个点图层
+        private MyMapObjects.moMapLayer GetPointLayer()
+        {
+            Int32 sLayerCount = moMap.Layers.Count;
+            MyMapObjects.moMapLayer sLayer = null;
+            for (Int32 i = 0; i <= sLayerCount - 1; i++)
+            {
+                if (moMap.Layers.GetItem(i).ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    sLayer = moMap.Layers.GetItem(i);
+                    break;
+                }
+            }
+            return sLayer;
+        }
+
         //根据指定的平移量修改移动图形的坐标
         private void ModifyMovingGeometries(double deltaX, double deltaY)
         {
@@ -959,6 +1009,8 @@ namespace MyMapObjectsDemo2022
                 drawingTool.DrawPolygon(mSketchingShape[i], mEditingPolygonSymbol);
             }
             //正在描绘的部分（只有一个Part）
+            if (mSketchingShape.Count == 0)
+                return;
             MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
             if (sLastPart.Count >= 2)
                 drawingTool.DrawPolyline(sLastPart, mEditingPolygonSymbol.Outline);
@@ -1284,7 +1336,41 @@ namespace MyMapObjectsDemo2022
 
         private void 增加新要素ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
+        }
 
+        private void 编辑节点ToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            btnEditPolygon_Click(sender, e);
+        }
+
+        private void 停止编辑ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            btnEndEdit_Click(sender, e);
+        }
+
+        private void 面ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            btnSketchPolygon_Click(sender, e);
+        }
+
+        private void 线ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mMapOpStyle = 9;
+        }
+
+        private void 点ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mMapOpStyle = 10;
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            btnEndPart_Click(sender, e);
+            btnEndSketch_Click(sender, e);
+            mSketchingShape.Last().Clear();
+            moMap.RedrawMap();
         }
     }
 }
