@@ -140,19 +140,42 @@ namespace MyMapObjectsDemo2022
 
         private void btnSimpleRenderer_Click(object sender, EventArgs e)
         {
-            //（1）查找多边形图层
-            MyMapObjects.moMapLayer sLayer = GetPolygonLayer();
-            if (sLayer == null)
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
+            moMap.Refresh();
+            if (moMap.Layers.Count == 0)
             {
                 return;
-
             }
-            //(2)新建一个简单渲染对象
-            MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
-            MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
-            sRenderer.Symbol = sSymbol;
-            sLayer.Renderer = sRenderer;
-            moMap.RedrawMap();
+            else
+            {
+                MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
+                MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
+                if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    MyMapObjects.moSimpleMarkerSymbol sSymbol_point = new MyMapObjects.moSimpleMarkerSymbol();
+                    SimpleRendererPoint cForm = new SimpleRendererPoint();
+                    cForm.ShowDialog();
+                    sRenderer.Symbol = sSymbol_point;
+                }
+                else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    MyMapObjects.moSimpleLineSymbol sSymbol_line = new MyMapObjects.moSimpleLineSymbol();
+                    sRenderer.Symbol = sSymbol_line;
+                }
+                else
+                {
+                    MyMapObjects.moSimpleFillSymbol sSymbol_polygon = new MyMapObjects.moSimpleFillSymbol();
+                    sRenderer.Symbol = sSymbol_polygon;
+                }
+                sLayer.Renderer = sRenderer;
+                moMap.RedrawMap();
+            }
+            checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
         }
 
         private void btnUniqueValue_Click(object sender, EventArgs e)
@@ -1945,6 +1968,11 @@ namespace MyMapObjectsDemo2022
 
             var vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0));
             vertexEditorForm.Show();
+        }
+
+        private void 简单渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            btnSimpleRenderer_Click(moMap, e);
         }
     }
 }
