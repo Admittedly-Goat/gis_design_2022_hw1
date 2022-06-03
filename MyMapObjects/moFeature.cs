@@ -80,9 +80,21 @@ namespace MyMapObjects
             moRectangle sRect = null;
             if (_ShapeType == moGeometryTypeConstant.Point)
             {
-                moPoint sPoint = (moPoint)_Geometry;
-                sRect = new moRectangle(sPoint.X, sPoint.X,
+                
+                if(_Geometry.GetType()==typeof(moPoint))
+                {
+                    moPoint sPoint = (moPoint)_Geometry;
+                    sRect = new moRectangle(sPoint.X, sPoint.X,
                     sPoint.Y, sPoint.Y);
+                }
+                else
+                {
+                    moPoints sPoints = (moPoints)_Geometry;
+                    moPoint sPoint = sPoints.GetItem(0);
+                    sRect = new moRectangle(sPoint.X, sPoint.X,
+                    sPoint.Y, sPoint.Y);
+                }   
+                
             }
             else if (_ShapeType ==
                 moGeometryTypeConstant.MultiPolyline)
