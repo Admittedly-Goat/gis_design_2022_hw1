@@ -28,7 +28,7 @@ namespace MyMapObjectsDemo2022
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("当前没有查询要素");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("当前没有查询要素");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -154,10 +154,10 @@ namespace MyMapObjectsDemo2022
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Node0";
-            treeNode1.Text = "当前没有查询要素";
+            treeNode2.Name = "Node0";
+            treeNode2.Text = "当前没有查询要素";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.treeView1.Size = new System.Drawing.Size(173, 664);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -672,8 +672,8 @@ namespace MyMapObjectsDemo2022
             // 打开节点编辑器ToolStripMenuItem
             // 
             this.打开节点编辑器ToolStripMenuItem.Name = "打开节点编辑器ToolStripMenuItem";
-            this.打开节点编辑器ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.打开节点编辑器ToolStripMenuItem.Text = "打开节点编辑器";
+            this.打开节点编辑器ToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.打开节点编辑器ToolStripMenuItem.Text = "选择要素并开始编辑";
             // 
             // frmMain
             // 
