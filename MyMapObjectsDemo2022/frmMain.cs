@@ -25,6 +25,7 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleFillSymbol mZoomBoxSymbol; // 缩放盒符号
         private MyMapObjects.moSimpleFillSymbol mMovingPolygonSymbol; // 正在移动的多边形符号
         private MyMapObjects.moSimpleFillSymbol mEditingPolygonSymbol; // 正在编辑的多边形符号
+        private MyMapObjects.moSimpleFillSymbol mEditingLineSymbol; // 正在编辑的线段符号
         private MyMapObjects.moSimpleMarkerSymbol mEditingVertexSymbol; // 正在编辑的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
         private bool mShowLngLat = false; // 是否显示经纬度
@@ -856,7 +857,14 @@ namespace MyMapObjectsDemo2022
 
         private void moMap_AfterTrackingLayerDraw(object sender, MyMapObjects.moUserDrawingTool drawingTool)
         {
-            DrawSketchingShapes(drawingTool); //绘制描绘图形
+            if (mMapOpStyle == 9)
+            {
+                DrawSketchingShapesLine(drawingTool); //绘制描绘图形
+            }
+            else
+            {
+                DrawSketchingShapes(drawingTool);
+            }
             DrawEditingShapes(drawingTool); //绘制正在编辑的图形
         }
 
@@ -899,6 +907,9 @@ namespace MyMapObjectsDemo2022
             mEditingPolygonSymbol.Color = Color.Transparent;
             mEditingPolygonSymbol.Outline.Color = Color.DarkGreen;
             mEditingPolygonSymbol.Outline.Size = 0.53;
+            mEditingLineSymbol = new MyMapObjects.moSimpleFillSymbol();
+            mEditingLineSymbol.Color = Color.DarkGreen;
+            mEditingLineSymbol.Outline.Size = 0.53;
             mEditingVertexSymbol = new MyMapObjects.moSimpleMarkerSymbol();
             mEditingVertexSymbol.Color = Color.DarkGreen;
             mEditingVertexSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare;
@@ -1044,7 +1055,7 @@ namespace MyMapObjectsDemo2022
             }
         }
 
-        //绘制正在描绘的图形
+        //绘制正在描绘的图形。针对多边形
         private void DrawSketchingShapes(MyMapObjects.moUserDrawingTool drawingTool)
         {
             if (mSketchingShape == null)
@@ -1054,6 +1065,31 @@ namespace MyMapObjectsDemo2022
             for (Int32 i = 0; i <= sPartCount - 2; i++)
             {
                 drawingTool.DrawPolygon(mSketchingShape[i], mEditingPolygonSymbol);
+            }
+            //正在描绘的部分（只有一个Part）
+            if (mSketchingShape.Count == 0)
+                return;
+            MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
+            if (sLastPart.Count >= 2)
+                drawingTool.DrawPolyline(sLastPart, mEditingPolygonSymbol.Outline);
+            //绘制所有顶点手柄
+            for (Int32 i = 0; i <= sPartCount - 1; i++)
+            {
+                MyMapObjects.moPoints sPoints = mSketchingShape[i];
+                drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
+            }
+        }
+
+        //绘制正在描绘的图形，针对线段设计
+        private void DrawSketchingShapesLine(MyMapObjects.moUserDrawingTool drawingTool)
+        {
+            if (mSketchingShape == null)
+                return;
+            Int32 sPartCount = mSketchingShape.Count;
+            //绘制已经描绘完成的部分
+            for (Int32 i = 0; i <= sPartCount - 2; i++)
+            {
+                drawingTool.DrawPolyline(mSketchingShape[i], mEditingLineSymbol);
             }
             //正在描绘的部分（只有一个Part）
             if (mSketchingShape.Count == 0)
