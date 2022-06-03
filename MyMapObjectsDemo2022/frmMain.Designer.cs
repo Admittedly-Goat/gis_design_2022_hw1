@@ -1,4 +1,4 @@
-﻿namespace MyMapObjectsDemo2022
+namespace MyMapObjectsDemo2022
 {
     partial class frmMain
     {
@@ -92,6 +92,8 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.查看操作指南ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.停止部分ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.停止全部ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -430,30 +432,32 @@
             // 点ToolStripMenuItem
             // 
             this.点ToolStripMenuItem.Name = "点ToolStripMenuItem";
-            this.点ToolStripMenuItem.Size = new System.Drawing.Size(87, 22);
+            this.点ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
             this.点ToolStripMenuItem.Text = "点";
             this.点ToolStripMenuItem.Click += new System.EventHandler(this.点ToolStripMenuItem_Click);
             // 
             // 线ToolStripMenuItem
             // 
             this.线ToolStripMenuItem.Name = "线ToolStripMenuItem";
-            this.线ToolStripMenuItem.Size = new System.Drawing.Size(87, 22);
+            this.线ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
             this.线ToolStripMenuItem.Text = "线";
             this.线ToolStripMenuItem.Click += new System.EventHandler(this.线ToolStripMenuItem_Click);
             // 
             // 面ToolStripMenuItem
             // 
             this.面ToolStripMenuItem.Name = "面ToolStripMenuItem";
-            this.面ToolStripMenuItem.Size = new System.Drawing.Size(87, 22);
+            this.面ToolStripMenuItem.Size = new System.Drawing.Size(88, 22);
             this.面ToolStripMenuItem.Text = "面";
             this.面ToolStripMenuItem.Click += new System.EventHandler(this.面ToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.停止部分ToolStripMenuItem,
+            this.停止全部ToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem1.Text = "停止描绘";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // 编辑节点ToolStripMenuItem
             // 
@@ -657,6 +661,19 @@
             this.查看操作指南ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.查看操作指南ToolStripMenuItem.Text = "查看操作指南";
             this.查看操作指南ToolStripMenuItem.Click += new System.EventHandler(this.查看操作指南ToolStripMenuItem_Click);
+            // 停止部分ToolStripMenuItem
+            // 
+            this.停止部分ToolStripMenuItem.Name = "停止部分ToolStripMenuItem";
+            this.停止部分ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.停止部分ToolStripMenuItem.Text = "停止部分";
+            this.停止部分ToolStripMenuItem.Click += new System.EventHandler(this.停止部分ToolStripMenuItem_Click);
+            // 
+            // 停止全部ToolStripMenuItem
+            // 
+            this.停止全部ToolStripMenuItem.Name = "停止全部ToolStripMenuItem";
+            this.停止全部ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.停止全部ToolStripMenuItem.Text = "停止全部";
+            this.停止全部ToolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // frmMain
             // 
@@ -754,6 +771,8 @@
         private System.Windows.Forms.ToolStripMenuItem 面ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 查看操作指南ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 停止部分ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 停止全部ToolStripMenuItem;
     }
 }
 

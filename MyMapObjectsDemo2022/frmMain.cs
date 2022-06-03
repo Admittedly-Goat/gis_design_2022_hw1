@@ -42,6 +42,7 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moGeometry mEditingGeometry; // 正在编辑的图形
         private List<MyMapObjects.moPoints> mSketchingShape; // 正在描绘的图形，用一个多点集合存储
         MyMapObjects.moSimpleMarkerSymbol pSymbol = new MyMapObjects.moSimpleMarkerSymbol();  //描绘点
+        MyMapObjects.moSimpleLineSymbol lineSymbol = new MyMapObjects.moSimpleLineSymbol();   //描绘线
         private int identifySelectedLayerIndex = -1; //查询功能选择的Layer
         private propertyTable propertyTableForm; //属性表对象，作为窗体的一个附属类来进行操作，不使用复杂的委托等功能。
         private bool isPropertyTableShowing //属性表是否正在显示
@@ -647,12 +648,25 @@ namespace MyMapObjectsDemo2022
             {
 
             }
-            else if (mMapOpStyle == 10)  //描绘点
+            else if(mMapOpStyle==9)  //描绘线
+            {
+                OnSketchPolyline_MouseClick(e);
+            }
+            else if(mMapOpStyle==10)  //描绘点
             {
                 OnSketchPoint_MouseClick(e);
             }
         }
 
+
+        private void OnSketchPolyline_MouseClick(MouseEventArgs e)
+        {
+            //将屏幕坐标转换为地图坐标并加入描绘图形
+            MyMapObjects.moPoint sPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+            mSketchingShape.Last().Add(sPoint);
+            //地图控件重绘跟踪图层
+            moMap.RedrawTrackingShapes();
+        }
 
         private void OnSketchPoint_MouseClick(MouseEventArgs e)
         {
@@ -715,7 +729,40 @@ namespace MyMapObjectsDemo2022
             {
 
             }
+            else if(mMapOpStyle==9)
+            {
+                OnSketchLine_MouseMove(e);
+            }
             ShowCoordinates(e.Location); //显示鼠标位置的地图坐标
+        }
+
+        //描绘线状态下鼠标移动
+        private void OnSketchLine_MouseMove(MouseEventArgs e)
+        {
+            MyMapObjects.moPoint sCurPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+            if (mSketchingShape.Count == 0)
+                return;
+            MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
+            Int32 sPointCount = sLastPart.Count;
+            if (sPointCount == 0)
+            {
+            }
+            else if (sPointCount == 1)
+            {
+                moMap.Refresh();
+                MyMapObjects.moPoint sFirstPoint = sLastPart.GetItem(0);
+                MyMapObjects.moUserDrawingTool sDrawingTool = moMap.GetDrawingTool();
+                sDrawingTool.DrawLine(sFirstPoint, sCurPoint, mElasticSymbol);
+            }
+            else
+            {
+                moMap.Refresh();
+                MyMapObjects.moPoint sFirstPoint = sLastPart.GetItem(0);
+                MyMapObjects.moPoint sLastPoint = sLastPart.GetItem(sPointCount - 1);
+                MyMapObjects.moUserDrawingTool sDrawingTool = moMap.GetDrawingTool();
+                //sDrawingTool.DrawLine(sFirstPoint, sCurPoint, mElasticSymbol);
+                sDrawingTool.DrawLine(sLastPoint, sCurPoint, mElasticSymbol);
+            }
         }
 
         //描绘状态下鼠标移动
@@ -1366,12 +1413,89 @@ namespace MyMapObjectsDemo2022
             mMapOpStyle = 10;
         }
 
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        private void btnEndPolylineSketch_Click(object sender, EventArgs e)    //停止编辑线
+        {
+            if (mSketchingShape.Last().Count == 1)
+            {
+                return;
+            }
+            if (mSketchingShape.Last().Count == 0)
+            {
+                mSketchingShape.Remove(mSketchingShape.Last());
+
+            }
+            if (mSketchingShape.Count > 0)
+            {
+                MyMapObjects.moMapLayer sLayer = GetLineLayer();
+                if (sLayer != null)
+                {
+                    MyMapObjects.moMultiPolyline sMultiPolyline = new MyMapObjects.moMultiPolyline();
+                    sMultiPolyline.Parts.AddRange(mSketchingShape.ToArray());
+                    sMultiPolyline.UpdateExtent();
+                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
+                    sFeature.Geometry = sMultiPolyline;
+                    sLayer.Features.Add(sFeature);
+                }
+            }
+            InitializeSketchingShape();
+            moMap.RedrawMap();
+        }
+
+        private void btnEndPointSketch_Click(object sender,EventArgs e)    //停止编辑点
+        {
+            if (mSketchingShape.Last().Count == 0)
+            {
+                mSketchingShape.Remove(mSketchingShape.Last());
+
+            }
+            if (mSketchingShape.Count > 0)
+            {
+                MyMapObjects.moMapLayer sLayer = GetPointLayer();
+                if (sLayer != null)
+                {
+                    MyMapObjects.moPoints sPoints = new MyMapObjects.moPoints();
+                    sPoints.AddRange(mSketchingShape.Last().ToArray());
+                    for (int i = 0; i < sPoints.Count; i++)
+                    {
+                        MyMapObjects.moPoint sPoint = sPoints.GetItem(i);
+                        MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
+                        sFeature.Geometry = sPoint;
+                        sLayer.Features.Add(sFeature);
+                    }
+                    MyMapObjects.moUserDrawingTool dTool = moMap.GetDrawingTool();
+                    dTool.DrawPoints(sPoints, pSymbol);
+                }
+            }
+            InitializeSketchingShape();
+            moMap.RedrawMap();
+        
+    }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)  //停止描绘
+        {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            if (moMap.Layers.GetItem(selectedIndex).ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)   //描绘多边形
+            {
+                btnEndSketch_Click(sender, e);
+            }
+            else if (moMap.Layers.GetItem(selectedIndex).ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)    //描绘线
+            {
+                btnEndPolylineSketch_Click(sender, e);
+            }
+            else if (moMap.Layers.GetItem(selectedIndex).ShapeType == MyMapObjects.moGeometryTypeConstant.Point)    //描绘点
+            {
+                btnEndPointSketch_Click(sender, e);
+            }
+        }
+
+        private void 停止部分ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             btnEndPart_Click(sender, e);
-            btnEndSketch_Click(sender, e);
-            mSketchingShape.Last().Clear();
-            moMap.RedrawMap();
         }
 
         private void 属性选取ToolStripMenuItem_Click(object sender, EventArgs e)

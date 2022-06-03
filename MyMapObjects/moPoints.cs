@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyMapObjects
 {
-    public class moPoints
+    public class moPoints:moGeometry
     {
         #region 字段
 
