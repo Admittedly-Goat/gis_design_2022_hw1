@@ -236,8 +236,9 @@ namespace MyMapObjectsDemo2022
                 }
                 catch
                 {
-                    MessageBox.Show($"输入数据有误，请重新输入。该字段的类型为：{Layer.AttributeFields.GetItem(i).ValueType.ToString()}");
-                    continue;
+                    MessageBox.Show($"输入数据有误，数据未更改。该字段的类型为：{Layer.AttributeFields.GetItem(i).ValueType.ToString()}");
+                    ReloadPropList();
+                    break;
                 }
             }
 
