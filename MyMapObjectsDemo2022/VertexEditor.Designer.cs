@@ -107,12 +107,14 @@
             this.在上部ToolStripMenuItem1.Name = "在上部ToolStripMenuItem1";
             this.在上部ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.在上部ToolStripMenuItem1.Text = "在上部";
+            this.在上部ToolStripMenuItem1.Click += new System.EventHandler(this.在上部ToolStripMenuItem1_Click);
             // 
             // 在下部ToolStripMenuItem1
             // 
             this.在下部ToolStripMenuItem1.Name = "在下部ToolStripMenuItem1";
             this.在下部ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.在下部ToolStripMenuItem1.Text = "在下部";
+            this.在下部ToolStripMenuItem1.Click += new System.EventHandler(this.在下部ToolStripMenuItem1_Click);
             // 
             // 结束并保存ToolStripMenuItem
             // 

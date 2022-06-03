@@ -19,6 +19,8 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moFeature SelectedFeature;
         public MyMapObjects.moPoints NewPart;
         public int RemainingPartPointNumber;
+        private int AddVertexPartIndex;
+        private int AddVertexPointIndex;
         private void ReloadAllPartsAndPoints()
         {
             listBox1.Items.Clear();
@@ -304,6 +306,68 @@ namespace MyMapObjectsDemo2022
                 featureGeom.UpdateExtent();
             }
 
+        }
+
+        private void 在上部ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AddVertex(0);
+        }
+
+        private void 在下部ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AddVertex(1);
+        }
+
+        private void AddVertex(int pointIndexDelta)
+        {
+            // TODO!!!
+            if (listBox1.SelectedIndex == -1)
+            {
+                return;
+            }
+            string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
+            if (selectedText.EndsWith("节点"))
+            {
+                if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    AddVertexPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
+                    AddVertexPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1])+pointIndexDelta;
+                    var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                  /*  if (featureGeom.Parts.GetItem(selectedPartIndex).Count <= 2)
+                    {
+                        MessageBox.Show("线段少于2个点，无法继续操作，请直接删除部分。");
+                        return;
+                    }
+                    featureGeom.Parts.GetItem(selectedPartIndex).RemoveAt(selectedPointIndex);
+                    featureGeom.UpdateExtent();*/
+
+                }
+                else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
+                    int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
+                    var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                    if (featureGeom.Parts.GetItem(selectedPartIndex).Count <= 3)
+                    {
+                        MessageBox.Show("多边形少于3个点，无法继续操作，请直接删除部分。");
+                        return;
+                    }
+                    featureGeom.Parts.GetItem(selectedPartIndex).RemoveAt(selectedPointIndex);
+                    featureGeom.UpdateExtent();
+                }
+                else
+                {
+                    MessageBox.Show("单点无法添加新节点。");
+                    return;
+                }
+                HighlightedPoints.Clear();
+                RedrawMap();
+                ReloadAllPartsAndPoints();
+            }
+            else if (selectedText.EndsWith("部分"))
+            {
+                MessageBox.Show("您选择的是部分，请选择节点。");
+            }
         }
     }
 }
