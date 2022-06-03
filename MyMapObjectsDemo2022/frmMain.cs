@@ -25,7 +25,7 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleFillSymbol mZoomBoxSymbol; // 缩放盒符号
         private MyMapObjects.moSimpleFillSymbol mMovingPolygonSymbol; // 正在移动的多边形符号
         private MyMapObjects.moSimpleFillSymbol mEditingPolygonSymbol; // 正在编辑的多边形符号
-        private MyMapObjects.moSimpleFillSymbol mEditingLineSymbol; // 正在编辑的线段符号
+        private MyMapObjects.moSimpleLineSymbol mEditingLineSymbol; // 正在编辑的线段符号
         private MyMapObjects.moSimpleMarkerSymbol mEditingVertexSymbol; // 正在编辑的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
         private bool mShowLngLat = false; // 是否显示经纬度
@@ -907,9 +907,9 @@ namespace MyMapObjectsDemo2022
             mEditingPolygonSymbol.Color = Color.Transparent;
             mEditingPolygonSymbol.Outline.Color = Color.DarkGreen;
             mEditingPolygonSymbol.Outline.Size = 0.53;
-            mEditingLineSymbol = new MyMapObjects.moSimpleFillSymbol();
+            mEditingLineSymbol = new MyMapObjects.moSimpleLineSymbol();
             mEditingLineSymbol.Color = Color.DarkGreen;
-            mEditingLineSymbol.Outline.Size = 0.53;
+            mEditingLineSymbol.Size = 0.53;
             mEditingVertexSymbol = new MyMapObjects.moSimpleMarkerSymbol();
             mEditingVertexSymbol.Color = Color.DarkGreen;
             mEditingVertexSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare;
@@ -1096,7 +1096,7 @@ namespace MyMapObjectsDemo2022
                 return;
             MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
             if (sLastPart.Count >= 2)
-                drawingTool.DrawPolyline(sLastPart, mEditingPolygonSymbol.Outline);
+                drawingTool.DrawPolyline(sLastPart, mEditingLineSymbol);
             //绘制所有顶点手柄
             for (Int32 i = 0; i <= sPartCount - 1; i++)
             {
