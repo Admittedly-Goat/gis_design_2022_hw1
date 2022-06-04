@@ -1319,7 +1319,8 @@ namespace MyMapObjectsDemo2022
 
         private void 详情面板ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            ChangeLayerOrder cForm = new ChangeLayerOrder(moMap.Layers, moMap);
+            cForm.ShowDialog();
         }
 
         private void 编辑节点ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2188,5 +2189,26 @@ namespace MyMapObjectsDemo2022
         {
             btnClassBreaks_Click(moMap, e);
         }
+
+        private void 更改图层注记ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
+            MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
+            MyMapObjects.moLabelRenderer sLabelRenderer = new MyMapObjects.moLabelRenderer();
+            LabelRenderer cForm = new LabelRenderer(sLayer, sLabelRenderer, moMap);
+            cForm.ShowDialog();
+
+
+
+        }
+
+        //private void ToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+
+
+
+        //}
+    
+
     }
 }

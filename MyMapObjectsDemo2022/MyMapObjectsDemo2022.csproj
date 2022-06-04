@@ -54,6 +54,12 @@
     <Compile Include="AttrSequenceChanger.Designer.cs">
       <DependentUpon>AttrSequenceChanger.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChangeLayerOrder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeLayerOrder.Designer.cs">
+      <DependentUpon>ChangeLayerOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChangeNameOfLayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +108,12 @@
     </Compile>
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LabelRenderer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LabelRenderer.Designer.cs">
+      <DependentUpon>LabelRenderer.cs</DependentUpon>
     </Compile>
     <Compile Include="OperatorTypeSelection.cs">
       <SubType>Form</SubType>
@@ -168,6 +180,9 @@
     <EmbeddedResource Include="AttrSequenceChanger.resx">
       <DependentUpon>AttrSequenceChanger.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ChangeLayerOrder.resx">
+      <DependentUpon>ChangeLayerOrder.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ChangeNameOfLayer.resx">
       <DependentUpon>ChangeNameOfLayer.cs</DependentUpon>
     </EmbeddedResource>
@@ -191,6 +206,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LabelRenderer.resx">
+      <DependentUpon>LabelRenderer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OperatorTypeSelection.resx">
       <DependentUpon>OperatorTypeSelection.cs</DependentUpon>

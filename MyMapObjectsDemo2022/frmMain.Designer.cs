@@ -210,7 +210,7 @@ namespace MyMapObjectsDemo2022
             this.geoJSONToolStripMenuItem,
             this.lay文件课上实习格式ToolStripMenuItem});
             this.addLayer.Name = "addLayer";
-            this.addLayer.Size = new System.Drawing.Size(100, 22);
+            this.addLayer.Size = new System.Drawing.Size(180, 22);
             this.addLayer.Text = "打开";
             // 
             // 土木GISToolStripMenuItem
@@ -239,7 +239,7 @@ namespace MyMapObjectsDemo2022
             this.保存当前项目为土木GIS工程文件ToolStripMenuItem,
             this.保存图层为GeoJSONToolStripMenuItem});
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.保存ToolStripMenuItem.Text = "保存";
             // 
             // 保存当前项目为土木GIS工程文件ToolStripMenuItem
@@ -260,7 +260,7 @@ namespace MyMapObjectsDemo2022
             this.导出ToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.导出地图为bitmapToolStripMenuItem});
             this.导出ToolStripMenuItem1.Name = "导出ToolStripMenuItem1";
-            this.导出ToolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
+            this.导出ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.导出ToolStripMenuItem1.Text = "导出";
             // 
             // 导出地图为bitmapToolStripMenuItem
@@ -343,21 +343,21 @@ namespace MyMapObjectsDemo2022
             // 简单渲染ToolStripMenuItem
             // 
             this.简单渲染ToolStripMenuItem.Name = "简单渲染ToolStripMenuItem";
-            this.简单渲染ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.简单渲染ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.简单渲染ToolStripMenuItem.Text = "简单渲染";
             this.简单渲染ToolStripMenuItem.Click += new System.EventHandler(this.简单渲染ToolStripMenuItem_Click);
             // 
             // 唯一值渲染ToolStripMenuItem
             // 
             this.唯一值渲染ToolStripMenuItem.Name = "唯一值渲染ToolStripMenuItem";
-            this.唯一值渲染ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.唯一值渲染ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.唯一值渲染ToolStripMenuItem.Text = "唯一值渲染";
             this.唯一值渲染ToolStripMenuItem.Click += new System.EventHandler(this.唯一值渲染ToolStripMenuItem_Click);
             // 
             // 分级渲染ToolStripMenuItem
             // 
             this.分级渲染ToolStripMenuItem.Name = "分级渲染ToolStripMenuItem";
-            this.分级渲染ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.分级渲染ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.分级渲染ToolStripMenuItem.Text = "分级渲染";
             this.分级渲染ToolStripMenuItem.Click += new System.EventHandler(this.分级渲染ToolStripMenuItem_Click);
             // 
@@ -366,6 +366,7 @@ namespace MyMapObjectsDemo2022
             this.更改图层注记ToolStripMenuItem.Name = "更改图层注记ToolStripMenuItem";
             this.更改图层注记ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.更改图层注记ToolStripMenuItem.Text = "更改图层注记";
+            this.更改图层注记ToolStripMenuItem.Click += new System.EventHandler(this.更改图层注记ToolStripMenuItem_Click);
             // 
             // 修改名称ToolStripMenuItem
             // 
