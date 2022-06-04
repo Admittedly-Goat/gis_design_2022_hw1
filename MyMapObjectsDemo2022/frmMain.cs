@@ -623,7 +623,7 @@ namespace MyMapObjectsDemo2022
             }
         }
 
-        //移动图形状态下鼠标松开
+        //移动图形状态下鼠标松开(需要实现展示移动结果)
         private void OnMoveShape_MouseUp(MouseEventArgs e)
         {
             if (mIsInMovingShapes == false)
@@ -632,20 +632,45 @@ namespace MyMapObjectsDemo2022
             }
             mIsInMovingShapes = false;
             //更新图层要素的数据
+            int sCount = mMovingGeometries.Count;
+            MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(checklistIndex);
+
+            //删除原有选中要素（删除的是选中要素list，如果多图层选中的话有问题）
+            int selectedIndex = checklistIndex;
+            int count = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Count;
+            for (Int32 i = 0; i < count; i++)
+            {
+                MyMapObjects.moFeature feature = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
+                moMap.Layers.GetItem(selectedIndex).Features.Remove(feature);
+            }
+            //更新新要素的坐标（距离有问题）
             double sDeltaX = moMap.ToMapDistance(e.Location.X - mOriginMouseLocation.X);
             double sDeltaY = moMap.ToMapDistance(mOriginMouseLocation.Y - e.Location.Y);
-            MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(checklistIndex);
-            if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            ModifyMovingGeometries(sDeltaX, sDeltaY);
+            
+            for(int i=0;i<sCount;i++)
             {
- 
-            }
-            else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
-            {
-
-            }
-            else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
-            {
-
+                if(mMovingGeometries[i].GetType()==typeof(MyMapObjects.moMultiPolygon))
+                {
+                    MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mMovingGeometries[i];
+                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
+                    sFeature.Geometry = sMultiPolygon;
+                    sLayer.Features.Add(sFeature);
+                }
+                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolyline))
+                {
+                    MyMapObjects.moMultiPolyline sMultiPolyline = (MyMapObjects.moMultiPolyline)mMovingGeometries[i];
+                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
+                    sFeature.Geometry = sMultiPolyline;
+                    sLayer.Features.Add(sFeature);
+                }
+                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moPoint))
+                {
+                    MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mMovingGeometries[i];
+                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
+                    sFeature.Geometry = sPoint;
+                    sLayer.Features.Add(sFeature);
+                }
             }
             //重绘地图
             moMap.RedrawMap();
@@ -1002,6 +1027,10 @@ namespace MyMapObjectsDemo2022
             mMovingPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();
             mMovingPolygonSymbol.Color = Color.Transparent;
             mMovingPolygonSymbol.Outline.Color = Color.Black;
+            mMovingPolylineSymbol = new MyMapObjects.moSimpleLineSymbol();
+            mMovingPolylineSymbol.Color = Color.Black;
+            mMovingPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+            mMovingPointSymbol.Color = Color.Black;
             mEditingPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();
             mEditingPolygonSymbol.Color = Color.Transparent;
             mEditingPolygonSymbol.Outline.Color = Color.DarkGreen;
@@ -1117,7 +1146,7 @@ namespace MyMapObjectsDemo2022
             return sLayer;
         }
 
-        //根据指定的平移量修改移动图形的坐标（需要修改）
+        //根据指定的平移量修改移动图形的坐标
         private void ModifyMovingGeometries(double deltaX, double deltaY)
         {
             Int32 sCount = mMovingGeometries.Count;
@@ -1140,10 +1169,33 @@ namespace MyMapObjectsDemo2022
                     }
                     sMultiPolygon.UpdateExtent();
                 }
+                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolyline))
+                {
+                    MyMapObjects.moMultiPolyline sMultiPolyline = (MyMapObjects.moMultiPolyline)mMovingGeometries[i];
+                    Int32 sPartCount = sMultiPolyline.Parts.Count;
+                    for (Int32 j = 0; j <= sPartCount - 1; j++)
+                    {
+                        MyMapObjects.moPoints sPoints = sMultiPolyline.Parts.GetItem(j);
+                        Int32 sPointCount = sPoints.Count;
+                        for (Int32 k = 0; k <= sPointCount - 1; k++)
+                        {
+                            MyMapObjects.moPoint sPoint = sPoints.GetItem(k);
+                            sPoint.X = sPoint.X + deltaX;
+                            sPoint.Y = sPoint.Y + deltaY;
+                        }
+                    }
+                    sMultiPolyline.UpdateExtent();
+                }
+                else if(mMovingGeometries[i].GetType() == typeof(MyMapObjects.moPoint))
+                {
+                    MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mMovingGeometries[i];
+                    sPoint.X = sPoint.X + deltaX;
+                    sPoint.Y = sPoint.Y + deltaY;
+                }
             }
         }
 
-        //绘制正在移动的图形（需要修改）
+        //绘制正在移动的图形
         private void DrawMovingShapes()
         {
             MyMapObjects.moUserDrawingTool sDrawingTool = moMap.GetDrawingTool();
@@ -1154,6 +1206,16 @@ namespace MyMapObjectsDemo2022
                 {
                     MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mMovingGeometries[i];
                     sDrawingTool.DrawMultiPolygon(sMultiPolygon, mMovingPolygonSymbol);
+                }
+                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolyline))
+                {
+                    MyMapObjects.moMultiPolyline sMultiPolyline = (MyMapObjects.moMultiPolyline)mMovingGeometries[i];
+                    sDrawingTool.DrawMultiPolyline(sMultiPolyline, mMovingPolylineSymbol);
+                }
+                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moPoint))
+                {
+                    MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mMovingGeometries[i];
+                    sDrawingTool.DrawPoint(sPoint, mMovingPointSymbol);
                 }
             }
         }
