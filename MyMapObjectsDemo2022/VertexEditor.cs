@@ -15,6 +15,9 @@ namespace MyMapObjectsDemo2022
         Action RedrawMap;
         Action CallMoMapEditVertex;
         Action NewPartMoMap;
+        Action AddNewVertexMoMap;
+        Action FindByGeometryMoMap;
+        Action CloseWindow;
         private MyMapObjects.moPoint MovingVertex;
         private MyMapObjects.moFeature SelectedFeature;
         public MyMapObjects.moPoints NewPart;
@@ -53,7 +56,7 @@ namespace MyMapObjectsDemo2022
                 }
             }
         }
-        public VertexEditor(Action redrawMap, MyMapObjects.moFeature feature, Action callMoMapEditVertex, Action newPartMoMap)
+        public VertexEditor(Action redrawMap, MyMapObjects.moFeature feature, Action callMoMapEditVertex, Action newPartMoMap, Action addNewVertexMoMap, Action findByGeometryMoMap, Action closeWindow)
         {
             InitializeComponent();
             HighlightedPoints = new MyMapObjects.moPoints();
@@ -62,6 +65,9 @@ namespace MyMapObjectsDemo2022
             ReloadAllPartsAndPoints();
             CallMoMapEditVertex = callMoMapEditVertex;
             NewPartMoMap = newPartMoMap;
+            AddNewVertexMoMap = addNewVertexMoMap;
+            FindByGeometryMoMap = findByGeometryMoMap;
+            CloseWindow = closeWindow;
         }
 
         private void VertexEditor_Load(object sender, EventArgs e)
@@ -73,7 +79,9 @@ namespace MyMapObjectsDemo2022
         {
             if (listBox1.SelectedIndex == -1)
             {
-                return;
+                HighlightedPoints.Clear();
+                HighlightedPoints.UpdateExtent();
+                RedrawMap();
             }
             string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
             if (selectedText.EndsWith("部分"))
@@ -331,43 +339,117 @@ namespace MyMapObjectsDemo2022
                 if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
                     AddVertexPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
-                    AddVertexPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1])+pointIndexDelta;
-                    var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
-                  /*  if (featureGeom.Parts.GetItem(selectedPartIndex).Count <= 2)
-                    {
-                        MessageBox.Show("线段少于2个点，无法继续操作，请直接删除部分。");
-                        return;
-                    }
-                    featureGeom.Parts.GetItem(selectedPartIndex).RemoveAt(selectedPointIndex);
-                    featureGeom.UpdateExtent();*/
+                    AddVertexPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]) + pointIndexDelta;
 
                 }
                 else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
-                    int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
-                    if (featureGeom.Parts.GetItem(selectedPartIndex).Count <= 3)
-                    {
-                        MessageBox.Show("多边形少于3个点，无法继续操作，请直接删除部分。");
-                        return;
-                    }
-                    featureGeom.Parts.GetItem(selectedPartIndex).RemoveAt(selectedPointIndex);
-                    featureGeom.UpdateExtent();
+                    AddVertexPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
+                    AddVertexPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]) + pointIndexDelta;
                 }
                 else
                 {
                     MessageBox.Show("单点无法添加新节点。");
                     return;
                 }
-                HighlightedPoints.Clear();
                 RedrawMap();
-                ReloadAllPartsAndPoints();
+                AddNewVertexMoMap();
             }
             else if (selectedText.EndsWith("部分"))
             {
                 MessageBox.Show("您选择的是部分，请选择节点。");
             }
+        }
+
+        public void AddVertexCallBack(MyMapObjects.moPoint newPoint)
+        {
+            if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+            {
+                var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                featureGeom.Parts.GetItem(AddVertexPartIndex).Insert(AddVertexPointIndex, newPoint);
+
+            }
+            else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            {
+                var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                featureGeom.Parts.GetItem(AddVertexPartIndex).Insert(AddVertexPointIndex, newPoint);
+            }
+            ReloadAllPartsAndPoints();
+            RedrawMap();
+        }
+
+        private void 图上选点ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReloadAllPartsAndPoints();
+            FindByGeometryMoMap();
+        }
+
+        public void SelectByGeometryCallBack(MyMapObjects.moPoint position)
+        {
+            if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+            {
+                var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                int selectedPart = -1;
+                int selectedPoint = -1;
+                double currentMinDist = double.MaxValue;
+                for (int i = 0; i < featureGeom.Parts.Count; i++)
+                {
+                    for (int j = 0; j < featureGeom.Parts.GetItem(i).Count; j++)
+                    {
+                        if (Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).X - position.X, 2) + Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).Y - position.Y, 2) < currentMinDist)
+                        {
+                            selectedPart = i;
+                            selectedPoint = j;
+                            currentMinDist = Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).X - position.X, 2) + Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).Y - position.Y, 2);
+                        }
+                    }
+                }
+                for (int i = 0; i < listBox1.Items.Count; i++)
+                {
+                    if (listBox1.Items[i].ToString().StartsWith($"    [{selectedPart}-{selectedPoint}]"))
+                    {
+                        listBox1.SelectedIndex = i;
+                        return;
+                    }
+                }
+
+            }
+            else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            {
+                var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                int selectedPart = -1;
+                int selectedPoint = -1;
+                double currentMinDist = double.MaxValue;
+                for (int i = 0; i < featureGeom.Parts.Count; i++)
+                {
+                    for (int j = 0; j < featureGeom.Parts.GetItem(i).Count; j++)
+                    {
+                        if (Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).X - position.X, 2) + Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).Y - position.Y, 2) < currentMinDist)
+                        {
+                            selectedPart = i;
+                            selectedPoint = j;
+                            currentMinDist = Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).X - position.X, 2) + Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).Y - position.Y, 2);
+                        }
+                    }
+                }
+                for (int i = 0; i < listBox1.Items.Count; i++)
+                {
+                    if (listBox1.Items[i].ToString().StartsWith($"    [{selectedPart}-{selectedPoint}]"))
+                    {
+                        listBox1.SelectedIndex = i;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                listBox1.SelectedIndex = 0;
+            }
+        }
+
+        private void 结束并保存ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CloseWindow();
         }
     }
 }
