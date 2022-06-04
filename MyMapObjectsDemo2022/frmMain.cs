@@ -34,7 +34,6 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前简单渲染的点符号
         private MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前简单渲染的线符号
         private MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();//当前简单渲染的面符号
-        private MyMapObjects.moClassBreaksRenderer mClassBreaksRenderer = new MyMapObjects.moClassBreaksRenderer();//当前分级渲染
         private bool mShowLngLat = false; // 是否显示经纬度
         private int checklistIndex = -1;   //全局图层列表索引
 
@@ -279,6 +278,7 @@ namespace MyMapObjectsDemo2022
             {
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
                 MyMapObjects.moClassBreaksRenderer sRenderer = new MyMapObjects.moClassBreaksRenderer();
+                MyMapObjects.moClassBreaksRenderer sRenderer_clone = sRenderer.Clone1();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
                     ClassBreaksPoint cForm = new ClassBreaksPoint(sLayer, sRenderer, mSimpleRendererPointSymbol);
@@ -298,9 +298,12 @@ namespace MyMapObjectsDemo2022
                     cForm.ShowDialog();
                     sRenderer.DefaultSymbol = mSimpleRendererPolygonSymbol;
                 }
-
-                sLayer.Renderer = sRenderer;
-                moMap.RedrawMap();
+                if(sRenderer.Field!=sRenderer_clone.Field)
+                {
+                    sLayer.Renderer = sRenderer;
+                    moMap.RedrawMap();
+                }
+                
             }
 
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;

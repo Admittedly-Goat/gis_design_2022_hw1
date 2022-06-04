@@ -629,8 +629,8 @@ namespace MyMapObjects
                             sValue = (float)_Features.GetItem(i).Attributes.GetItem(sFieldIndex);
                         else if (sValueType == moValueTypeConstant.dDouble)
                             sValue = (double)_Features.GetItem(i).Attributes.GetItem(sFieldIndex);
-                        else
-                            throw new Exception("Invalid value type of field " + sFieldName);
+                        /*else
+                            throw new Exception("Invalid value type of field " + sFieldName);*/
 
                         _Features.GetItem(i).Symbol = sRenderer.FindSymbol(sValue);
                     }
