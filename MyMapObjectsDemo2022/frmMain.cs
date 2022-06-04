@@ -32,6 +32,8 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleMarkerSymbol mEditingHighlightedVertexSymbol; // 正在编辑的高亮的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
         private MyMapObjects.moSimpleMarkerSymbol mRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前渲染的点符号
+        private MyMapObjects.moSimpleLineSymbol mRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前渲染的线符号
+        private MyMapObjects.moSimpleFillSymbol mRendererFillSymbol = new MyMapObjects.moSimpleFillSymbol();//当前渲染的面符号
         private bool mShowLngLat = false; // 是否显示经纬度
         private int checklistIndex = -1;   //全局图层列表索引
 
@@ -167,8 +169,9 @@ namespace MyMapObjectsDemo2022
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    MyMapObjects.moSimpleLineSymbol sSymbol_line = new MyMapObjects.moSimpleLineSymbol();
-                    sRenderer.Symbol = sSymbol_line;
+                    SimpleRendererLine cForm = new SimpleRendererLine(mRendererLineSymbol);
+                    cForm.ShowDialog();
+                    sRenderer.Symbol = mRendererLineSymbol;
                 }
                 else
                 {

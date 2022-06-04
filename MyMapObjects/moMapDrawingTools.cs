@@ -227,7 +227,9 @@ namespace MyMapObjects
             sPen.DashStyle = (DashStyle)symbol.Style;
             g.DrawPath(sPen, sGraphicPath);
             sPen.Dispose();
+           
         }
+        
 
         //采用简单线符号绘制复合折线
         private static void DrawMultiPolylineBySimpleLine(Graphics g, moRectangle extent, double mapScale, double dpm,

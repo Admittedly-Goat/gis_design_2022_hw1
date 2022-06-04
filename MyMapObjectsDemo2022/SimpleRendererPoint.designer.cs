@@ -44,13 +44,14 @@ namespace MyMapObjectsDemo2022
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 12F);
-            this.label1.Location = new System.Drawing.Point(12, 44);
+            this.label1.Location = new System.Drawing.Point(150, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(152, 16);
             this.label1.TabIndex = 6;
@@ -59,7 +60,7 @@ namespace MyMapObjectsDemo2022
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(81, 47);
+            this.label2.Location = new System.Drawing.Point(219, 58);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(0, 12);
             this.label2.TabIndex = 13;
@@ -68,7 +69,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("宋体", 12F);
-            this.label3.Location = new System.Drawing.Point(12, 233);
+            this.label3.Location = new System.Drawing.Point(150, 244);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(152, 16);
             this.label3.TabIndex = 14;
@@ -77,7 +78,7 @@ namespace MyMapObjectsDemo2022
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(170, 230);
+            this.textBox1.Location = new System.Drawing.Point(308, 241);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 26);
             this.textBox1.TabIndex = 16;
@@ -86,7 +87,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.Circle.AutoSize = true;
             this.Circle.Font = new System.Drawing.Font("宋体", 16F);
-            this.Circle.Location = new System.Drawing.Point(58, 87);
+            this.Circle.Location = new System.Drawing.Point(196, 98);
             this.Circle.Name = "Circle";
             this.Circle.Size = new System.Drawing.Size(50, 26);
             this.Circle.TabIndex = 18;
@@ -97,7 +98,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.SolidCircle.AutoSize = true;
             this.SolidCircle.Font = new System.Drawing.Font("宋体", 16F);
-            this.SolidCircle.Location = new System.Drawing.Point(58, 150);
+            this.SolidCircle.Location = new System.Drawing.Point(196, 161);
             this.SolidCircle.Name = "SolidCircle";
             this.SolidCircle.Size = new System.Drawing.Size(50, 26);
             this.SolidCircle.TabIndex = 19;
@@ -108,7 +109,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.Triangle.AutoSize = true;
             this.Triangle.Font = new System.Drawing.Font("宋体", 16F);
-            this.Triangle.Location = new System.Drawing.Point(187, 87);
+            this.Triangle.Location = new System.Drawing.Point(325, 98);
             this.Triangle.Name = "Triangle";
             this.Triangle.Size = new System.Drawing.Size(50, 26);
             this.Triangle.TabIndex = 20;
@@ -119,7 +120,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.SolidTriangle.AutoSize = true;
             this.SolidTriangle.Font = new System.Drawing.Font("宋体", 16F);
-            this.SolidTriangle.Location = new System.Drawing.Point(187, 150);
+            this.SolidTriangle.Location = new System.Drawing.Point(325, 161);
             this.SolidTriangle.Name = "SolidTriangle";
             this.SolidTriangle.Size = new System.Drawing.Size(50, 26);
             this.SolidTriangle.TabIndex = 21;
@@ -130,7 +131,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.Square.AutoSize = true;
             this.Square.Font = new System.Drawing.Font("宋体", 16F);
-            this.Square.Location = new System.Drawing.Point(315, 87);
+            this.Square.Location = new System.Drawing.Point(453, 98);
             this.Square.Name = "Square";
             this.Square.Size = new System.Drawing.Size(50, 26);
             this.Square.TabIndex = 22;
@@ -141,7 +142,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.SolidSquare.AutoSize = true;
             this.SolidSquare.Font = new System.Drawing.Font("宋体", 16F);
-            this.SolidSquare.Location = new System.Drawing.Point(315, 150);
+            this.SolidSquare.Location = new System.Drawing.Point(453, 161);
             this.SolidSquare.Name = "SolidSquare";
             this.SolidSquare.Size = new System.Drawing.Size(50, 26);
             this.SolidSquare.TabIndex = 23;
@@ -152,7 +153,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.CircleDot.AutoSize = true;
             this.CircleDot.Font = new System.Drawing.Font("宋体", 16F);
-            this.CircleDot.Location = new System.Drawing.Point(434, 87);
+            this.CircleDot.Location = new System.Drawing.Point(572, 98);
             this.CircleDot.Name = "CircleDot";
             this.CircleDot.Size = new System.Drawing.Size(50, 26);
             this.CircleDot.TabIndex = 24;
@@ -163,7 +164,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.CircleCircle.AutoSize = true;
             this.CircleCircle.Font = new System.Drawing.Font("宋体", 16F);
-            this.CircleCircle.Location = new System.Drawing.Point(434, 150);
+            this.CircleCircle.Location = new System.Drawing.Point(572, 161);
             this.CircleCircle.Name = "CircleCircle";
             this.CircleCircle.Size = new System.Drawing.Size(50, 26);
             this.CircleCircle.TabIndex = 25;
@@ -172,7 +173,7 @@ namespace MyMapObjectsDemo2022
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(129, 516);
+            this.button1.Location = new System.Drawing.Point(277, 355);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(78, 31);
             this.button1.TabIndex = 26;
@@ -182,7 +183,7 @@ namespace MyMapObjectsDemo2022
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(338, 516);
+            this.button2.Location = new System.Drawing.Point(453, 355);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(78, 31);
             this.button2.TabIndex = 27;
@@ -190,11 +191,21 @@ namespace MyMapObjectsDemo2022
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(433, 248);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 12);
+            this.label4.TabIndex = 28;
+            this.label4.Text = "毫米";
+            // 
             // SimpleRendererPoint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(558, 579);
+            this.ClientSize = new System.Drawing.Size(791, 448);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.CircleCircle);
@@ -232,5 +243,6 @@ namespace MyMapObjectsDemo2022
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Label label4;
     }
 }
