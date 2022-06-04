@@ -106,6 +106,16 @@ namespace MyMapObjects
             sSymbol._Size = _Size;
             return sSymbol;
         }
+        public  moSimpleLineSymbol Clone1()
+        {
+            moSimpleLineSymbol sSymbol = new moSimpleLineSymbol();
+            sSymbol._Label = _Label;
+            sSymbol._Visible = _Visible;
+            sSymbol._Style = _Style;
+            sSymbol._Color = _Color;
+            sSymbol._Size = _Size;
+            return sSymbol;
+        }
 
         #endregion
 

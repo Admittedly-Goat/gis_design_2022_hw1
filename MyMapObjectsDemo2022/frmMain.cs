@@ -31,9 +31,11 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleMarkerSymbol mEditingVertexSymbol; // 正在编辑的图形顶点符号
         private MyMapObjects.moSimpleMarkerSymbol mEditingHighlightedVertexSymbol; // 正在编辑的高亮的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
-        private MyMapObjects.moSimpleMarkerSymbol mRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前渲染的点符号
-        private MyMapObjects.moSimpleLineSymbol mRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前渲染的线符号
-        private MyMapObjects.moSimpleFillSymbol mRendererFillSymbol = new MyMapObjects.moSimpleFillSymbol();//当前渲染的面符号
+        private MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前简单渲染的点符号
+        private MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前简单渲染的线符号
+        private MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();//当前简单渲染的面符号
+        private MyMapObjects.moUniqueValueRenderer mUniqueValueRenderer = new MyMapObjects.moUniqueValueRenderer();//当前唯一值渲染
+        private MyMapObjects.moClassBreaksRenderer mClassBreaksRenderer = new MyMapObjects.moClassBreaksRenderer();//当前分级渲染
         private bool mShowLngLat = false; // 是否显示经纬度
         private int checklistIndex = -1;   //全局图层列表索引
 
@@ -163,28 +165,52 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    SimpleRendererPoint cForm = new SimpleRendererPoint(mRendererPointSymbol);
+                    MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol_clone = new MyMapObjects.moSimpleMarkerSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    mSimpleRendererPointSymbol_clone = mSimpleRendererPointSymbol.Clone1();
+                    SimpleRendererPoint cForm = new SimpleRendererPoint(mSimpleRendererPointSymbol);
                     cForm.ShowDialog();
-                    sRenderer.Symbol = mRendererPointSymbol;
+                    sRenderer.Symbol = mSimpleRendererPointSymbol;                    
+                    if (mSimpleRendererPointSymbol.Color != mSimpleRendererPointSymbol_clone.Color ||
+                        mSimpleRendererPointSymbol.Size != mSimpleRendererPointSymbol_clone.Size||
+                        mSimpleRendererPointSymbol.Style !=mSimpleRendererPointSymbol_clone.Style)
+                    {
+                        sLayer.Renderer = sRenderer;
+                        moMap.RedrawMap();
+                    }
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    SimpleRendererLine cForm = new SimpleRendererLine(mRendererLineSymbol);
+                    MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol_clone = new MyMapObjects.moSimpleLineSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    mSimpleRendererLineSymbol_clone = mSimpleRendererLineSymbol.Clone1();
+                    SimpleRendererLine cForm = new SimpleRendererLine(mSimpleRendererLineSymbol);
                     cForm.ShowDialog();
-                    sRenderer.Symbol = mRendererLineSymbol;
+                    sRenderer.Symbol = mSimpleRendererLineSymbol;
+                    if (mSimpleRendererLineSymbol.Color != mSimpleRendererLineSymbol_clone.Color ||
+                        mSimpleRendererLineSymbol.Size != mSimpleRendererLineSymbol_clone.Size ||
+                        mSimpleRendererLineSymbol.Style != mSimpleRendererLineSymbol_clone.Style)
+                    {
+                        sLayer.Renderer = sRenderer;
+                        moMap.RedrawMap();
+                    }
                 }
                 else
                 {
+                    MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol_clone = new MyMapObjects.moSimpleFillSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    mSimpleRendererPolygonSymbol_clone = mSimpleRendererPolygonSymbol.Clone1();
                     DialogResult dr = colorDialog1.ShowDialog();
                     //选择填充颜色
                     if (dr == DialogResult.OK)
                     {
-                        mRendererFillSymbol.Color = colorDialog1.Color;
+                        mSimpleRendererPolygonSymbol.Color = colorDialog1.Color;    
                     }
-                    sRenderer.Symbol = mRendererFillSymbol;
+                    sRenderer.Symbol = mSimpleRendererPolygonSymbol;
+                    if (mSimpleRendererPolygonSymbol.Color != mSimpleRendererPolygonSymbol_clone.Color )
+                    {
+                        sLayer.Renderer = sRenderer;
+                        moMap.RedrawMap();
+                    }
                 }
-                sLayer.Renderer = sRenderer;
-                moMap.RedrawMap();
+                          
             }
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
         }
@@ -208,18 +234,19 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    UniqueValuePoint cForm = new UniqueValuePoint(sLayer, sRenderer, mRendererPointSymbol);
+                    UniqueValuePoint cForm = new UniqueValuePoint(sLayer, sRenderer, mSimpleRendererPointSymbol);
                     cForm.ShowDialog();
+                    
 
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    UniqueValueLIne cForm = new UniqueValueLIne(sLayer, sRenderer, mRendererLineSymbol);
+                    UniqueValueLIne cForm = new UniqueValueLIne(sLayer, sRenderer, mSimpleRendererLineSymbol);
                     cForm.ShowDialog();
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    UniqueValuePolygon cForm = new UniqueValuePolygon(sLayer, sRenderer, mRendererFillSymbol);
+                    UniqueValuePolygon cForm = new UniqueValuePolygon(sLayer, sRenderer, mSimpleRendererPolygonSymbol);
                     cForm.ShowDialog();
                 }
                 sLayer.Renderer = sRenderer;
@@ -249,22 +276,22 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moClassBreaksRenderer sRenderer = new MyMapObjects.moClassBreaksRenderer();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    ClassBreaksPoint cForm = new ClassBreaksPoint(sLayer, sRenderer, mRendererPointSymbol);
+                    ClassBreaksPoint cForm = new ClassBreaksPoint(sLayer, sRenderer, mSimpleRendererPointSymbol);
                     cForm.ShowDialog();
-                    sRenderer.DefaultSymbol = mRendererPointSymbol;
+                    sRenderer.DefaultSymbol = mSimpleRendererPointSymbol;
 
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    ClassBreaksLine cForm = new ClassBreaksLine(sLayer, sRenderer, mRendererLineSymbol);
+                    ClassBreaksLine cForm = new ClassBreaksLine(sLayer, sRenderer, mSimpleRendererLineSymbol);
                     cForm.ShowDialog();
-                    sRenderer.DefaultSymbol = mRendererLineSymbol;
+                    sRenderer.DefaultSymbol = mSimpleRendererLineSymbol;
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    ClassBreaksPolygon cForm = new ClassBreaksPolygon(sLayer, sRenderer, mRendererFillSymbol);
+                    ClassBreaksPolygon cForm = new ClassBreaksPolygon(sLayer, sRenderer, mSimpleRendererPolygonSymbol);
                     cForm.ShowDialog();
-                    sRenderer.DefaultSymbol = mRendererFillSymbol;
+                    sRenderer.DefaultSymbol = mSimpleRendererPolygonSymbol;
                 }
 
                 sLayer.Renderer = sRenderer;

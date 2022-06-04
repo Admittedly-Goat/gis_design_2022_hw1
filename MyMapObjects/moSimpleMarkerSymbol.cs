@@ -104,6 +104,20 @@ namespace MyMapObjects
             sSymbol._Size = _Size;
             return sSymbol;
         }
+        /// <summary>
+        /// 克隆
+        /// </summary>
+        /// <returns></returns>
+        public moSimpleMarkerSymbol Clone1()
+        {
+            moSimpleMarkerSymbol sSymbol = new moSimpleMarkerSymbol();
+            sSymbol._Label = _Label;
+            sSymbol._Visible = _Visible;
+            sSymbol._Style = _Style;
+            sSymbol._Color = _Color;
+            sSymbol._Size = _Size;
+            return sSymbol;
+        }
 
         #endregion
 
