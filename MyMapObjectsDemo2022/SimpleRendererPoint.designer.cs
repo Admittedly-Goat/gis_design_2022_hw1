@@ -56,6 +56,7 @@ namespace MyMapObjectsDemo2022
             this.label1.Size = new System.Drawing.Size(152, 16);
             this.label1.TabIndex = 6;
             this.label1.Text = "选择点要素的形状：";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -64,6 +65,7 @@ namespace MyMapObjectsDemo2022
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(0, 12);
             this.label2.TabIndex = 13;
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
@@ -74,6 +76,7 @@ namespace MyMapObjectsDemo2022
             this.label3.Size = new System.Drawing.Size(152, 16);
             this.label3.TabIndex = 14;
             this.label3.Text = "设置点要素的大小：";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // textBox1
             // 
@@ -82,6 +85,7 @@ namespace MyMapObjectsDemo2022
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 26);
             this.textBox1.TabIndex = 16;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // Circle
             // 
@@ -93,6 +97,7 @@ namespace MyMapObjectsDemo2022
             this.Circle.TabIndex = 18;
             this.Circle.Text = "○";
             this.Circle.UseVisualStyleBackColor = true;
+            this.Circle.CheckedChanged += new System.EventHandler(this.Circle_CheckedChanged);
             // 
             // SolidCircle
             // 
@@ -104,6 +109,7 @@ namespace MyMapObjectsDemo2022
             this.SolidCircle.TabIndex = 19;
             this.SolidCircle.Text = "●";
             this.SolidCircle.UseVisualStyleBackColor = true;
+            this.SolidCircle.CheckedChanged += new System.EventHandler(this.SolidCircle_CheckedChanged);
             // 
             // Triangle
             // 
@@ -115,6 +121,7 @@ namespace MyMapObjectsDemo2022
             this.Triangle.TabIndex = 20;
             this.Triangle.Text = "△";
             this.Triangle.UseVisualStyleBackColor = true;
+            this.Triangle.CheckedChanged += new System.EventHandler(this.Triangle_CheckedChanged);
             // 
             // SolidTriangle
             // 
@@ -126,6 +133,7 @@ namespace MyMapObjectsDemo2022
             this.SolidTriangle.TabIndex = 21;
             this.SolidTriangle.Text = "▲";
             this.SolidTriangle.UseVisualStyleBackColor = true;
+            this.SolidTriangle.CheckedChanged += new System.EventHandler(this.SolidTriangle_CheckedChanged);
             // 
             // Square
             // 
@@ -137,6 +145,7 @@ namespace MyMapObjectsDemo2022
             this.Square.TabIndex = 22;
             this.Square.Text = "□";
             this.Square.UseVisualStyleBackColor = true;
+            this.Square.CheckedChanged += new System.EventHandler(this.Square_CheckedChanged);
             // 
             // SolidSquare
             // 
@@ -148,6 +157,7 @@ namespace MyMapObjectsDemo2022
             this.SolidSquare.TabIndex = 23;
             this.SolidSquare.Text = "■";
             this.SolidSquare.UseVisualStyleBackColor = true;
+            this.SolidSquare.CheckedChanged += new System.EventHandler(this.SolidSquare_CheckedChanged);
             // 
             // CircleDot
             // 
@@ -159,6 +169,7 @@ namespace MyMapObjectsDemo2022
             this.CircleDot.TabIndex = 24;
             this.CircleDot.Text = "☉";
             this.CircleDot.UseVisualStyleBackColor = true;
+            this.CircleDot.CheckedChanged += new System.EventHandler(this.CircleDot_CheckedChanged);
             // 
             // CircleCircle
             // 
@@ -170,6 +181,7 @@ namespace MyMapObjectsDemo2022
             this.CircleCircle.TabIndex = 25;
             this.CircleCircle.Text = "◎";
             this.CircleCircle.UseVisualStyleBackColor = true;
+            this.CircleCircle.CheckedChanged += new System.EventHandler(this.CircleCircle_CheckedChanged);
             // 
             // button1
             // 
@@ -199,6 +211,7 @@ namespace MyMapObjectsDemo2022
             this.label4.Size = new System.Drawing.Size(29, 12);
             this.label4.TabIndex = 28;
             this.label4.Text = "毫米";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // SimpleRendererPoint
             // 

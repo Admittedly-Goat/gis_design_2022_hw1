@@ -123,6 +123,24 @@
     <Compile Include="SimpleRendererPoint.designer.cs">
       <DependentUpon>SimpleRendererPoint.cs</DependentUpon>
     </Compile>
+    <Compile Include="UniqueValueLIne.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UniqueValueLIne.Designer.cs">
+      <DependentUpon>UniqueValueLIne.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UniqueValuePoint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UniqueValuePoint.Designer.cs">
+      <DependentUpon>UniqueValuePoint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UniqueValuePolygon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UniqueValuePolygon.Designer.cs">
+      <DependentUpon>UniqueValuePolygon.cs</DependentUpon>
+    </Compile>
     <Compile Include="VertexEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +191,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SimpleRendererPoint.resx">
       <DependentUpon>SimpleRendererPoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UniqueValueLIne.resx">
+      <DependentUpon>UniqueValueLIne.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UniqueValuePoint.resx">
+      <DependentUpon>UniqueValuePoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UniqueValuePolygon.resx">
+      <DependentUpon>UniqueValuePolygon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VertexEditor.resx">
       <DependentUpon>VertexEditor.cs</DependentUpon>

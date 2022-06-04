@@ -191,32 +191,43 @@ namespace MyMapObjectsDemo2022
 
         private void btnUniqueValue_Click(object sender, EventArgs e)
         {
-            //(1)查找一个多边形图层
-            MyMapObjects.moMapLayer sLayer = GetPolygonLayer();
-            if (sLayer == null)
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
+            moMap.Refresh();
+            if (moMap.Layers.Count == 0)
             {
                 return;
             }
-            //(2)假定第一个字段为名称并且为字符型，新建一个唯一值渲染对象
-            MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
-            sRenderer.Field = "名称";
-            List<String> sNames = new List<string>();
-            Int32 sFeatureCount = sLayer.Features.Count;
-            for (Int32 i = 0; i <= sFeatureCount - 1; i++)
+            else
             {
-                string sName = (string)sLayer.Features.GetItem(i).Attributes.GetItem(0);
-                sNames.Add(sName);
+                MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
+                MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
+                if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    UniqueValuePoint cForm = new UniqueValuePoint(sLayer, sRenderer, mRendererPointSymbol);
+                    cForm.ShowDialog();
+
+                }
+                else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    UniqueValueLIne cForm = new UniqueValueLIne(sLayer, sRenderer, mRendererLineSymbol);
+                    cForm.ShowDialog();
+                }
+                else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    UniqueValuePolygon cForm = new UniqueValuePolygon(sLayer, sRenderer, mRendererFillSymbol);
+                    cForm.ShowDialog();
+                }
+                sLayer.Renderer = sRenderer;
+                moMap.RedrawMap();
             }
-            sNames.Distinct().ToList();
-            Int32 sValueCount = sNames.Count;
-            for (Int32 i = 0; i <= sValueCount - 1; i++)
-            {
-                MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
-                sRenderer.AddUniqueValue(sNames[i], sSymbol);
-            }
-            sRenderer.DefaultSymbol = new MyMapObjects.moSimpleFillSymbol();
-            sLayer.Renderer = sRenderer;
-            moMap.RedrawMap();
+            
+            checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
+
         }
 
         private void btnClassBreaks_Click(object sender, EventArgs e)
@@ -2065,6 +2076,11 @@ namespace MyMapObjectsDemo2022
         private void 简单渲染ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             btnSimpleRenderer_Click(moMap, e);
+        }
+
+        private void 唯一值渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            btnUniqueValue_Click(moMap, e);
         }
     }
 }
