@@ -49,6 +49,7 @@ namespace MyMapObjectsDemo2022
         private bool mIsInIdentify = false;
         private bool mIsInMovingShapes = false;
         private List<MyMapObjects.moGeometry> mMovingGeometries = new List<MyMapObjects.moGeometry>(); // 正在移动的图形的集合
+        private List<MyMapObjects.moFeature> mMovingFeatures = new List<MyMapObjects.moFeature>(); //正在移动的要素集合，index和上面的移动图形集合对应。
         private MyMapObjects.moGeometry mEditingGeometry; // 正在编辑的图形
         private List<MyMapObjects.moPoints> mSketchingShape; // 正在描绘的图形，用一个多点集合存储
         MyMapObjects.moSimpleMarkerSymbol pSymbol = new MyMapObjects.moSimpleMarkerSymbol();  //描绘点
@@ -542,6 +543,7 @@ namespace MyMapObjectsDemo2022
                     MyMapObjects.moMultiPolygon sOriPolygon = (MyMapObjects.moMultiPolygon)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moMultiPolygon sDesPolygon = sOriPolygon.Clone();
                     mMovingGeometries.Add(sDesPolygon);
+                    mMovingFeatures.Add(sLayer.SelectedFeatures.GetItem(i));
                 }
             }
             else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
@@ -551,6 +553,7 @@ namespace MyMapObjectsDemo2022
                     MyMapObjects.moMultiPolyline sOriPolyline = (MyMapObjects.moMultiPolyline)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moMultiPolyline sDesPolyline = sOriPolyline.Clone();
                     mMovingGeometries.Add(sDesPolyline);
+                    mMovingFeatures.Add(sLayer.SelectedFeatures.GetItem(i));
                 }
             }
             else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
@@ -560,6 +563,7 @@ namespace MyMapObjectsDemo2022
                     MyMapObjects.moPoint sOriPoint = (MyMapObjects.moPoint)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moPoint sDesPoint = sOriPoint.Clone();
                     mMovingGeometries.Add(sDesPoint);
+                    mMovingFeatures.Add(sLayer.SelectedFeatures.GetItem(i));
                 }
             }
             //设置变量
@@ -703,37 +707,13 @@ namespace MyMapObjectsDemo2022
             for (Int32 i = 0; i < count; i++)
             {
                 MyMapObjects.moFeature feature = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
-                moMap.Layers.GetItem(selectedIndex).Features.Remove(feature);
+                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i).Geometry = mMovingGeometries[i];
             }
             //更新新要素的坐标（距离有问题）
-            double sDeltaX = moMap.ToMapDistance(e.Location.X - mOriginMouseLocation.X);
-            double sDeltaY = moMap.ToMapDistance(mOriginMouseLocation.Y - e.Location.Y);
+            double sDeltaX = moMap.ToMapDistance(e.Location.X - mStartMouseLocation.X);
+            double sDeltaY = moMap.ToMapDistance(mStartMouseLocation.Y - e.Location.Y);
             ModifyMovingGeometries(sDeltaX, sDeltaY);
 
-            for (int i = 0; i < sCount; i++)
-            {
-                if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolygon))
-                {
-                    MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mMovingGeometries[i];
-                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
-                    sFeature.Geometry = sMultiPolygon;
-                    sLayer.Features.Add(sFeature);
-                }
-                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolyline))
-                {
-                    MyMapObjects.moMultiPolyline sMultiPolyline = (MyMapObjects.moMultiPolyline)mMovingGeometries[i];
-                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
-                    sFeature.Geometry = sMultiPolyline;
-                    sLayer.Features.Add(sFeature);
-                }
-                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moPoint))
-                {
-                    MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mMovingGeometries[i];
-                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
-                    sFeature.Geometry = sPoint;
-                    sLayer.Features.Add(sFeature);
-                }
-            }
             //重绘地图
             moMap.RedrawMap();
             //清除移动图形列表
