@@ -1354,7 +1354,21 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             int selectedIndex=Convert.ToInt32(checkedListBox1.SelectedIndex);
-
+            SaveFileDialog sDialog = new SaveFileDialog();
+            sDialog.Filter = "GeoJSON Files (*.geojson)|*.geojson";
+            string sFileName = "";
+            if (sDialog.ShowDialog(this)
+                == DialogResult.OK)
+            {
+                sFileName = sDialog.FileName;
+                sDialog.Dispose();
+            }
+            else
+            {
+                sDialog.Dispose();
+                return;
+            }
+            DataIOTools.SaveLayerAsGeoJSON(sFileName, moMap.Layers.GetItem(selectedIndex));
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
