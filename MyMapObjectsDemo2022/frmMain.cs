@@ -264,7 +264,7 @@ namespace MyMapObjectsDemo2022
                 {
 
                 }
-                
+
                 sLayer.Renderer = sRenderer;
                 moMap.RedrawMap();
             }
@@ -272,7 +272,7 @@ namespace MyMapObjectsDemo2022
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
         }
 
-        
+
 
         private void btnShowLabel_Click(object sender, EventArgs e)
         {
@@ -430,10 +430,12 @@ namespace MyMapObjectsDemo2022
             else if (mMapOpStyle == 8) //编辑
             {
 
-            }else if (mMapOpStyle == 20)
+            }
+            else if (mMapOpStyle == 20)
             {
                 OnEditingVertex_MouseDown(e);
-            }else if(mMapOpStyle == 21)
+            }
+            else if (mMapOpStyle == 21)
             {
                 var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
                 if (vertexEditorForm != null)
@@ -452,12 +454,21 @@ namespace MyMapObjectsDemo2022
                         vertexEditorForm.RemainingPartPointNumber--;
                     }
                 }
-            }else if(mMapOpStyle == 22)
+            }
+            else if (mMapOpStyle == 22)
             {
                 var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
                 if (vertexEditorForm != null)
                 {
                     vertexEditorForm.AddVertexCallBack(newPoint);
+                }
+            }
+            else if (mMapOpStyle == 23)
+            {
+                var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+                if (vertexEditorForm != null)
+                {
+                    vertexEditorForm.SelectByGeometryCallBack(newPoint);
                 }
             }
         }
@@ -495,7 +506,7 @@ namespace MyMapObjectsDemo2022
             }
             //复制图形
             mMovingGeometries.Clear();
-            if(sLayer.ShapeType==MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
                 for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
                 {
@@ -504,16 +515,16 @@ namespace MyMapObjectsDemo2022
                     mMovingGeometries.Add(sDesPolygon);
                 }
             }
-            else if(sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+            else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
-                for(Int32 i=0;i<=sSelFeatureCount-1;i++)
+                for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
                 {
                     MyMapObjects.moMultiPolyline sOriPolyline = (MyMapObjects.moMultiPolyline)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moMultiPolyline sDesPolyline = sOriPolyline.Clone();
                     mMovingGeometries.Add(sDesPolyline);
                 }
             }
-            else if(sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+            else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
             {
                 for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
                 {
@@ -669,10 +680,10 @@ namespace MyMapObjectsDemo2022
             double sDeltaX = moMap.ToMapDistance(e.Location.X - mOriginMouseLocation.X);
             double sDeltaY = moMap.ToMapDistance(mOriginMouseLocation.Y - e.Location.Y);
             ModifyMovingGeometries(sDeltaX, sDeltaY);
-            
-            for(int i=0;i<sCount;i++)
+
+            for (int i = 0; i < sCount; i++)
             {
-                if(mMovingGeometries[i].GetType()==typeof(MyMapObjects.moMultiPolygon))
+                if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolygon))
                 {
                     MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mMovingGeometries[i];
                     MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
@@ -795,11 +806,11 @@ namespace MyMapObjectsDemo2022
             {
 
             }
-            else if(mMapOpStyle==9)  //描绘线
+            else if (mMapOpStyle == 9)  //描绘线
             {
                 OnSketchPolyline_MouseClick(e);
             }
-            else if(mMapOpStyle==10)  //描绘点
+            else if (mMapOpStyle == 10)  //描绘点
             {
                 OnSketchPoint_MouseClick(e);
             }
@@ -876,7 +887,7 @@ namespace MyMapObjectsDemo2022
             {
 
             }
-            else if(mMapOpStyle==9)
+            else if (mMapOpStyle == 9)
             {
                 OnSketchLine_MouseMove(e);
             }
@@ -1208,7 +1219,7 @@ namespace MyMapObjectsDemo2022
                     }
                     sMultiPolyline.UpdateExtent();
                 }
-                else if(mMovingGeometries[i].GetType() == typeof(MyMapObjects.moPoint))
+                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moPoint))
                 {
                     MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mMovingGeometries[i];
                     sPoint.X = sPoint.X + deltaX;
@@ -1609,7 +1620,7 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
-            if(moMap.Layers.GetItem(selectedIndex).ShapeType!=MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
                 MessageBox.Show("选择要素与图层不匹配！");
                 return;
@@ -1617,7 +1628,7 @@ namespace MyMapObjectsDemo2022
             else
             {
                 btnSketchPolygon_Click(sender, e);
-            }  
+            }
         }
 
         private void 线ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1686,7 +1697,7 @@ namespace MyMapObjectsDemo2022
             moMap.RedrawMap();
         }
 
-        private void btnEndPointSketch_Click(object sender,EventArgs e)    //停止编辑点
+        private void btnEndPointSketch_Click(object sender, EventArgs e)    //停止编辑点
         {
             if (mSketchingShape.Last().Count == 0)
             {
@@ -1713,8 +1724,8 @@ namespace MyMapObjectsDemo2022
             }
             InitializeSketchingShape();
             moMap.RedrawMap();
-        
-    }
+
+        }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)  //停止描绘
         {
@@ -2063,11 +2074,12 @@ namespace MyMapObjectsDemo2022
                     drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
                 }
                 //绘制高亮顶点
-                if(vertexEditorForm != null)
+                if (vertexEditorForm != null)
                 {
                     drawingTool.DrawPoints(vertexEditorForm.HighlightedPoints, mEditingHighlightedVertexSymbol);
                 }
-            }else if (mEditingGeometry.GetType() == typeof(MyMapObjects.moMultiPolyline))
+            }
+            else if (mEditingGeometry.GetType() == typeof(MyMapObjects.moMultiPolyline))
             {
                 MyMapObjects.moMultiPolyline sMultiPolyline = (MyMapObjects.moMultiPolyline)mEditingGeometry;
                 //绘制边界
@@ -2084,7 +2096,8 @@ namespace MyMapObjectsDemo2022
                 {
                     drawingTool.DrawPoints(vertexEditorForm.HighlightedPoints, mEditingHighlightedVertexSymbol);
                 }
-            }else if (mEditingGeometry.GetType() == typeof(MyMapObjects.moPoint))
+            }
+            else if (mEditingGeometry.GetType() == typeof(MyMapObjects.moPoint))
             {
                 MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mEditingGeometry;
                 drawingTool.DrawPoint(sPoint, mEditingVertexSymbol);
@@ -2124,7 +2137,7 @@ namespace MyMapObjectsDemo2022
             //地图重回跟踪层
             moMap.RedrawTrackingShapes();
 
-            vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0),CallBackMovingVertex,CallBackNewPartMoMap, AddNewVertexMoMap);
+            vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0), CallBackMovingVertex, CallBackNewPartMoMap, AddNewVertexMoMap, GeomSelect,ExitEditing);
             vertexEditorForm.Show();
         }
 
@@ -2142,6 +2155,21 @@ namespace MyMapObjectsDemo2022
         private void AddNewVertexMoMap()
         {
             mMapOpStyle = 22;
+        }
+
+        private void GeomSelect()
+        {
+            mMapOpStyle = 23;
+        }
+
+        private void ExitEditing()
+        {
+            mEditingGeometry = null;
+            if (vertexEditorForm != null)
+            {
+                vertexEditorForm.Close();
+            }
+            RedrawMapForVertexEditing();
         }
 
         private void 简单渲染ToolStripMenuItem_Click(object sender, EventArgs e)

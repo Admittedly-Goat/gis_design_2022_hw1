@@ -16,6 +16,8 @@ namespace MyMapObjectsDemo2022
         Action CallMoMapEditVertex;
         Action NewPartMoMap;
         Action AddNewVertexMoMap;
+        Action FindByGeometryMoMap;
+        Action CloseWindow;
         private MyMapObjects.moPoint MovingVertex;
         private MyMapObjects.moFeature SelectedFeature;
         public MyMapObjects.moPoints NewPart;
@@ -54,7 +56,7 @@ namespace MyMapObjectsDemo2022
                 }
             }
         }
-        public VertexEditor(Action redrawMap, MyMapObjects.moFeature feature, Action callMoMapEditVertex, Action newPartMoMap,Action addNewVertexMoMap)
+        public VertexEditor(Action redrawMap, MyMapObjects.moFeature feature, Action callMoMapEditVertex, Action newPartMoMap, Action addNewVertexMoMap, Action findByGeometryMoMap, Action closeWindow)
         {
             InitializeComponent();
             HighlightedPoints = new MyMapObjects.moPoints();
@@ -64,6 +66,8 @@ namespace MyMapObjectsDemo2022
             CallMoMapEditVertex = callMoMapEditVertex;
             NewPartMoMap = newPartMoMap;
             AddNewVertexMoMap = addNewVertexMoMap;
+            FindByGeometryMoMap = findByGeometryMoMap;
+            CloseWindow = closeWindow;
         }
 
         private void VertexEditor_Load(object sender, EventArgs e)
@@ -75,7 +79,9 @@ namespace MyMapObjectsDemo2022
         {
             if (listBox1.SelectedIndex == -1)
             {
-                return;
+                HighlightedPoints.Clear();
+                HighlightedPoints.UpdateExtent();
+                RedrawMap();
             }
             string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
             if (selectedText.EndsWith("部分"))
@@ -374,7 +380,76 @@ namespace MyMapObjectsDemo2022
 
         private void 图上选点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ReloadAllPartsAndPoints();
+            FindByGeometryMoMap();
+        }
 
+        public void SelectByGeometryCallBack(MyMapObjects.moPoint position)
+        {
+            if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+            {
+                var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                int selectedPart = -1;
+                int selectedPoint = -1;
+                double currentMinDist = double.MaxValue;
+                for (int i = 0; i < featureGeom.Parts.Count; i++)
+                {
+                    for (int j = 0; j < featureGeom.Parts.GetItem(i).Count; j++)
+                    {
+                        if (Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).X - position.X, 2) + Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).Y - position.Y, 2) < currentMinDist)
+                        {
+                            selectedPart = i;
+                            selectedPoint = j;
+                            currentMinDist = Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).X - position.X, 2) + Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).Y - position.Y, 2);
+                        }
+                    }
+                }
+                for (int i = 0; i < listBox1.Items.Count; i++)
+                {
+                    if (listBox1.Items[i].ToString().StartsWith($"    [{selectedPart}-{selectedPoint}]"))
+                    {
+                        listBox1.SelectedIndex = i;
+                        return;
+                    }
+                }
+
+            }
+            else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            {
+                var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                int selectedPart = -1;
+                int selectedPoint = -1;
+                double currentMinDist = double.MaxValue;
+                for (int i = 0; i < featureGeom.Parts.Count; i++)
+                {
+                    for (int j = 0; j < featureGeom.Parts.GetItem(i).Count; j++)
+                    {
+                        if (Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).X - position.X, 2) + Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).Y - position.Y, 2) < currentMinDist)
+                        {
+                            selectedPart = i;
+                            selectedPoint = j;
+                            currentMinDist = Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).X - position.X, 2) + Math.Pow(featureGeom.Parts.GetItem(i).GetItem(j).Y - position.Y, 2);
+                        }
+                    }
+                }
+                for (int i = 0; i < listBox1.Items.Count; i++)
+                {
+                    if (listBox1.Items[i].ToString().StartsWith($"    [{selectedPart}-{selectedPoint}]"))
+                    {
+                        listBox1.SelectedIndex = i;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                listBox1.SelectedIndex = 0;
+            }
+        }
+
+        private void 结束并保存ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CloseWindow();
         }
     }
 }
