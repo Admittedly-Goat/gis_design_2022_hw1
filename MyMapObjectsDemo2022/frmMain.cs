@@ -1348,6 +1348,12 @@ namespace MyMapObjectsDemo2022
 
         private void 保存图层为GeoJSONToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex=Convert.ToInt32(checkedListBox1.SelectedIndex);
 
         }
 
@@ -2201,6 +2207,41 @@ namespace MyMapObjectsDemo2022
         private void 分级渲染ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             btnClassBreaks_Click(moMap, e);
+        }
+
+        private void 导出地图为bitmapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var scale = Microsoft.VisualBasic.Interaction.InputBox("请输入解析度，即1图上像素代表多少屏幕像素", "解析度输入");
+                var scaleDouble = Convert.ToDouble(scale);
+                if (scaleDouble < 1)
+                {
+                    MessageBox.Show("解析度请不要小于1，请重新操作。");
+                    return;
+                }
+                SaveFileDialog sDialog = new SaveFileDialog();
+                sDialog.Filter = "Bitmap Files (*.bmp)|*.bmp";
+                string sFileName = "";
+                if (sDialog.ShowDialog(this)
+                    == DialogResult.OK)
+                {
+                    sFileName = sDialog.FileName;
+                    sDialog.Dispose();
+                }
+                else
+                {
+                    sDialog.Dispose();
+                    return;
+                }
+                moMap.DrawCurrentExtentWithScale(scaleDouble).Save(sFileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("出现问题，请重试。问题："+ex.Message);
+
+            }
+
         }
     }
 }
