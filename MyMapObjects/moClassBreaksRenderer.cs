@@ -167,7 +167,51 @@ namespace MyMapObjects
             }
             return _DefaultSymbol;
         }
+        /// <summary>
+        /// 为所有点、线符号赋予渐变尺寸
+        /// </summary>
+        /// <param name="size"></param>
+        public void RampSize(double size)
+        {
+            Int32 sBreakCount = _BreakValues.Count;
+            double[] Size = new double[sBreakCount];
+            if (sBreakCount <= 0)
+                return;
+            else if(sBreakCount <=4)
+            {
+                double minSize = size * 2 / sBreakCount;
+                for(int i =0;i<sBreakCount;i++)
+                {
+                    Size[i] = i * minSize;
+                }
+            }
+            else
+            {
+                double minSize = size / 4;
+                for(int i=0;i<sBreakCount;i++)
+                {
+                    Size[i] = i * minSize;
+                }
+            }
+            for (Int32 i = 0; i < sBreakCount ; i++)
+            {
+                if (_Symbols[i] != null)
+                {
+                    if (_Symbols[i].SymbolType == moSymbolTypeConstant.SimpleMarkerSymbol)
+                    {
+                        moSimpleMarkerSymbol sSymbol = (moSimpleMarkerSymbol)_Symbols[i];
+                        sSymbol.Size = Size[i];
+                    }
+                    else if (_Symbols[i].SymbolType == moSymbolTypeConstant.SimpleLineSymbol)
+                    {
+                        moSimpleLineSymbol sSymbol = (moSimpleLineSymbol)_Symbols[i];
+                        sSymbol.Size = Size[i];
+                    }
+                }
+            }
 
+
+        }
         /// <summary>
         /// 为所有符号生成渐变色
         /// </summary>
