@@ -31,6 +31,9 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleMarkerSymbol mEditingVertexSymbol; // 正在编辑的图形顶点符号
         private MyMapObjects.moSimpleMarkerSymbol mEditingHighlightedVertexSymbol; // 正在编辑的高亮的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
+        private MyMapObjects.moSimpleMarkerSymbol mRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前渲染的点符号
+        private MyMapObjects.moSimpleLineSymbol mRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前渲染的线符号
+        private MyMapObjects.moSimpleFillSymbol mRendererFillSymbol = new MyMapObjects.moSimpleFillSymbol();//当前渲染的面符号
         private bool mShowLngLat = false; // 是否显示经纬度
         private int checklistIndex = -1;   //全局图层列表索引
 
@@ -160,20 +163,25 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    MyMapObjects.moSimpleMarkerSymbol sSymbol_point = new MyMapObjects.moSimpleMarkerSymbol();
-                    SimpleRendererPoint cForm = new SimpleRendererPoint();
+                    SimpleRendererPoint cForm = new SimpleRendererPoint(mRendererPointSymbol);
                     cForm.ShowDialog();
-                    sRenderer.Symbol = sSymbol_point;
+                    sRenderer.Symbol = mRendererPointSymbol;
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    MyMapObjects.moSimpleLineSymbol sSymbol_line = new MyMapObjects.moSimpleLineSymbol();
-                    sRenderer.Symbol = sSymbol_line;
+                    SimpleRendererLine cForm = new SimpleRendererLine(mRendererLineSymbol);
+                    cForm.ShowDialog();
+                    sRenderer.Symbol = mRendererLineSymbol;
                 }
                 else
                 {
-                    MyMapObjects.moSimpleFillSymbol sSymbol_polygon = new MyMapObjects.moSimpleFillSymbol();
-                    sRenderer.Symbol = sSymbol_polygon;
+                    DialogResult dr = colorDialog1.ShowDialog();
+                    //选择填充颜色
+                    if (dr == DialogResult.OK)
+                    {
+                        mRendererFillSymbol.Color = colorDialog1.Color;
+                    }
+                    sRenderer.Symbol = mRendererFillSymbol;
                 }
                 sLayer.Renderer = sRenderer;
                 moMap.RedrawMap();
@@ -183,32 +191,43 @@ namespace MyMapObjectsDemo2022
 
         private void btnUniqueValue_Click(object sender, EventArgs e)
         {
-            //(1)查找一个多边形图层
-            MyMapObjects.moMapLayer sLayer = GetPolygonLayer();
-            if (sLayer == null)
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
+            moMap.Refresh();
+            if (moMap.Layers.Count == 0)
             {
                 return;
             }
-            //(2)假定第一个字段为名称并且为字符型，新建一个唯一值渲染对象
-            MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
-            sRenderer.Field = "名称";
-            List<String> sNames = new List<string>();
-            Int32 sFeatureCount = sLayer.Features.Count;
-            for (Int32 i = 0; i <= sFeatureCount - 1; i++)
+            else
             {
-                string sName = (string)sLayer.Features.GetItem(i).Attributes.GetItem(0);
-                sNames.Add(sName);
+                MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
+                MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
+                if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    UniqueValuePoint cForm = new UniqueValuePoint(sLayer, sRenderer, mRendererPointSymbol);
+                    cForm.ShowDialog();
+
+                }
+                else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    UniqueValueLIne cForm = new UniqueValueLIne(sLayer, sRenderer, mRendererLineSymbol);
+                    cForm.ShowDialog();
+                }
+                else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    UniqueValuePolygon cForm = new UniqueValuePolygon(sLayer, sRenderer, mRendererFillSymbol);
+                    cForm.ShowDialog();
+                }
+                sLayer.Renderer = sRenderer;
+                moMap.RedrawMap();
             }
-            sNames.Distinct().ToList();
-            Int32 sValueCount = sNames.Count;
-            for (Int32 i = 0; i <= sValueCount - 1; i++)
-            {
-                MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
-                sRenderer.AddUniqueValue(sNames[i], sSymbol);
-            }
-            sRenderer.DefaultSymbol = new MyMapObjects.moSimpleFillSymbol();
-            sLayer.Renderer = sRenderer;
-            moMap.RedrawMap();
+            
+            checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
+
         }
 
         private void btnClassBreaks_Click(object sender, EventArgs e)
@@ -2119,6 +2138,11 @@ namespace MyMapObjectsDemo2022
         private void 简单渲染ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             btnSimpleRenderer_Click(moMap, e);
+        }
+
+        private void 唯一值渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            btnUniqueValue_Click(moMap, e);
         }
     }
 }

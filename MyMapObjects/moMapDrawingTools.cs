@@ -227,7 +227,9 @@ namespace MyMapObjects
             sPen.DashStyle = (DashStyle)symbol.Style;
             g.DrawPath(sPen, sGraphicPath);
             sPen.Dispose();
+           
         }
+        
 
         //采用简单线符号绘制复合折线
         private static void DrawMultiPolylineBySimpleLine(Graphics g, moRectangle extent, double mapScale, double dpm,
@@ -421,7 +423,7 @@ namespace MyMapObjects
             {
                 SolidBrush sBrush = new SolidBrush(symbol.Color);
                 Pen pen = new Pen(symbol.Color);
-                Rectangle dot = new Rectangle(drawingArea.X + drawingArea.Width *5 / 12, drawingArea.Y + drawingArea.Height * 5 / 12, drawingArea.Width / 3, drawingArea.Height / 3);
+                Rectangle dot = new Rectangle(drawingArea.X + drawingArea.Width *5 / 12, drawingArea.Y + drawingArea.Height * 5 / 12, drawingArea.Width / 6, drawingArea.Width / 6);
                 g.DrawEllipse(pen, drawingArea);
                 g.FillEllipse(sBrush, dot);
                 pen.Dispose();
@@ -430,7 +432,7 @@ namespace MyMapObjects
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.CircleCircle)
             {
                 Pen pen = new Pen(symbol.Color);
-                Rectangle circle = new Rectangle(drawingArea.X + drawingArea.Width /4, drawingArea.Y + drawingArea.Height /4, drawingArea.Width *11/16, drawingArea.Height * 11/16);
+                Rectangle circle = new Rectangle(drawingArea.X + drawingArea.Width * 3 / 16, drawingArea.Y + drawingArea.Height * 3 / 16, drawingArea.Width * 3 / 4, drawingArea.Height * 3 / 4);
                 g.DrawEllipse(pen, drawingArea);
                 g.DrawEllipse(pen, circle);
                 pen.Dispose();
