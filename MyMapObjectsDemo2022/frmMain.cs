@@ -456,6 +456,13 @@ namespace MyMapObjectsDemo2022
                         vertexEditorForm.RemainingPartPointNumber--;
                     }
                 }
+            }else if(mMapOpStyle == 22)
+            {
+                var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+                if (vertexEditorForm != null)
+                {
+                    vertexEditorForm.AddVertexCallBack(newPoint);
+                }
             }
         }
 
@@ -2121,7 +2128,7 @@ namespace MyMapObjectsDemo2022
             //地图重回跟踪层
             moMap.RedrawTrackingShapes();
 
-            vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0),CallBackMovingVertex,CallBackNewPartMoMap);
+            vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0),CallBackMovingVertex,CallBackNewPartMoMap, AddNewVertexMoMap);
             vertexEditorForm.Show();
         }
 
@@ -2135,6 +2142,12 @@ namespace MyMapObjectsDemo2022
             mMapOpStyle = 21;
 
         }
+
+        private void AddNewVertexMoMap()
+        {
+            mMapOpStyle = 22;
+        }
+
         private void 简单渲染ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             btnSimpleRenderer_Click(moMap, e);

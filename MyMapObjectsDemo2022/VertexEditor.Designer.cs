@@ -64,6 +64,7 @@
             this.图上选点ToolStripMenuItem.Name = "图上选点ToolStripMenuItem";
             this.图上选点ToolStripMenuItem.Size = new System.Drawing.Size(113, 19);
             this.图上选点ToolStripMenuItem.Text = "图上选点";
+            this.图上选点ToolStripMenuItem.Click += new System.EventHandler(this.图上选点ToolStripMenuItem_Click);
             // 
             // 移动节点ToolStripMenuItem
             // 

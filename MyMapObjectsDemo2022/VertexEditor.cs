@@ -15,6 +15,7 @@ namespace MyMapObjectsDemo2022
         Action RedrawMap;
         Action CallMoMapEditVertex;
         Action NewPartMoMap;
+        Action AddNewVertexMoMap;
         private MyMapObjects.moPoint MovingVertex;
         private MyMapObjects.moFeature SelectedFeature;
         public MyMapObjects.moPoints NewPart;
@@ -53,7 +54,7 @@ namespace MyMapObjectsDemo2022
                 }
             }
         }
-        public VertexEditor(Action redrawMap, MyMapObjects.moFeature feature, Action callMoMapEditVertex, Action newPartMoMap)
+        public VertexEditor(Action redrawMap, MyMapObjects.moFeature feature, Action callMoMapEditVertex, Action newPartMoMap,Action addNewVertexMoMap)
         {
             InitializeComponent();
             HighlightedPoints = new MyMapObjects.moPoints();
@@ -62,6 +63,7 @@ namespace MyMapObjectsDemo2022
             ReloadAllPartsAndPoints();
             CallMoMapEditVertex = callMoMapEditVertex;
             NewPartMoMap = newPartMoMap;
+            AddNewVertexMoMap = addNewVertexMoMap;
         }
 
         private void VertexEditor_Load(object sender, EventArgs e)
@@ -331,43 +333,48 @@ namespace MyMapObjectsDemo2022
                 if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
                     AddVertexPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
-                    AddVertexPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1])+pointIndexDelta;
-                    var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
-                  /*  if (featureGeom.Parts.GetItem(selectedPartIndex).Count <= 2)
-                    {
-                        MessageBox.Show("线段少于2个点，无法继续操作，请直接删除部分。");
-                        return;
-                    }
-                    featureGeom.Parts.GetItem(selectedPartIndex).RemoveAt(selectedPointIndex);
-                    featureGeom.UpdateExtent();*/
+                    AddVertexPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]) + pointIndexDelta;
 
                 }
                 else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
-                    int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
-                    if (featureGeom.Parts.GetItem(selectedPartIndex).Count <= 3)
-                    {
-                        MessageBox.Show("多边形少于3个点，无法继续操作，请直接删除部分。");
-                        return;
-                    }
-                    featureGeom.Parts.GetItem(selectedPartIndex).RemoveAt(selectedPointIndex);
-                    featureGeom.UpdateExtent();
+                    AddVertexPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
+                    AddVertexPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]) + pointIndexDelta;
                 }
                 else
                 {
                     MessageBox.Show("单点无法添加新节点。");
                     return;
                 }
-                HighlightedPoints.Clear();
                 RedrawMap();
-                ReloadAllPartsAndPoints();
+                AddNewVertexMoMap();
             }
             else if (selectedText.EndsWith("部分"))
             {
                 MessageBox.Show("您选择的是部分，请选择节点。");
             }
+        }
+
+        public void AddVertexCallBack(MyMapObjects.moPoint newPoint)
+        {
+            if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+            {
+                var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                featureGeom.Parts.GetItem(AddVertexPartIndex).Insert(AddVertexPointIndex, newPoint);
+
+            }
+            else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            {
+                var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                featureGeom.Parts.GetItem(AddVertexPartIndex).Insert(AddVertexPointIndex, newPoint);
+            }
+            ReloadAllPartsAndPoints();
+            RedrawMap();
+        }
+
+        private void 图上选点ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
