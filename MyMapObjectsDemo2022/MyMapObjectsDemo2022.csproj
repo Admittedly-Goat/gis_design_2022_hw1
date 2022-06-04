@@ -72,6 +72,12 @@
     <Compile Include="ClassBreaksPoint.Designer.cs">
       <DependentUpon>ClassBreaksPoint.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClassBreaksPolygon.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClassBreaksPolygon.Designer.cs">
+      <DependentUpon>ClassBreaksPolygon.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateLineLayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ClassBreaksPoint.resx">
       <DependentUpon>ClassBreaksPoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClassBreaksPolygon.resx">
+      <DependentUpon>ClassBreaksPolygon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreateLineLayer.resx">
       <DependentUpon>CreateLineLayer.cs</DependentUpon>

@@ -262,7 +262,9 @@ namespace MyMapObjectsDemo2022
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-
+                    ClassBreaksPolygon cForm = new ClassBreaksPolygon(sLayer, sRenderer, mRendererFillSymbol);
+                    cForm.ShowDialog();
+                    sRenderer.DefaultSymbol = mRendererFillSymbol;
                 }
                 
                 sLayer.Renderer = sRenderer;

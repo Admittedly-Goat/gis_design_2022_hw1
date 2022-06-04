@@ -181,7 +181,9 @@ namespace MyMapObjectsDemo2022
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.MaximizeBox = false;
             this.Name = "SimpleRendererLine";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "选择线要素样式";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -85,8 +85,10 @@ namespace MyMapObjectsDemo2022
             this.Controls.Add(this.button1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.label1);
+            this.MaximizeBox = false;
             this.Name = "UniqueValuePoint";
-            this.Text = "UniqueValuePoint";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "点要素唯一值渲染";
             this.ResumeLayout(false);
             this.PerformLayout();
 
