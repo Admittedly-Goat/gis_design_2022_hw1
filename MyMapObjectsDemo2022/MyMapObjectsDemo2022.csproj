@@ -60,6 +60,18 @@
     <Compile Include="ChangeNameOfLayer.Designer.cs">
       <DependentUpon>ChangeNameOfLayer.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClassBreaksLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClassBreaksLine.Designer.cs">
+      <DependentUpon>ClassBreaksLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClassBreaksPoint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClassBreaksPoint.Designer.cs">
+      <DependentUpon>ClassBreaksPoint.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateLineLayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -152,6 +164,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ChangeNameOfLayer.resx">
       <DependentUpon>ChangeNameOfLayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClassBreaksLine.resx">
+      <DependentUpon>ClassBreaksLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClassBreaksPoint.resx">
+      <DependentUpon>ClassBreaksPoint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreateLineLayer.resx">
       <DependentUpon>CreateLineLayer.cs</DependentUpon>

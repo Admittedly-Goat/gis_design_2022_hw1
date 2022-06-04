@@ -225,58 +225,54 @@ namespace MyMapObjectsDemo2022
                 sLayer.Renderer = sRenderer;
                 moMap.RedrawMap();
             }
-            
+
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
 
         }
 
         private void btnClassBreaks_Click(object sender, EventArgs e)
         {
-            //查找多边形图层
-            MyMapObjects.moMapLayer sLayer = GetPolygonLayer();
-            if (sLayer == null)
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
+            moMap.Refresh();
+            if (moMap.Layers.Count == 0)
             {
                 return;
             }
-            //新建一个分级渲染对象，并假定图层中存在名称为“F5”的字段且为单精度浮点型
-            MyMapObjects.moClassBreaksRenderer sRenderer = new MyMapObjects.moClassBreaksRenderer();
-            sRenderer.Field = "F5";
-            //读出所有值
-            Int32 sFieldIndex = sLayer.AttributeFields.FindField(sRenderer.Field);
-            if (sFieldIndex < 0)
+            else
             {
-                return;
+                MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
+                MyMapObjects.moClassBreaksRenderer sRenderer = new MyMapObjects.moClassBreaksRenderer();
+                if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    ClassBreaksPoint cForm = new ClassBreaksPoint(sLayer, sRenderer, mRendererPointSymbol);
+                    cForm.ShowDialog();
+                    sRenderer.DefaultSymbol = mRendererPointSymbol;
+
+                }
+                else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    ClassBreaksLine cForm = new ClassBreaksLine(sLayer, sRenderer, mRendererLineSymbol);
+                    cForm.ShowDialog();
+                    sRenderer.DefaultSymbol = mRendererLineSymbol;
+                }
+                else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+
+                }
+                
+                sLayer.Renderer = sRenderer;
+                moMap.RedrawMap();
             }
-            if (sLayer.AttributeFields.GetItem(sFieldIndex).ValueType != MyMapObjects.moValueTypeConstant.dSingle)
-            {
-                return;
-            }
-            Int32 sFeatureCount = sLayer.Features.Count;
-            List<double> sValues = new List<double>();
-            for (Int32 i = 0; i < sFeatureCount - 1; i++)
-            {
-                double sValue = (float)sLayer.Features.GetItem(i).Attributes.GetItem(sFieldIndex);
-                sValues.Add(sValue);
-            }
-            //获取最小最大值，并分五级
-            double sMinValue = sValues.Min();
-            double sMaxValue = sValues.Max();
-            for (Int32 i = 0; i <= 4; i++)
-            {
-                double sValue = sMinValue + (sMaxValue - sMinValue) * (i + 1) / 5;
-                MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
-                sRenderer.AddBreakValue(sValue, sSymbol);
-            }
-            //生成渐变色
-            Color sStartColor = Color.FromArgb(255, 255, 192, 192);
-            Color sEndColor = Color.Maroon;
-            sRenderer.RampColor(sStartColor, sEndColor);
-            //赋给图层
-            sRenderer.DefaultSymbol = new MyMapObjects.moSimpleFillSymbol();
-            sLayer.Renderer = sRenderer;
-            //重绘地图
-            moMap.RedrawMap();
+
+            checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
         }
+
+        
 
         private void btnShowLabel_Click(object sender, EventArgs e)
         {
@@ -2143,6 +2139,11 @@ namespace MyMapObjectsDemo2022
         private void 唯一值渲染ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             btnUniqueValue_Click(moMap, e);
+        }
+
+        private void 分级渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            btnClassBreaks_Click(moMap, e);
         }
     }
 }

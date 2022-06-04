@@ -28,7 +28,7 @@ namespace MyMapObjectsDemo2022
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("当前没有查询要素");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("当前没有查询要素");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -158,10 +158,10 @@ namespace MyMapObjectsDemo2022
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode2.Name = "Node0";
-            treeNode2.Text = "当前没有查询要素";
+            treeNode1.Name = "Node0";
+            treeNode1.Text = "当前没有查询要素";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode1});
             this.treeView1.Size = new System.Drawing.Size(173, 663);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -359,6 +359,7 @@ namespace MyMapObjectsDemo2022
             this.分级渲染ToolStripMenuItem.Name = "分级渲染ToolStripMenuItem";
             this.分级渲染ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.分级渲染ToolStripMenuItem.Text = "分级渲染";
+            this.分级渲染ToolStripMenuItem.Click += new System.EventHandler(this.分级渲染ToolStripMenuItem_Click);
             // 
             // 更改图层注记ToolStripMenuItem
             // 
