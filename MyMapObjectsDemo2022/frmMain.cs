@@ -34,7 +34,6 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前简单渲染的点符号
         private MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前简单渲染的线符号
         private MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();//当前简单渲染的面符号
-        private MyMapObjects.moUniqueValueRenderer mUniqueValueRenderer = new MyMapObjects.moUniqueValueRenderer();//当前唯一值渲染
         private MyMapObjects.moClassBreaksRenderer mClassBreaksRenderer = new MyMapObjects.moClassBreaksRenderer();//当前分级渲染
         private bool mShowLngLat = false; // 是否显示经纬度
         private int checklistIndex = -1;   //全局图层列表索引
@@ -233,11 +232,12 @@ namespace MyMapObjectsDemo2022
             {
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
                 MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
+                MyMapObjects.moUniqueValueRenderer sRenderer_clone = new MyMapObjects.moUniqueValueRenderer();
+                sRenderer_clone = sRenderer.Clone1();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
                     UniqueValuePoint cForm = new UniqueValuePoint(sLayer, sRenderer, mSimpleRendererPointSymbol);
                     cForm.ShowDialog();
-                    
 
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
@@ -250,8 +250,12 @@ namespace MyMapObjectsDemo2022
                     UniqueValuePolygon cForm = new UniqueValuePolygon(sLayer, sRenderer, mSimpleRendererPolygonSymbol);
                     cForm.ShowDialog();
                 }
-                sLayer.Renderer = sRenderer;
-                moMap.RedrawMap();
+                if (sRenderer_clone.Field != sRenderer.Field)
+                {
+                    sLayer.Renderer = sRenderer;
+                    moMap.RedrawMap();
+                }
+
             }
 
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
