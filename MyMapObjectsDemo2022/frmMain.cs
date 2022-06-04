@@ -24,11 +24,14 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleFillSymbol mSelectingBoxSymbol; // 选择盒符号
         private MyMapObjects.moSimpleFillSymbol mZoomBoxSymbol; // 缩放盒符号
         private MyMapObjects.moSimpleFillSymbol mMovingPolygonSymbol; // 正在移动的多边形符号
+        private MyMapObjects.moSimpleMarkerSymbol mMovingPointSymbol;  //正在移动的点符号
+        private MyMapObjects.moSimpleLineSymbol mMovingPolylineSymbol;  //正在移动的线符号
         private MyMapObjects.moSimpleFillSymbol mEditingPolygonSymbol; // 正在编辑的多边形符号
         private MyMapObjects.moSimpleLineSymbol mEditingLineSymbol; // 正在编辑的线段符号
         private MyMapObjects.moSimpleMarkerSymbol mEditingVertexSymbol; // 正在编辑的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
         private bool mShowLngLat = false; // 是否显示经纬度
+        private int checklistIndex = -1;   //全局图层列表索引
 
         // 与地图操作有关的变量
         private Int32 mMapOpStyle = 0; // 0：无，1：放大，2：缩小，3：漫游，4：选择，5：查询，6：移动，7：描绘，8：编辑
@@ -397,11 +400,14 @@ namespace MyMapObjectsDemo2022
             {
                 return;
             }
-            MyMapObjects.moMapLayer sLayer = GetPolygonLayer();
-            if (sLayer == null)
+            if (checkedListBox1.SelectedIndex == -1)
             {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
+            int selectedIndex = checkedListBox1.SelectedIndex;
+            checklistIndex = selectedIndex;
+            MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(selectedIndex);
             //判断是否有选中的要素
             Int32 sSelFeatureCount = sLayer.SelectedFeatures.Count;
             if (sSelFeatureCount == 0)
@@ -410,11 +416,32 @@ namespace MyMapObjectsDemo2022
             }
             //复制图形
             mMovingGeometries.Clear();
-            for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
+            if(sLayer.ShapeType==MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
-                MyMapObjects.moMultiPolygon sOriPolygon = (MyMapObjects.moMultiPolygon)sLayer.SelectedFeatures.GetItem(i).Geometry;
-                MyMapObjects.moMultiPolygon sDesPolygon = sOriPolygon.Clone();
-                mMovingGeometries.Add(sDesPolygon);
+                for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
+                {
+                    MyMapObjects.moMultiPolygon sOriPolygon = (MyMapObjects.moMultiPolygon)sLayer.SelectedFeatures.GetItem(i).Geometry;
+                    MyMapObjects.moMultiPolygon sDesPolygon = sOriPolygon.Clone();
+                    mMovingGeometries.Add(sDesPolygon);
+                }
+            }
+            else if(sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+            {
+                for(Int32 i=0;i<=sSelFeatureCount-1;i++)
+                {
+                    MyMapObjects.moMultiPolyline sOriPolyline = (MyMapObjects.moMultiPolyline)sLayer.SelectedFeatures.GetItem(i).Geometry;
+                    MyMapObjects.moMultiPolyline sDesPolyline = sOriPolyline.Clone();
+                    mMovingGeometries.Add(sDesPolyline);
+                }
+            }
+            else if(sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+            {
+                for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
+                {
+                    MyMapObjects.moPoint sOriPoint = (MyMapObjects.moPoint)sLayer.SelectedFeatures.GetItem(i).Geometry;
+                    MyMapObjects.moPoint sDesPoint = sOriPoint.Clone();
+                    mMovingGeometries.Add(sDesPoint);
+                }
             }
             //设置变量
             mStartMouseLocation = e.Location;
@@ -547,12 +574,27 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             mIsInMovingShapes = false;
+            //更新图层要素的数据
             double sDeltaX = moMap.ToMapDistance(e.Location.X - mOriginMouseLocation.X);
             double sDeltaY = moMap.ToMapDistance(mOriginMouseLocation.Y - e.Location.Y);
+            MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(checklistIndex);
+            if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+            {
+ 
+            }
+            else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+            {
+
+            }
+            else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+            {
+
+            }
             //重绘地图
             moMap.RedrawMap();
             //清除移动图形列表
             mMovingGeometries.Clear();
+            checklistIndex = -1;
         }
 
         private void OnIdentify_MouseUp(MouseEventArgs e)
@@ -1014,7 +1056,7 @@ namespace MyMapObjectsDemo2022
             return sLayer;
         }
 
-        //根据指定的平移量修改移动图形的坐标
+        //根据指定的平移量修改移动图形的坐标（需要修改）
         private void ModifyMovingGeometries(double deltaX, double deltaY)
         {
             Int32 sCount = mMovingGeometries.Count;
@@ -1040,7 +1082,7 @@ namespace MyMapObjectsDemo2022
             }
         }
 
-        //绘制正在移动的图形
+        //绘制正在移动的图形（需要修改）
         private void DrawMovingShapes()
         {
             MyMapObjects.moUserDrawingTool sDrawingTool = moMap.GetDrawingTool();
