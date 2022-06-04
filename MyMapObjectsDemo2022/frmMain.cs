@@ -175,8 +175,13 @@ namespace MyMapObjectsDemo2022
                 }
                 else
                 {
-                    MyMapObjects.moSimpleFillSymbol sSymbol_polygon = new MyMapObjects.moSimpleFillSymbol();
-                    sRenderer.Symbol = sSymbol_polygon;
+                    DialogResult dr = colorDialog1.ShowDialog();
+                    //选择填充颜色
+                    if (dr == DialogResult.OK)
+                    {
+                        mRendererFillSymbol.Color = colorDialog1.Color;
+                    }
+                    sRenderer.Symbol = mRendererFillSymbol;
                 }
                 sLayer.Renderer = sRenderer;
                 moMap.RedrawMap();
