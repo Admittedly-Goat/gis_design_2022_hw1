@@ -40,23 +40,30 @@ namespace MyMapObjectsDemo2022
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            moUniqueValueRenderer.Field = listBox1.SelectedItem.ToString();
-            List<object> sNames = new List<object>();
-            Int32 sFeatureCount = moMapLayer.Features.Count;
-            for (Int32 i = 0; i <= sFeatureCount - 1; i++)
+            if(listBox1.SelectedIndex == -1)
             {
-                object sName = moMapLayer.Features.GetItem(i).Attributes.GetItem(listBox1.SelectedIndex);
-                sNames.Add(sName);
+                MessageBox.Show("未选择绑定字段");
             }
-            sNames.Distinct().ToList();
-            Int32 sValueCount = sNames.Count;
-            for (Int32 i = 0; i <= sValueCount - 1; i++)
+            else
             {
-                MyMapObjects.moSimpleMarkerSymbol sSymbol = new MyMapObjects.moSimpleMarkerSymbol();
-                moUniqueValueRenderer.AddUniqueValue(sNames[i].ToString(), sSymbol);
-            }
-            moUniqueValueRenderer.DefaultSymbol = new MyMapObjects.moSimpleMarkerSymbol();
-            this.Close();
+                moUniqueValueRenderer.Field = listBox1.SelectedItem.ToString();
+                List<object> sNames = new List<object>();
+                Int32 sFeatureCount = moMapLayer.Features.Count;
+                for (Int32 i = 0; i <= sFeatureCount - 1; i++)
+                {
+                    object sName = moMapLayer.Features.GetItem(i).Attributes.GetItem(listBox1.SelectedIndex);
+                    sNames.Add(sName);
+                }
+                sNames.Distinct().ToList();
+                Int32 sValueCount = sNames.Count;
+                for (Int32 i = 0; i <= sValueCount - 1; i++)
+                {
+                    MyMapObjects.moSimpleMarkerSymbol sSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                    moUniqueValueRenderer.AddUniqueValue(sNames[i].ToString(), sSymbol);
+                }
+                moUniqueValueRenderer.DefaultSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                this.Close();
+            }         
         }
 
         private void label1_Click(object sender, EventArgs e)

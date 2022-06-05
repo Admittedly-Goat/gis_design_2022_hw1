@@ -180,6 +180,27 @@ namespace MyMapObjects
             return sRenderer;
 
         }
+        public moUniqueValueRenderer Clone1()
+        {
+            moUniqueValueRenderer sRenderer = new moUniqueValueRenderer();
+            sRenderer._Field = _Field;
+            sRenderer._HeadTitle = _HeadTitle;
+            sRenderer._ShowHead = _ShowHead;
+            Int32 sValueCount = _Values.Count;
+            for (Int32 i = 0; i <= sValueCount - 1; i++)
+            {
+                string sValue = _Values[i];
+                moSymbol sSymbol = null;
+                if (_Symbols[i] != null)
+                    sSymbol = _Symbols[i].Clone();
+                sRenderer.AddUniqueValue(sValue, sSymbol);
+            }
+            if (_DefaultSymbol != null)
+                sRenderer.DefaultSymbol = _DefaultSymbol.Clone();
+            sRenderer._ShowDefaultSymbol = _ShowDefaultSymbol;
+            return sRenderer;
+
+        }
 
         #endregion
 

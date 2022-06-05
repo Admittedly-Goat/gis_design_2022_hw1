@@ -31,61 +31,78 @@ namespace MyMapObjectsDemo2022
         {
             //获取级数
             int num = int.Parse(textBox1.Text);
-            moClassBreaksRenderer.Field = listBox1.SelectedItem.ToString();
-            //读出所有值
-            Int32 sFieldIndex = moMapLayer.AttributeFields.FindField(moClassBreaksRenderer.Field);
-            if (sFieldIndex < 0)
+            if(listBox1.SelectedIndex == -1)
             {
-                return;
+                MessageBox.Show("未选择绑定字段");
             }
-            if (moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt16
-                || moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt32
-                || moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt64)
+            else
             {
-                Int32 sFeatureCount = moMapLayer.Features.Count;
-                List<int> sValues = new List<int>();
-                for (Int32 i = 0; i < sFeatureCount - 1; i++)
+                moClassBreaksRenderer.Field = listBox1.SelectedItem.ToString();
+                //读出所有值
+                Int32 sFieldIndex = moMapLayer.AttributeFields.FindField(moClassBreaksRenderer.Field);
+                if (sFieldIndex < 0)
                 {
-                    int sValue = (int)moMapLayer.Features.GetItem(i).Attributes.GetItem(sFieldIndex);
-                    sValues.Add(sValue);
+                    return;
                 }
-                //获取最小最大值
-                int sMinValue = sValues.Min();
-                int sMaxValue = sValues.Max();
-                for (Int32 i = 0; i < num; i++)
+                if (moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt16
+                    || moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt32
+                    || moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt64)
                 {
-                    int sValue = sMinValue + (sMaxValue - sMinValue) * (i + 1) / num;
-                    MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
-                    moClassBreaksRenderer.AddBreakValue(sValue, sSymbol);
+                    Int32 sFeatureCount = moMapLayer.Features.Count;
+                    List<int> sValues = new List<int>();
+                    for (Int32 i = 0; i < sFeatureCount - 1; i++)
+                    {
+                        int sValue = int.Parse(moMapLayer.Features.GetItem(i).Attributes.GetItem(sFieldIndex).ToString());
+                        sValues.Add(sValue);
+                    }
+                    //获取最小最大值
+                    int sMinValue = sValues.Min();
+                    int sMaxValue = sValues.Max();
+                    for (Int32 i = 0; i < num; i++)
+                    {
+                        int sValue = sMinValue + (sMaxValue - sMinValue) * (i + 1) / num;
+                        MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
+                        moClassBreaksRenderer.AddBreakValue(sValue, sSymbol);
+                    }
+                    //生成渐变色
+                    Color sStartColor = Color.FromArgb(255, 255, 192, 192);
+                    Color sEndColor = Color.Maroon;
+                    moClassBreaksRenderer.RampColor(sStartColor, sEndColor);
+                    this.Close();
                 }
-            }
 
-            else if (moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dSingle ||
-                moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dDouble)
-            {
-                Int32 sFeatureCount = moMapLayer.Features.Count;
-                List<double> sValues = new List<double>();
-                for (Int32 i = 0; i < sFeatureCount - 1; i++)
+                else if (moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dSingle ||
+                    moMapLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dDouble)
                 {
-                    double sValue = (float)moMapLayer.Features.GetItem(i).Attributes.GetItem(sFieldIndex);
-                    sValues.Add(sValue);
+                    Int32 sFeatureCount = moMapLayer.Features.Count;
+                    List<double> sValues = new List<double>();
+                    for (Int32 i = 0; i < sFeatureCount - 1; i++)
+                    {
+                        double sValue = (float)moMapLayer.Features.GetItem(i).Attributes.GetItem(sFieldIndex);
+                        sValues.Add(sValue);
+                    }
+                    //获取最小最大值
+                    double sMinValue = sValues.Min();
+                    double sMaxValue = sValues.Max();
+                    for (Int32 i = 0; i < num; i++)
+                    {
+                        double sValue = sMinValue + (sMaxValue - sMinValue) * (i + 1) / num;
+                        MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
+                        moClassBreaksRenderer.AddBreakValue(sValue, sSymbol);
+                    }
+                    //生成渐变色
+                    Color sStartColor = Color.FromArgb(255, 255, 192, 192);
+                    Color sEndColor = Color.Maroon;
+                    moClassBreaksRenderer.RampColor(sStartColor, sEndColor);
+                    this.Close();
                 }
-                //获取最小最大值
-                double sMinValue = sValues.Min();
-                double sMaxValue = sValues.Max();
-                for (Int32 i = 0; i < num; i++)
+                else
                 {
-                    double sValue = sMinValue + (sMaxValue - sMinValue) * (i + 1) / num;
-                    MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
-                    moClassBreaksRenderer.AddBreakValue(sValue, sSymbol);
+                    MessageBox.Show("所选字段为文本类型，无法进行分级渲染，请选择其他字段");
                 }
-            }
 
-            //生成渐变色
-            Color sStartColor = Color.FromArgb(255, 255, 192, 192);
-            Color sEndColor = Color.Maroon;
-            moClassBreaksRenderer.RampColor(sStartColor, sEndColor);
-            this.Close();
+            }
+            
         }
 
         private void button2_Click(object sender, EventArgs e)

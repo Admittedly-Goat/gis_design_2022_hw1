@@ -56,7 +56,7 @@ namespace MyMapObjectsDemo2022
             else if (CircleCircle.Checked)
                 moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.CircleCircle;
             moSimpleMarkerSymbol.Size = float.Parse(textBox1.Text);
-            this.Close();
+            
             //显示颜色对话框
             DialogResult dr = colorDialog1.ShowDialog();
             //选择符号颜色
@@ -64,6 +64,7 @@ namespace MyMapObjectsDemo2022
             {
                 moSimpleMarkerSymbol.Color = colorDialog1.Color;
             }
+            this.Close();
         }
         //取消
         private void button2_Click(object sender, EventArgs e)
@@ -71,69 +72,5 @@ namespace MyMapObjectsDemo2022
             this.Close();
         }
 
-        private void SolidTriangle_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void CircleCircle_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void CircleDot_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SolidSquare_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Square_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Triangle_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SolidCircle_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Circle_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

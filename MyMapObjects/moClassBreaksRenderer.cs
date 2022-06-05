@@ -300,6 +300,29 @@ namespace MyMapObjects
             sRenderer._ShowDefaultSymbol = _ShowDefaultSymbol;
             return sRenderer;
         }
+        public moClassBreaksRenderer Clone1()
+        {
+            moClassBreaksRenderer sRenderer = new moClassBreaksRenderer();
+            sRenderer._Field = _Field;
+            sRenderer._HeadTitle = _HeadTitle;
+            sRenderer._ShowHead = _ShowHead;
+
+            Int32 sBreakCount = _BreakValues.Count;
+            for (Int32 i = 0; i <= sBreakCount - 1; i++)
+            {
+                double sBreakValue = _BreakValues[i];
+                moSymbol sSymbol = null;
+                if (_Symbols[i] != null)
+                    sSymbol = _Symbols[i].Clone();
+                //sRenderer.AddUniqueValue(sValue, sSymbol);
+            }
+            if (_DefaultSymbol != null)
+            {
+                sRenderer.DefaultSymbol = _DefaultSymbol.Clone();
+            }
+            sRenderer._ShowDefaultSymbol = _ShowDefaultSymbol;
+            return sRenderer;
+        }
         #endregion
 
         #region 私有函数

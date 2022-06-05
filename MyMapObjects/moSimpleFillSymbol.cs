@@ -95,6 +95,15 @@ namespace MyMapObjects
             sSymbol.Outline = (moSimpleLineSymbol)_Outline.Clone();
             return sSymbol;
         }
+        public moSimpleFillSymbol Clone1()
+        {
+            moSimpleFillSymbol sSymbol = new moSimpleFillSymbol();
+            sSymbol._Label = _Label;
+            sSymbol._Visible = _Visible;
+            sSymbol._Color = _Color;
+            sSymbol.Outline = (moSimpleLineSymbol)_Outline.Clone();
+            return sSymbol;
+        }
 
         #endregion
 

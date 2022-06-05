@@ -11,7 +11,7 @@ namespace MyMapObjectsDemo2022
     {
         #region 程序集方法
 
-        internal static MyMapObjects.moMapLayer LoadMapLayer(BinaryReader sr,String filePath)
+        internal static MyMapObjects.moMapLayer LoadMapLayer(BinaryReader sr, String filePath)
         {
             //由于GeoJSON的定义，所有数据文件都需要用WGS84经纬度来存储坐标。Lay文件使用Lambert投影存储坐标，所以需要转化成经纬度后显示
             MyMapObjects.moProjectionCS projectionLay = layCoordinateTranslateToWGS1984Object();
@@ -167,6 +167,94 @@ namespace MyMapObjectsDemo2022
             MyMapObjects.moMapLayer sMapLayer = new MyMapObjects.moMapLayer(Path.GetFileName(fileLocation), geomType, sFields);
             sMapLayer.Features = sFeatures;
             return sMapLayer;
+        }
+
+        internal static void SaveLayerAsGeoJSON(string fileLocation, MyMapObjects.moMapLayer layer)
+        {
+            List<string> geojsonPropertyNameList = new List<string>();
+            List<MyMapObjects.moValueTypeConstant> geojsonPropertyValueList = new List<MyMapObjects.moValueTypeConstant>();
+            for (int i = 0; i < layer.AttributeFields.Count; i++)
+            {
+                geojsonPropertyNameList.Add(layer.AttributeFields.GetItem(i).Name);
+                geojsonPropertyValueList.Add(layer.AttributeFields.GetItem(i).ValueType);
+            }
+            Dictionary<String, dynamic> geojsonDict = new Dictionary<string, dynamic>();
+            geojsonDict["type"] = "FeatureCollection";
+            List<dynamic> geojsonFeatureList = new List<dynamic>();
+            geojsonDict["features"] = geojsonFeatureList;
+            for (int i = 0; i < layer.Features.Count; i++)
+            {
+                Dictionary<string, dynamic> singleFeatureDict = new Dictionary<string, dynamic>();
+                geojsonFeatureList.Add(singleFeatureDict);
+                singleFeatureDict["type"] = "Feature";
+                singleFeatureDict["id"] = i;
+                if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    singleFeatureDict["geometry"] = new Dictionary<string, dynamic>()
+                    {
+                        {"type","Point" },
+                        {"coordinates",new List<double>(){((MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry).X, ((MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry).Y} }
+                    };
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    singleFeatureDict["geometry"] = new Dictionary<string, dynamic>()
+                    {
+                        {"type","MultiLineString" }
+                    };
+                    List<dynamic> coordinatePartList = new List<dynamic>();
+                    var geomPolyline = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    for (int j = 0; j < geomPolyline.Parts.Count; j++)
+                    {
+                        List<dynamic> coordinatePointList = new List<dynamic>();
+                        for (int k = 0; k < geomPolyline.Parts.GetItem(j).Count; k++)
+                        {
+                            List<double> coordinate = new List<double>() { geomPolyline.Parts.GetItem(j).GetItem(k).X, geomPolyline.Parts.GetItem(j).GetItem(k).Y };
+                            coordinatePointList.Add(coordinate);
+                        }
+                        coordinatePartList.Add(coordinatePointList);
+                    }
+                    singleFeatureDict["geometry"]["coordinates"] = coordinatePartList;
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    singleFeatureDict["geometry"] = new Dictionary<string, dynamic>()
+                    {
+                        {"type","Polygon" }
+                    };
+                    List<dynamic> coordinatePartList = new List<dynamic>();
+                    var geomPolygon = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    for (int j = 0; j < geomPolygon.Parts.Count; j++)
+                    {
+                        List<dynamic> coordinatePointList = new List<dynamic>();
+                        for (int k = 0; k < geomPolygon.Parts.GetItem(j).Count; k++)
+                        {
+                            List<double> coordinate = new List<double>() { geomPolygon.Parts.GetItem(j).GetItem(k).X, geomPolygon.Parts.GetItem(j).GetItem(k).Y };
+                            coordinatePointList.Add(coordinate);
+                        }
+                        coordinatePartList.Add(coordinatePointList);
+                    }
+                    singleFeatureDict["geometry"]["coordinates"] = coordinatePartList;
+                }
+                Dictionary<string, dynamic> propertyDict = new Dictionary<string, dynamic>();
+                singleFeatureDict["properties"] = propertyDict;
+                for(int j = 0; j < geojsonPropertyValueList.Count; j++)
+                {
+                    if ((geojsonPropertyValueList[j]==MyMapObjects.moValueTypeConstant.dInt16) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt32) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt64))
+                    {
+                        propertyDict[geojsonPropertyNameList[j]] =Convert.ToInt64(layer.Features.GetItem(i).Attributes.GetItem(j));
+                    }
+                    else if((geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dDouble) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dSingle))
+                    {
+                        propertyDict[geojsonPropertyNameList[j]] = Convert.ToDouble(layer.Features.GetItem(i).Attributes.GetItem(j));
+                    }else if(geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dText)
+                    {
+                        propertyDict[geojsonPropertyNameList[j]] = Convert.ToString(layer.Features.GetItem(i).Attributes.GetItem(j));
+                    }
+                }
+            }
+            string json = JsonConvert.SerializeObject(geojsonDict);
+            File.WriteAllText(fileLocation, json);
         }
         #endregion
 

@@ -550,7 +550,7 @@ namespace MyMapObjects
         //创建默认投影坐标系统，更改为WGS1984坐标系
         private void CreateDefaultProjectionCS()
         {
-            string sProjCSName = "WGS_1984";
+           string sProjCSName = "WGS_1984";
             string sGeoCSName = "WGS_1984";
             string sDatumName = "WGS_1984";
             string sSpheroidName = "Krassowsky_1940";
@@ -568,8 +568,8 @@ namespace MyMapObjects
             _ProjectionCS = new moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
                 sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
                 sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
-            /*
-            string sProjCSName = "Beijing54 Lambert Conformal Conic 2SP";
+            
+            /*string sProjCSName = "Beijing54 Lambert Conformal Conic 2SP";
             string sGeoCSName = "Beijing 1954";
             string sDatumName = "Beijing 1954";
             string sSpheroidName = "Krassowsky_1940";
@@ -740,7 +740,44 @@ namespace MyMapObjects
 
         #endregion
 
-
+        public Bitmap DrawCurrentExtentWithScale(double scale)
+        {
+            //（1）获取地图窗口的范围
+            moRectangle sExtent = GetExtent();
+            if (sExtent.IsEmpty == true)
+            {
+                MessageBox.Show("地图范围为空，请重试。");
+                throw new Exception("地图范围为空");
+            }
+            //（2）绘制所有图层的要素，采用倒序
+            double sMapScale = mMapDrawingReference.MapScale;
+            double dpm = mMapDrawingReference.dpm * scale;
+            double mpu = mMapDrawingReference.mpu;
+            Bitmap exportBitmap = new Bitmap(Convert.ToInt32(scale * mBufferMap1.Width), Convert.ToInt32(scale * mBufferMap1.Height));
+            Graphics g = Graphics.FromImage(exportBitmap);
+            g.Clear(Color.White);
+            Int32 sLayerCount = _Layers.Count;
+            for (Int32 i = sLayerCount - 1; i >= 0; i--)
+            {
+                moMapLayer sLayer = _Layers.GetItem(i);
+                if (sLayer.Visible == true)
+                {
+                    sLayer.DrawFeatures(g, sExtent, sMapScale, dpm, mpu);
+                }
+            }
+            //（3）绘制所有图层的注记，依然倒序
+            List<RectangleF> sPlacedLabelExtents = new List<RectangleF>();
+            for (Int32 i = sLayerCount - 1; i >= 0; i--)
+            {
+                moMapLayer sLayer = _Layers.GetItem(i);
+                if (sLayer.Visible == true)
+                {
+                    sLayer.DrawLabels(g, sExtent, sMapScale, dpm, mpu, sPlacedLabelExtents);
+                }
+            }
+            g.Dispose();
+            return exportBitmap;
+        }
 
     }
 }

@@ -31,9 +31,9 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleMarkerSymbol mEditingVertexSymbol; // 正在编辑的图形顶点符号
         private MyMapObjects.moSimpleMarkerSymbol mEditingHighlightedVertexSymbol; // 正在编辑的高亮的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
-        private MyMapObjects.moSimpleMarkerSymbol mRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前渲染的点符号
-        private MyMapObjects.moSimpleLineSymbol mRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前渲染的线符号
-        private MyMapObjects.moSimpleFillSymbol mRendererFillSymbol = new MyMapObjects.moSimpleFillSymbol();//当前渲染的面符号
+        private MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前简单渲染的点符号
+        private MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前简单渲染的线符号
+        private MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();//当前简单渲染的面符号
         private bool mShowLngLat = false; // 是否显示经纬度
         private int checklistIndex = -1;   //全局图层列表索引
 
@@ -47,6 +47,7 @@ namespace MyMapObjectsDemo2022
         private bool mIsInIdentify = false;
         private bool mIsInMovingShapes = false;
         private List<MyMapObjects.moGeometry> mMovingGeometries = new List<MyMapObjects.moGeometry>(); // 正在移动的图形的集合
+        private List<MyMapObjects.moFeature> mMovingFeatures = new List<MyMapObjects.moFeature>(); //正在移动的要素集合，index和上面的移动图形集合对应。
         private MyMapObjects.moGeometry mEditingGeometry; // 正在编辑的图形
         private List<MyMapObjects.moPoints> mSketchingShape; // 正在描绘的图形，用一个多点集合存储
         MyMapObjects.moSimpleMarkerSymbol pSymbol = new MyMapObjects.moSimpleMarkerSymbol();  //描绘点
@@ -74,6 +75,11 @@ namespace MyMapObjectsDemo2022
         #region 窗体和控件事件处理
         private void lay文件课上实习格式ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                return;
+            }
             OpenFileDialog sDialog = new OpenFileDialog();
             string sFileName = "";
             if (sDialog.ShowDialog(this)
@@ -163,28 +169,52 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    SimpleRendererPoint cForm = new SimpleRendererPoint(mRendererPointSymbol);
+                    MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol_clone = new MyMapObjects.moSimpleMarkerSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    mSimpleRendererPointSymbol_clone = mSimpleRendererPointSymbol.Clone1();
+                    SimpleRendererPoint cForm = new SimpleRendererPoint(mSimpleRendererPointSymbol);
                     cForm.ShowDialog();
-                    sRenderer.Symbol = mRendererPointSymbol;
+                    sRenderer.Symbol = mSimpleRendererPointSymbol;
+                    if (mSimpleRendererPointSymbol.Color != mSimpleRendererPointSymbol_clone.Color ||
+                        mSimpleRendererPointSymbol.Size != mSimpleRendererPointSymbol_clone.Size ||
+                        mSimpleRendererPointSymbol.Style != mSimpleRendererPointSymbol_clone.Style)
+                    {
+                        sLayer.Renderer = sRenderer;
+                        moMap.RedrawMap();
+                    }
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    SimpleRendererLine cForm = new SimpleRendererLine(mRendererLineSymbol);
+                    MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol_clone = new MyMapObjects.moSimpleLineSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    mSimpleRendererLineSymbol_clone = mSimpleRendererLineSymbol.Clone1();
+                    SimpleRendererLine cForm = new SimpleRendererLine(mSimpleRendererLineSymbol);
                     cForm.ShowDialog();
-                    sRenderer.Symbol = mRendererLineSymbol;
+                    sRenderer.Symbol = mSimpleRendererLineSymbol;
+                    if (mSimpleRendererLineSymbol.Color != mSimpleRendererLineSymbol_clone.Color ||
+                        mSimpleRendererLineSymbol.Size != mSimpleRendererLineSymbol_clone.Size ||
+                        mSimpleRendererLineSymbol.Style != mSimpleRendererLineSymbol_clone.Style)
+                    {
+                        sLayer.Renderer = sRenderer;
+                        moMap.RedrawMap();
+                    }
                 }
                 else
                 {
+                    MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol_clone = new MyMapObjects.moSimpleFillSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    mSimpleRendererPolygonSymbol_clone = mSimpleRendererPolygonSymbol.Clone1();
                     DialogResult dr = colorDialog1.ShowDialog();
                     //选择填充颜色
                     if (dr == DialogResult.OK)
                     {
-                        mRendererFillSymbol.Color = colorDialog1.Color;
+                        mSimpleRendererPolygonSymbol.Color = colorDialog1.Color;
                     }
-                    sRenderer.Symbol = mRendererFillSymbol;
+                    sRenderer.Symbol = mSimpleRendererPolygonSymbol;
+                    if (mSimpleRendererPolygonSymbol.Color != mSimpleRendererPolygonSymbol_clone.Color)
+                    {
+                        sLayer.Renderer = sRenderer;
+                        moMap.RedrawMap();
+                    }
                 }
-                sLayer.Renderer = sRenderer;
-                moMap.RedrawMap();
+
             }
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
         }
@@ -206,24 +236,30 @@ namespace MyMapObjectsDemo2022
             {
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
                 MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
+                MyMapObjects.moUniqueValueRenderer sRenderer_clone = new MyMapObjects.moUniqueValueRenderer();
+                sRenderer_clone = sRenderer.Clone1();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    UniqueValuePoint cForm = new UniqueValuePoint(sLayer, sRenderer, mRendererPointSymbol);
+                    UniqueValuePoint cForm = new UniqueValuePoint(sLayer, sRenderer, mSimpleRendererPointSymbol);
                     cForm.ShowDialog();
 
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    UniqueValueLIne cForm = new UniqueValueLIne(sLayer, sRenderer, mRendererLineSymbol);
+                    UniqueValueLIne cForm = new UniqueValueLIne(sLayer, sRenderer, mSimpleRendererLineSymbol);
                     cForm.ShowDialog();
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    UniqueValuePolygon cForm = new UniqueValuePolygon(sLayer, sRenderer, mRendererFillSymbol);
+                    UniqueValuePolygon cForm = new UniqueValuePolygon(sLayer, sRenderer, mSimpleRendererPolygonSymbol);
                     cForm.ShowDialog();
                 }
-                sLayer.Renderer = sRenderer;
-                moMap.RedrawMap();
+                if (sRenderer_clone.Field != sRenderer.Field)
+                {
+                    sLayer.Renderer = sRenderer;
+                    moMap.RedrawMap();
+                }
+
             }
 
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
@@ -247,28 +283,32 @@ namespace MyMapObjectsDemo2022
             {
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
                 MyMapObjects.moClassBreaksRenderer sRenderer = new MyMapObjects.moClassBreaksRenderer();
+                MyMapObjects.moClassBreaksRenderer sRenderer_clone = sRenderer.Clone1();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    ClassBreaksPoint cForm = new ClassBreaksPoint(sLayer, sRenderer, mRendererPointSymbol);
+                    ClassBreaksPoint cForm = new ClassBreaksPoint(sLayer, sRenderer, mSimpleRendererPointSymbol);
                     cForm.ShowDialog();
-                    sRenderer.DefaultSymbol = mRendererPointSymbol;
+                    sRenderer.DefaultSymbol = mSimpleRendererPointSymbol;
 
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    ClassBreaksLine cForm = new ClassBreaksLine(sLayer, sRenderer, mRendererLineSymbol);
+                    ClassBreaksLine cForm = new ClassBreaksLine(sLayer, sRenderer, mSimpleRendererLineSymbol);
                     cForm.ShowDialog();
-                    sRenderer.DefaultSymbol = mRendererLineSymbol;
+                    sRenderer.DefaultSymbol = mSimpleRendererLineSymbol;
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    ClassBreaksPolygon cForm = new ClassBreaksPolygon(sLayer, sRenderer, mRendererFillSymbol);
+                    ClassBreaksPolygon cForm = new ClassBreaksPolygon(sLayer, sRenderer, mSimpleRendererPolygonSymbol);
                     cForm.ShowDialog();
-                    sRenderer.DefaultSymbol = mRendererFillSymbol;
+                    sRenderer.DefaultSymbol = mSimpleRendererPolygonSymbol;
+                }
+                if (sRenderer.Field != sRenderer_clone.Field)
+                {
+                    sLayer.Renderer = sRenderer;
+                    moMap.RedrawMap();
                 }
 
-                sLayer.Renderer = sRenderer;
-                moMap.RedrawMap();
             }
 
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
@@ -515,6 +555,7 @@ namespace MyMapObjectsDemo2022
                     MyMapObjects.moMultiPolygon sOriPolygon = (MyMapObjects.moMultiPolygon)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moMultiPolygon sDesPolygon = sOriPolygon.Clone();
                     mMovingGeometries.Add(sDesPolygon);
+                    mMovingFeatures.Add(sLayer.SelectedFeatures.GetItem(i));
                 }
             }
             else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
@@ -524,6 +565,7 @@ namespace MyMapObjectsDemo2022
                     MyMapObjects.moMultiPolyline sOriPolyline = (MyMapObjects.moMultiPolyline)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moMultiPolyline sDesPolyline = sOriPolyline.Clone();
                     mMovingGeometries.Add(sDesPolyline);
+                    mMovingFeatures.Add(sLayer.SelectedFeatures.GetItem(i));
                 }
             }
             else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
@@ -533,6 +575,7 @@ namespace MyMapObjectsDemo2022
                     MyMapObjects.moPoint sOriPoint = (MyMapObjects.moPoint)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moPoint sDesPoint = sOriPoint.Clone();
                     mMovingGeometries.Add(sDesPoint);
+                    mMovingFeatures.Add(sLayer.SelectedFeatures.GetItem(i));
                 }
             }
             //设置变量
@@ -676,37 +719,13 @@ namespace MyMapObjectsDemo2022
             for (Int32 i = 0; i < count; i++)
             {
                 MyMapObjects.moFeature feature = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
-                moMap.Layers.GetItem(selectedIndex).Features.Remove(feature);
+                moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i).Geometry = mMovingGeometries[i];
             }
             //更新新要素的坐标（距离有问题）
-            double sDeltaX = moMap.ToMapDistance(e.Location.X - mOriginMouseLocation.X);
-            double sDeltaY = moMap.ToMapDistance(mOriginMouseLocation.Y - e.Location.Y);
+            double sDeltaX = moMap.ToMapDistance(e.Location.X - mStartMouseLocation.X);
+            double sDeltaY = moMap.ToMapDistance(mStartMouseLocation.Y - e.Location.Y);
             ModifyMovingGeometries(sDeltaX, sDeltaY);
 
-            for (int i = 0; i < sCount; i++)
-            {
-                if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolygon))
-                {
-                    MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mMovingGeometries[i];
-                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
-                    sFeature.Geometry = sMultiPolygon;
-                    sLayer.Features.Add(sFeature);
-                }
-                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolyline))
-                {
-                    MyMapObjects.moMultiPolyline sMultiPolyline = (MyMapObjects.moMultiPolyline)mMovingGeometries[i];
-                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
-                    sFeature.Geometry = sMultiPolyline;
-                    sLayer.Features.Add(sFeature);
-                }
-                else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moPoint))
-                {
-                    MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mMovingGeometries[i];
-                    MyMapObjects.moFeature sFeature = sLayer.GetNewFeature();
-                    sFeature.Geometry = sPoint;
-                    sLayer.Features.Add(sFeature);
-                }
-            }
             //重绘地图
             moMap.RedrawMap();
             //清除移动图形列表
@@ -1335,7 +1354,32 @@ namespace MyMapObjectsDemo2022
 
         private void 保存图层为GeoJSONToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
+                return;
+            }
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            int selectedIndex = Convert.ToInt32(checkedListBox1.SelectedIndex);
+            SaveFileDialog sDialog = new SaveFileDialog();
+            sDialog.Filter = "GeoJSON Files (*.geojson)|*.geojson";
+            string sFileName = "";
+            if (sDialog.ShowDialog(this)
+                == DialogResult.OK)
+            {
+                sFileName = sDialog.FileName;
+                sDialog.Dispose();
+            }
+            else
+            {
+                sDialog.Dispose();
+                return;
+            }
+            DataIOTools.SaveLayerAsGeoJSON(sFileName, moMap.Layers.GetItem(selectedIndex));
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -1380,6 +1424,11 @@ namespace MyMapObjectsDemo2022
 
         private void geoJSONToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                return;
+            }
             OpenFileDialog sDialog = new OpenFileDialog();
             string sFileName = "";
             if (sDialog.ShowDialog(this)
@@ -2140,7 +2189,7 @@ namespace MyMapObjectsDemo2022
             //地图重回跟踪层
             moMap.RedrawTrackingShapes();
 
-            vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0), CallBackMovingVertex, CallBackNewPartMoMap, AddNewVertexMoMap, GeomSelect,ExitEditing);
+            vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0), CallBackMovingVertex, CallBackNewPartMoMap, AddNewVertexMoMap, GeomSelect, ExitEditing);
             vertexEditorForm.Show();
         }
 
@@ -2210,5 +2259,362 @@ namespace MyMapObjectsDemo2022
         //}
     
 
+        private void 导出地图为bitmapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var scale = Microsoft.VisualBasic.Interaction.InputBox("请输入解析度，即1图上像素代表多少屏幕像素", "解析度输入");
+                var scaleDouble = Convert.ToDouble(scale);
+                if (scaleDouble < 1)
+                {
+                    MessageBox.Show("解析度请不要小于1，请重新操作。");
+                    return;
+                }
+                SaveFileDialog sDialog = new SaveFileDialog();
+                sDialog.Filter = "Bitmap Files (*.bmp)|*.bmp";
+                string sFileName = "";
+                if (sDialog.ShowDialog(this)
+                    == DialogResult.OK)
+                {
+                    sFileName = sDialog.FileName;
+                    sDialog.Dispose();
+                }
+                else
+                {
+                    sDialog.Dispose();
+                    return;
+                }
+                moMap.DrawCurrentExtentWithScale(scaleDouble).Save(sFileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("出现问题，请重试。问题：" + ex.Message);
+
+            }
+
+        }
+
+        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void 坐标系统设置ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!CheckAllLayerProjectionLngLatIsValid())
+            {
+                MessageBox.Show("您的地理数据中有一些要素超过了经度在-180到180度，纬度在-90到90度之间的经纬度限制，无法从当前的投影直角坐标系转换到经纬度坐标，再切换到其它坐标系。您需要首先解决这些要素，然后重新转换。");
+                return;
+            }
+            var coordinateSelectForm = new CoordinateSystemChange();
+            coordinateSelectForm.ShowDialog();
+            int coordinateSystemSelectIndex = coordinateSelectForm.coordinateSystemSelected;
+            for(int i = 0; i < moMap.Layers.Count; i++)
+            {
+                TransferCurrentLayerProjectionToLngLat(moMap.Layers.GetItem(i));
+            }
+            if (coordinateSystemSelectIndex == 0)
+            {
+                string sProjCSName = "WGS_1984";
+                string sGeoCSName = "WGS_1984";
+                string sDatumName = "WGS_1984";
+                string sSpheroidName = "WGS_1984";
+                double sSemiMajor = 6378137;
+                double sInverseFlattening = 298.257;
+                double sOriginLatitude = 0;
+                double sCentralMeridian = 0;
+                double sFalseEasting = 0;
+                double sFalseNorthing = 0;
+                double sScaleFactor = 1;
+                double sStandardParallelOne = 0;
+                double sStandardParallelTwo = 0;
+                MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
+                MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.None;
+                var projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                    sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
+                    sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
+                moMap.ProjectionCS = projectionCS;
+            }
+            else if (coordinateSystemSelectIndex == 1)
+            {
+                string sProjCSName = "Beijing54 Lambert Conformal Conic 2SP";
+                string sGeoCSName = "Beijing 1954";
+                string sDatumName = "Beijing 1954";
+                string sSpheroidName = "Krassowsky_1940";
+                double sSemiMajor = 6378245;
+                double sInverseFlattening = 298.3;
+                double sOriginLatitude = 0;
+                double sCentralMeridian = 105;
+                double sFalseEasting = 0;
+                double sFalseNorthing = 0;
+                double sScaleFactor = 1;
+                double sStandardParallelOne = 30;
+                double sStandardParallelTwo = 62;
+                MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
+                MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.Lambert_Conformal_Conic_2SP;
+                var projectionCS=new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                    sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
+                    sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
+                moMap.ProjectionCS = projectionCS;
+            }
+            else if (coordinateSystemSelectIndex == 2)
+            {
+                string sProjCSName = "Mercator";
+                string sGeoCSName = "WGS_1984";
+                string sDatumName = "WGS_1984";
+                string sSpheroidName = "WGS_1984";
+                double sSemiMajor = 6378137;
+                double sInverseFlattening = 298.257;
+                double sOriginLatitude = 0;
+                double sCentralMeridian = 0;
+                double sFalseEasting = 0;
+                double sFalseNorthing = 0;
+                double sScaleFactor = 1;
+                double sStandardParallelOne = 0;
+                double sStandardParallelTwo = 0;
+                MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
+                MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.Mercator;
+                var projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                    sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
+                    sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
+                moMap.ProjectionCS = projectionCS;
+            }
+            for (int i = 0; i < moMap.Layers.Count; i++)
+            {
+                TransferCurrentLayerProjectionToMap(moMap.Layers.GetItem(i));
+            }
+            moMap.FullExtent();
+        }
+
+        private bool CheckAllLayerProjectionLngLatIsValid()
+        {
+            for (int i = 0; i < moMap.Layers.Count; i++)
+            {
+                var layer = moMap.Layers.GetItem(i);
+                if (!CheckCurrentLayerProjectionIsValid(layer))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool CheckCurrentLayerProjectionIsValid(MyMapObjects.moMapLayer layer)
+        {
+            for (int i = 0; i < layer.Features.Count; i++)
+            {
+                if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry);
+                        if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
+                        {
+                            return false;
+                        }
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    var geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        for (int j = 0; j < geometry.Parts.Count; j++)
+                        {
+                            for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
+                            {
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    var geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        for (int j = 0; j < geometry.Parts.Count; j++)
+                        {
+                            for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
+                            {
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private void TransferCurrentLayerProjectionToLngLat(MyMapObjects.moMapLayer layer)
+        {
+            for (int i = 0; i < layer.Features.Count; i++)
+            {
+                if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry);
+                        geometry.X = pointCurrentCoordinate.X;
+                        geometry.Y = pointCurrentCoordinate.Y;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    var geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        for (int j = 0; j < geometry.Parts.Count; j++)
+                        {
+                            for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
+                            {
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
+                                geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
+                            }
+                            geometry.Parts.GetItem(j).UpdateExtent();
+                        }
+                        geometry.UpdateExtent();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    var geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        for (int j = 0; j < geometry.Parts.Count; j++)
+                        {
+                            for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
+                            {
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
+                                geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
+                            }
+                            geometry.Parts.GetItem(j).UpdateExtent();
+                        }
+                        geometry.UpdateExtent();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                layer.UpdateExtent();
+            }
+        }
+
+        private void TransferCurrentLayerProjectionToMap(MyMapObjects.moMapLayer layer)
+        {
+            for (int i = 0; i < layer.Features.Count; i++)
+            {
+                if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry);
+                        geometry.X = pointCurrentCoordinate.X;
+                        geometry.Y = pointCurrentCoordinate.Y;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    var geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        for (int j = 0; j < geometry.Parts.Count; j++)
+                        {
+                            for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
+                            {
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry.Parts.GetItem(j).GetItem(k));
+                                geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
+                                geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
+                            }
+                            geometry.Parts.GetItem(j).UpdateExtent();
+                        }
+                        geometry.UpdateExtent();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    var geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        for (int j = 0; j < geometry.Parts.Count; j++)
+                        {
+                            for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
+                            {
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry.Parts.GetItem(j).GetItem(k));
+                                geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
+                                geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
+                            }
+                            geometry.Parts.GetItem(j).UpdateExtent();
+                        }
+                        geometry.UpdateExtent();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                layer.UpdateExtent();
+            }
+        }
+
+        private void 土木GISToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                return;
+            }
+        }
+
+        private void 保存当前项目为土木GIS工程文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
+                return;
+            }
+        }
     }
 }
