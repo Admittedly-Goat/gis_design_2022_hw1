@@ -64,6 +64,7 @@ namespace MyMapObjectsDemo2022
                         MyMapObjects.moSimpleLineSymbol sSymbol = new MyMapObjects.moSimpleLineSymbol();
                         moClassBreaksRenderer.AddBreakValue(sValue, sSymbol);
                     }
+                    moClassBreaksRenderer.DefaultSymbol = new MyMapObjects.moSimpleLineSymbol();
                     moClassBreaksRenderer.RampSize(moSimpleLineSymbol.Size);
                     //显示颜色对话框
                     DialogResult dr = colorDialog1.ShowDialog();
@@ -94,6 +95,7 @@ namespace MyMapObjectsDemo2022
                         MyMapObjects.moSimpleLineSymbol sSymbol = new MyMapObjects.moSimpleLineSymbol();
                         moClassBreaksRenderer.AddBreakValue(sValue, sSymbol);
                     }
+                    moClassBreaksRenderer.DefaultSymbol = new MyMapObjects.moSimpleLineSymbol();
                     moClassBreaksRenderer.RampSize(moSimpleLineSymbol.Size);
                     //显示颜色对话框
                     DialogResult dr = colorDialog1.ShowDialog();

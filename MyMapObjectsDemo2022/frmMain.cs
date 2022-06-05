@@ -2611,6 +2611,25 @@ namespace MyMapObjectsDemo2022
                 MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
                 return;
             }
+            OpenFileDialog sDialog = new OpenFileDialog();
+            string sFileName = "";
+            if (sDialog.ShowDialog(this)
+                == DialogResult.OK)
+            {
+                sFileName = sDialog.FileName;
+                sDialog.Dispose();
+            }
+            else
+            {
+                sDialog.Dispose();
+                return;
+            }
+            DataIOTools.LoadTuMuGISProjectFileToMoMapObject(moMap, sFileName);
+            moMap.FullExtent();
+            moMap.RedrawMap();
+            moMap_LayerChanged(null);
+
+
         }
 
         private void 保存当前项目为土木GIS工程文件ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2620,6 +2639,21 @@ namespace MyMapObjectsDemo2022
                 MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
                 return;
             }
+            SaveFileDialog sDialog = new SaveFileDialog();
+            sDialog.Filter = "土木GIS Project Files (*.tmproj)|*.tmproj";
+            string sFileName = "";
+            if (sDialog.ShowDialog(this)
+                == DialogResult.OK)
+            {
+                sFileName = sDialog.FileName;
+                sDialog.Dispose();
+            }
+            else
+            {
+                sDialog.Dispose();
+                return;
+            }
+            DataIOTools.SaveAsTuMuGISProjectFile(moMap, sFileName);
         }
     }
 }

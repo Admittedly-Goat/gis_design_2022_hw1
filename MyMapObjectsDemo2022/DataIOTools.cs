@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -548,6 +549,346 @@ namespace MyMapObjectsDemo2022
 
             string json = JsonConvert.SerializeObject(rawList);
             File.WriteAllText(fileLocation, json);
+        }
+
+        public static void LoadTuMuGISProjectFileToMoMapObject(MyMapObjects.moMapControl moMap, string fileLocation)
+        {
+            if (moMap.Layers.Count != 0)
+            {
+                throw new Exception("您当前已经打开了图层，请删除所有图层后打开项目文件。");
+            }
+            List<Dictionary<string, dynamic>> jsonListObject = JsonConvert.DeserializeObject<List<Dictionary<string, dynamic>>>(File.ReadAllText(fileLocation));
+            for (int i = 0; i < jsonListObject.Count; i++)
+            {
+                Dictionary<string, dynamic> layerJsonDict = jsonListObject[i];
+                String layerName = layerJsonDict["Name"];
+                String layerGeoJSONStr = layerJsonDict["GeoJSONStr"];
+                var newLayer = LoadMapLayerFromGeoJSONByGeoJSONString(layerGeoJSONStr, layerName);
+                Dictionary<string, dynamic> newLayerAppendixInfo = layerJsonDict["Appendix"].ToObject<Dictionary<string,dynamic>>();
+                bool isVisible = newLayerAppendixInfo["Visible"];
+                if (!isVisible)
+                {
+                    newLayer.LabelRenderer = null;
+                }
+                else
+                {
+                    string field = newLayerAppendixInfo["Field"];
+                    string font= newLayerAppendixInfo["Font"];
+                    int fontSize= newLayerAppendixInfo["FontSize"];
+                    List<int> colorList= newLayerAppendixInfo["Color"].ToObject<List<int>>();
+                    newLayer.LabelRenderer = new MyMapObjects.moLabelRenderer();
+                    newLayer.LabelRenderer.Field = field;
+                    newLayer.LabelRenderer.TextSymbol.Font = new System.Drawing.Font(font, fontSize);
+                    newLayer.LabelRenderer.TextSymbol.FontColor = System.Drawing.Color.FromArgb(colorList[0], colorList[1], colorList[2]);
+                }
+
+                Dictionary<string, dynamic> newLayerRendererInfo = layerJsonDict["Renderer"].ToObject<Dictionary<string,dynamic>>();
+                string layerRendererType = newLayerRendererInfo["Type"];
+                if (layerRendererType == "SimpleRendererPolygon")
+                {
+                    MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
+                    MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();
+                    List<int> simpleColor = newLayerRendererInfo["Color"].ToObject<List<int>>();
+                    mSimpleRendererPolygonSymbol.Color = System.Drawing.Color.FromArgb(simpleColor[0], simpleColor[1], simpleColor[2]);
+                    sRenderer.Symbol = mSimpleRendererPolygonSymbol;
+                    newLayer.Renderer = sRenderer;
+                }
+                else if (layerRendererType == "UniqueRendererPolygon")
+                {
+                    MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
+                    string field = newLayerRendererInfo["Field"];
+                    sRenderer.Field = field;
+                    List<object> sNames = new List<object>();
+                    Int32 sFeatureCount = newLayer.Features.Count;
+                    for (Int32 j = 0; j <= sFeatureCount - 1; j++)
+                    {
+                        object sName = newLayer.Features.GetItem(j).Attributes.GetItem(newLayer.AttributeFields.FindField(field));
+                        sNames.Add(sName);
+                    }
+                    sNames.Distinct().ToList();
+                    Int32 sValueCount = sNames.Count;
+                    for (Int32 j = 0; j <= sValueCount - 1; j++)
+                    {
+                        MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
+                        sRenderer.AddUniqueValue(sNames[j].ToString(), sSymbol);
+                    }
+                    sRenderer.DefaultSymbol = new MyMapObjects.moSimpleFillSymbol();
+                    newLayer.Renderer = sRenderer;
+                }
+                else if (layerRendererType == "ClassRendererPolygon")
+                {
+                    MyMapObjects.moClassBreaksRenderer sRenderer = new MyMapObjects.moClassBreaksRenderer();
+                    string field = newLayerRendererInfo["Field"];
+                    sRenderer.Field = field;
+                    int num =Convert.ToInt32(newLayerRendererInfo["Class"]);
+                    Int32 sFieldIndex = newLayer.AttributeFields.FindField(sRenderer.Field);
+                    if (newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt16
+                    || newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt32
+                    || newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt64)
+                    {
+                        Int32 sFeatureCount = newLayer.Features.Count;
+                        List<int> sValues = new List<int>();
+                        for (Int32 j = 0; j < sFeatureCount - 1; j++)
+                        {
+                            int sValue = int.Parse(newLayer.Features.GetItem(j).Attributes.GetItem(sFieldIndex).ToString());
+                            sValues.Add(sValue);
+                        }
+                        //获取最小最大值
+                        int sMinValue = sValues.Min();
+                        int sMaxValue = sValues.Max();
+                        for (Int32 j = 0; j < num; j++)
+                        {
+                            int sValue = sMinValue + (sMaxValue - sMinValue) * (j + 1) / num;
+                            MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
+                            sRenderer.AddBreakValue(sValue, sSymbol);
+                        }
+                        //生成渐变色
+                        Color sStartColor = Color.FromArgb(255, 255, 192, 192);
+                        Color sEndColor = Color.Maroon;
+                        sRenderer.DefaultSymbol = new MyMapObjects.moSimpleFillSymbol();
+                        sRenderer.RampColor(sStartColor, sEndColor);
+                    }
+                    else if (newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dSingle ||
+                        newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dDouble)
+                    {
+                        Int32 sFeatureCount = newLayer.Features.Count;
+                        List<double> sValues = new List<double>();
+                        for (Int32 j = 0; j < sFeatureCount - 1; j++)
+                        {
+                            double sValue = (float)newLayer.Features.GetItem(j).Attributes.GetItem(sFieldIndex);
+                            sValues.Add(sValue);
+                        }
+                        //获取最小最大值
+                        double sMinValue = sValues.Min();
+                        double sMaxValue = sValues.Max();
+                        for (Int32 j = 0; j < num; j++)
+                        {
+                            double sValue = sMinValue + (sMaxValue - sMinValue) * (j + 1) / num;
+                            MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
+                            sRenderer.AddBreakValue(sValue, sSymbol);
+                        }
+                        //生成渐变色
+                        Color sStartColor = Color.FromArgb(255, 255, 192, 192);
+                        Color sEndColor = Color.Maroon;
+                        sRenderer.DefaultSymbol = new MyMapObjects.moSimpleFillSymbol();
+                        sRenderer.RampColor(sStartColor, sEndColor);
+                    }
+                    newLayer.Renderer = sRenderer;
+                }
+                else if (layerRendererType == "SimpleRendererPolyline")
+                {
+                    MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
+                    MyMapObjects.moSimpleLineSymbol mSimpleRendererPolylineSymbol = new MyMapObjects.moSimpleLineSymbol();
+                    List<int> simpleColor = newLayerRendererInfo["Color"].ToObject<List<int>>();
+                    mSimpleRendererPolylineSymbol.Color = System.Drawing.Color.FromArgb(simpleColor[0], simpleColor[1], simpleColor[2]);
+                    int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                    mSimpleRendererPolylineSymbol.Style = (MyMapObjects.moSimpleLineSymbolStyleConstant)style;
+                    sRenderer.Symbol = mSimpleRendererPolylineSymbol;
+                    newLayer.Renderer = sRenderer;
+                }
+                else if (layerRendererType == "UniqueRendererPolyline")
+                {
+                    MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
+                    string field = newLayerRendererInfo["Field"];
+                    sRenderer.Field = field;
+                    List<object> sNames = new List<object>();
+                    Int32 sFeatureCount = newLayer.Features.Count;
+                    for (Int32 j = 0; j <= sFeatureCount - 1; j++)
+                    {
+                        object sName = newLayer.Features.GetItem(j).Attributes.GetItem(newLayer.AttributeFields.FindField(field));
+                        sNames.Add(sName);
+                    }
+                    sNames.Distinct().ToList();
+                    Int32 sValueCount = sNames.Count;
+                    for (Int32 j = 0; j <= sValueCount - 1; j++)
+                    {
+                        MyMapObjects.moSimpleLineSymbol sSymbol = new MyMapObjects.moSimpleLineSymbol();
+                        int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                        sSymbol.Style = (MyMapObjects.moSimpleLineSymbolStyleConstant)style;
+                        sRenderer.AddUniqueValue(sNames[j].ToString(), sSymbol);
+                    }
+                    {
+                        MyMapObjects.moSimpleLineSymbol sSymbol = new MyMapObjects.moSimpleLineSymbol();
+                        int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                        sSymbol.Style = (MyMapObjects.moSimpleLineSymbolStyleConstant)style;
+                        sRenderer.DefaultSymbol = sSymbol;
+                    }
+                    newLayer.Renderer = sRenderer;
+                }
+                else if (layerRendererType == "ClassRendererPolyline")
+                {
+                    MyMapObjects.moClassBreaksRenderer sRenderer = new MyMapObjects.moClassBreaksRenderer();
+                    string field = newLayerRendererInfo["Field"];
+                    sRenderer.Field = field;
+                    int num = Convert.ToInt32(newLayerRendererInfo["Class"]);
+                    Int32 sFieldIndex = newLayer.AttributeFields.FindField(sRenderer.Field);
+                    if (newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt16
+                    || newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt32
+                    || newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt64)
+                    {
+                        Int32 sFeatureCount = newLayer.Features.Count;
+                        List<int> sValues = new List<int>();
+                        for (Int32 j = 0; j < sFeatureCount - 1; j++)
+                        {
+                            int sValue = int.Parse(newLayer.Features.GetItem(j).Attributes.GetItem(sFieldIndex).ToString());
+                            sValues.Add(sValue);
+                        }
+                        //获取最小最大值
+                        int sMinValue = sValues.Min();
+                        int sMaxValue = sValues.Max();
+                        for (Int32 j = 0; j < num; j++)
+                        {
+                            int sValue = sMinValue + (sMaxValue - sMinValue) * (j + 1) / num;
+                            MyMapObjects.moSimpleLineSymbol sSymbol = new MyMapObjects.moSimpleLineSymbol();
+                            int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                            sSymbol.Style = (MyMapObjects.moSimpleLineSymbolStyleConstant)style;
+                            sRenderer.AddBreakValue(sValue, sSymbol);
+                        }
+                        //生成渐变色
+                        Color sStartColor = Color.FromArgb(255, 255, 192, 192);
+                        Color sEndColor = Color.Maroon;
+                        sRenderer.DefaultSymbol = new MyMapObjects.moSimpleLineSymbol();
+                        sRenderer.RampSize((new MyMapObjects.moSimpleLineSymbol()).Size);
+                        sRenderer.RampColor(sStartColor, sEndColor);
+                    }
+                    else if (newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dSingle ||
+                        newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dDouble)
+                    {
+                        Int32 sFeatureCount = newLayer.Features.Count;
+                        List<double> sValues = new List<double>();
+                        for (Int32 j = 0; j < sFeatureCount - 1; j++)
+                        {
+                            double sValue = (float)newLayer.Features.GetItem(j).Attributes.GetItem(sFieldIndex);
+                            sValues.Add(sValue);
+                        }
+                        //获取最小最大值
+                        double sMinValue = sValues.Min();
+                        double sMaxValue = sValues.Max();
+                        for (Int32 j = 0; j < num; j++)
+                        {
+                            double sValue = sMinValue + (sMaxValue - sMinValue) * (j + 1) / num;
+                            MyMapObjects.moSimpleLineSymbol sSymbol = new MyMapObjects.moSimpleLineSymbol();
+                            int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                            sSymbol.Style = (MyMapObjects.moSimpleLineSymbolStyleConstant)style;
+                            sRenderer.AddBreakValue(sValue, sSymbol);
+                        }
+                        //生成渐变色
+                        Color sStartColor = Color.FromArgb(255, 255, 192, 192);
+                        Color sEndColor = Color.Maroon;
+                        sRenderer.DefaultSymbol = new MyMapObjects.moSimpleLineSymbol();
+                        sRenderer.RampSize((new MyMapObjects.moSimpleLineSymbol()).Size);
+                        sRenderer.RampColor(sStartColor, sEndColor);
+                    }
+                    newLayer.Renderer = sRenderer;
+                }
+                else if (layerRendererType == "SimpleRendererPoint")
+                {
+                    MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
+                    MyMapObjects.moSimpleMarkerSymbol mSimpleRendererMarkerSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                    List<int> simpleColor = newLayerRendererInfo["Color"].ToObject<List<int>>();
+                    mSimpleRendererMarkerSymbol.Color = System.Drawing.Color.FromArgb(simpleColor[0], simpleColor[1], simpleColor[2]);
+                    int style =Convert.ToInt32( newLayerRendererInfo["DrawType"]);
+                    mSimpleRendererMarkerSymbol.Style = (MyMapObjects.moSimpleMarkerSymbolStyleConstant)style;
+                    sRenderer.Symbol = mSimpleRendererMarkerSymbol;
+                    newLayer.Renderer = sRenderer;
+                }
+                else if (layerRendererType == "UniqueRendererPoint")
+                {
+                    MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
+                    string field = newLayerRendererInfo["Field"];
+                    sRenderer.Field = field;
+                    List<object> sNames = new List<object>();
+                    Int32 sFeatureCount = newLayer.Features.Count;
+                    for (Int32 j = 0; j <= sFeatureCount - 1; j++)
+                    {
+                        object sName = newLayer.Features.GetItem(j).Attributes.GetItem(newLayer.AttributeFields.FindField(field));
+                        sNames.Add(sName);
+                    }
+                    sNames.Distinct().ToList();
+                    Int32 sValueCount = sNames.Count;
+                    for (Int32 j = 0; j <= sValueCount - 1; j++)
+                    {
+                        MyMapObjects.moSimpleMarkerSymbol sSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                        int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                        sSymbol.Style = (MyMapObjects.moSimpleMarkerSymbolStyleConstant)style;
+                        sRenderer.AddUniqueValue(sNames[j].ToString(), sSymbol);
+                    }
+                    {
+                        MyMapObjects.moSimpleMarkerSymbol sSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                        int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                        sSymbol.Style = (MyMapObjects.moSimpleMarkerSymbolStyleConstant)style;
+                        sRenderer.DefaultSymbol = sSymbol;
+                    }
+                    newLayer.Renderer = sRenderer;
+                }
+                else if (layerRendererType == "ClassRendererPoint")
+                {
+                    MyMapObjects.moClassBreaksRenderer sRenderer = new MyMapObjects.moClassBreaksRenderer();
+                    string field = newLayerRendererInfo["Field"];
+                    sRenderer.Field = field;
+                    int num = Convert.ToInt32(newLayerRendererInfo["Class"]);
+                    Int32 sFieldIndex = newLayer.AttributeFields.FindField(sRenderer.Field);
+                    if (newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt16
+                    || newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt32
+                    || newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt64)
+                    {
+                        Int32 sFeatureCount = newLayer.Features.Count;
+                        List<int> sValues = new List<int>();
+                        for (Int32 j = 0; j < sFeatureCount - 1; j++)
+                        {
+                            int sValue = int.Parse(newLayer.Features.GetItem(j).Attributes.GetItem(sFieldIndex).ToString());
+                            sValues.Add(sValue);
+                        }
+                        //获取最小最大值
+                        int sMinValue = sValues.Min();
+                        int sMaxValue = sValues.Max();
+                        for (Int32 j = 0; j < num; j++)
+                        {
+                            int sValue = sMinValue + (sMaxValue - sMinValue) * (j + 1) / num;
+                            MyMapObjects.moSimpleMarkerSymbol sSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                            int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                            sSymbol.Style = (MyMapObjects.moSimpleMarkerSymbolStyleConstant)style;
+                            sRenderer.AddBreakValue(sValue, sSymbol);
+                        }
+                        //生成渐变色
+                        Color sStartColor = Color.FromArgb(255, 255, 192, 192);
+                        Color sEndColor = Color.Maroon;
+                        sRenderer.DefaultSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                        sRenderer.RampSize((new MyMapObjects.moSimpleMarkerSymbol()).Size);
+                        sRenderer.RampColor(sStartColor, sEndColor);
+                    }
+                    else if (newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dSingle ||
+                        newLayer.AttributeFields.GetItem(sFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dDouble)
+                    {
+                        Int32 sFeatureCount = newLayer.Features.Count;
+                        List<double> sValues = new List<double>();
+                        for (Int32 j = 0; j < sFeatureCount - 1; j++)
+                        {
+                            double sValue = (float)newLayer.Features.GetItem(j).Attributes.GetItem(sFieldIndex);
+                            sValues.Add(sValue);
+                        }
+                        //获取最小最大值
+                        double sMinValue = sValues.Min();
+                        double sMaxValue = sValues.Max();
+                        for (Int32 j = 0; j < num; j++)
+                        {
+                            double sValue = sMinValue + (sMaxValue - sMinValue) * (j + 1) / num;
+                            MyMapObjects.moSimpleMarkerSymbol sSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                            int style = Convert.ToInt32(newLayerRendererInfo["DrawType"]);
+                            sSymbol.Style = (MyMapObjects.moSimpleMarkerSymbolStyleConstant)style;
+                            sRenderer.AddBreakValue(sValue, sSymbol);
+                        }
+                        //生成渐变色
+                        Color sStartColor = Color.FromArgb(255, 255, 192, 192);
+                        Color sEndColor = Color.Maroon;
+                        sRenderer.DefaultSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                        sRenderer.RampSize((new MyMapObjects.moSimpleMarkerSymbol()).Size);
+                        sRenderer.RampColor(sStartColor, sEndColor);
+                    }
+                    newLayer.Renderer = sRenderer;
+                }
+                moMap.Layers.Add(newLayer);
+            }
         }
 
         private static MyMapObjects.moMapLayer LoadMapLayerFromGeoJSONByGeoJSONString(String json, String layerName)
