@@ -238,16 +238,17 @@ namespace MyMapObjectsDemo2022
                 }
                 Dictionary<string, dynamic> propertyDict = new Dictionary<string, dynamic>();
                 singleFeatureDict["properties"] = propertyDict;
-                for(int j = 0; j < geojsonPropertyValueList.Count; j++)
+                for (int j = 0; j < geojsonPropertyValueList.Count; j++)
                 {
-                    if ((geojsonPropertyValueList[j]==MyMapObjects.moValueTypeConstant.dInt16) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt32) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt64))
+                    if ((geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt16) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt32) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt64))
                     {
-                        propertyDict[geojsonPropertyNameList[j]] =Convert.ToInt64(layer.Features.GetItem(i).Attributes.GetItem(j));
+                        propertyDict[geojsonPropertyNameList[j]] = Convert.ToInt64(layer.Features.GetItem(i).Attributes.GetItem(j));
                     }
-                    else if((geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dDouble) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dSingle))
+                    else if ((geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dDouble) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dSingle))
                     {
                         propertyDict[geojsonPropertyNameList[j]] = Convert.ToDouble(layer.Features.GetItem(i).Attributes.GetItem(j));
-                    }else if(geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dText)
+                    }
+                    else if (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dText)
                     {
                         propertyDict[geojsonPropertyNameList[j]] = Convert.ToString(layer.Features.GetItem(i).Attributes.GetItem(j));
                     }
@@ -442,6 +443,345 @@ namespace MyMapObjectsDemo2022
             {
                 return null;
             }
+        }
+
+        public static void SaveAsTuMuGISProjectFile(MyMapObjects.moMapControl moMap, string fileLocation)
+        {
+            List<dynamic> rawList = new List<dynamic>();
+            for (int i = 0; i < moMap.Layers.Count; i++)
+            {
+                Dictionary<string, dynamic> newLayer = new Dictionary<string, dynamic>();
+                rawList.Add(newLayer);
+                MyMapObjects.moMapLayer layer = moMap.Layers.GetItem(i);
+                newLayer["Name"] = layer.Name;
+
+                Dictionary<string, dynamic> newAppendixValue = new Dictionary<string, dynamic>();
+                newLayer["Appendix"] = newAppendixValue;
+                if (layer.LabelRenderer == null)
+                {
+                    newAppendixValue["Visible"] = false;
+                }
+                else
+                {
+                    newAppendixValue["Visible"] = true;
+                    newAppendixValue["Field"] = layer.LabelRenderer.Field;
+                    newAppendixValue["Font"] = layer.LabelRenderer.TextSymbol.Font.FontFamily;
+                    newAppendixValue["FontSize"] = layer.LabelRenderer.TextSymbol.Font.Size;
+                    newAppendixValue["Color"] = new List<int>() { layer.LabelRenderer.TextSymbol.FontColor.R, layer.LabelRenderer.TextSymbol.FontColor.G, layer.LabelRenderer.TextSymbol.FontColor.B };
+                }
+
+                Dictionary<string, dynamic> newRendererValue = new Dictionary<string, dynamic>();
+                newLayer["Renderer"] = newRendererValue;
+                var renderer = layer.Renderer;
+                if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.Simple)
+                    {
+                        newRendererValue["Type"] = "SimpleRendererPoint";
+                        newRendererValue["Color"] = new List<int>() { ((MyMapObjects.moSimpleMarkerSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.R,
+                            ((MyMapObjects.moSimpleMarkerSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.G,
+                            ((MyMapObjects.moSimpleMarkerSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.B };
+                        newRendererValue["DrawType"] = (int)(((MyMapObjects.moSimpleMarkerSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Style);
+                    }
+                    else if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.UniqueValue)
+                    {
+                        newRendererValue["Type"] = "UniqueRendererPoint";
+                        newRendererValue["Field"] = ((MyMapObjects.moUniqueValueRenderer)renderer).Field;
+                        newRendererValue["DrawType"] = (int)(((MyMapObjects.moSimpleMarkerSymbol)(((MyMapObjects.moUniqueValueRenderer)renderer).DefaultSymbol)).Style);
+                    }
+                    else if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.ClassBreaks)
+                    {
+                        newRendererValue["Type"] = "ClassRendererPoint";
+                        newRendererValue["Field"] = ((MyMapObjects.moClassBreaksRenderer)renderer).Field;
+                        newRendererValue["Class"] = ((MyMapObjects.moClassBreaksRenderer)renderer).BreakCount;
+                        newRendererValue["DrawType"] = (int)(((MyMapObjects.moSimpleMarkerSymbol)(((MyMapObjects.moClassBreaksRenderer)renderer).DefaultSymbol)).SymbolType);
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.Simple)
+                    {
+                        newRendererValue["Type"] = "SimpleRendererPolyline";
+                        newRendererValue["Color"] = new List<int>() { ((MyMapObjects.moSimpleLineSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.R,
+                            ((MyMapObjects.moSimpleLineSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.G,
+                            ((MyMapObjects.moSimpleLineSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.B };
+                        newRendererValue["DrawType"] = (int)(((MyMapObjects.moSimpleLineSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Style);
+                    }
+                    else if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.UniqueValue)
+                    {
+                        newRendererValue["Type"] = "UniqueRendererPolyline";
+                        newRendererValue["Field"] = ((MyMapObjects.moUniqueValueRenderer)renderer).Field;
+                        newRendererValue["DrawType"] = (int)(((MyMapObjects.moSimpleLineSymbol)(((MyMapObjects.moUniqueValueRenderer)renderer).DefaultSymbol)).Style);
+                    }
+                    else if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.ClassBreaks)
+                    {
+                        newRendererValue["Type"] = "ClassRendererPolyline";
+                        newRendererValue["Field"] = ((MyMapObjects.moClassBreaksRenderer)renderer).Field;
+                        newRendererValue["Class"] = ((MyMapObjects.moClassBreaksRenderer)renderer).BreakCount;
+                        newRendererValue["DrawType"] = (int)(((MyMapObjects.moSimpleLineSymbol)(((MyMapObjects.moClassBreaksRenderer)renderer).DefaultSymbol)).SymbolType);
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.Simple)
+                    {
+                        newRendererValue["Type"] = "SimpleRendererPolygon";
+                        newRendererValue["Color"] = new List<int>() { ((MyMapObjects.moSimpleFillSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.R,
+                            ((MyMapObjects.moSimpleFillSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.G,
+                            ((MyMapObjects.moSimpleFillSymbol)(((MyMapObjects.moSimpleRenderer)renderer).Symbol)).Color.B };
+                    }
+                    else if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.UniqueValue)
+                    {
+                        newRendererValue["Type"] = "UniqueRendererPolygon";
+                        newRendererValue["Field"] = ((MyMapObjects.moUniqueValueRenderer)renderer).Field;
+                    }
+                    else if (renderer.RendererType == MyMapObjects.moRendererTypeConstant.ClassBreaks)
+                    {
+                        newRendererValue["Type"] = "ClassRendererPolygon";
+                        newRendererValue["Field"] = ((MyMapObjects.moClassBreaksRenderer)renderer).Field;
+                        newRendererValue["Class"] = ((MyMapObjects.moClassBreaksRenderer)renderer).BreakCount;
+                    }
+                }
+
+                newLayer["GeoJSONStr"] = SaveLayerAsGeoJSONString(layer);
+            }
+
+            string json = JsonConvert.SerializeObject(rawList);
+            File.WriteAllText(fileLocation, json);
+        }
+
+        private static MyMapObjects.moMapLayer LoadMapLayerFromGeoJSONByGeoJSONString(String json, String layerName)
+        {
+            //检查用户输入
+            dynamic geojsonData = JsonConvert.DeserializeObject(json);
+            if (geojsonData.features.Count == 0)
+            {
+                throw new Exception("用户输入了一个空的图层，不含任何的属性");
+            }
+
+            //根据Lay文件解析方法，声明变量
+            MyMapObjects.moFields sFields = new MyMapObjects.moFields();
+            MyMapObjects.moFeatures sFeatures = new MyMapObjects.moFeatures();
+            MyMapObjects.moGeometryTypeConstant geomType;
+            bool isMultiLineString = false;
+
+            //检查图层类型
+            if (geojsonData.features[0].geometry.type == "Point")
+            {
+                geomType = MyMapObjects.moGeometryTypeConstant.Point;
+            }
+            else if ((geojsonData.features[0].geometry.type == "LineString") || (geojsonData.features[0].geometry.type == "MultiLineString"))
+            {
+                if (geojsonData.features[0].geometry.type == "MultiLineString")
+                {
+                    isMultiLineString = true;
+                }
+                geomType = MyMapObjects.moGeometryTypeConstant.MultiPolyline;
+            }
+            else if (geojsonData.features[0].geometry.type == "Polygon")
+            {
+                geomType = MyMapObjects.moGeometryTypeConstant.MultiPolygon;
+            }
+            else
+            {
+                throw new Exception("用户输入的几何类型不在本程序所支持的GeoJSON子集之内");
+            }
+
+            //生成字段
+            foreach (dynamic i in geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>().Keys)
+            {
+                int sValueType = -1;
+                if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(Int16))
+                {
+                    sValueType = 0;
+                }
+                else if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(Int32))
+                {
+                    sValueType = 1;
+                }
+                else if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(Int64))
+                {
+                    sValueType = 2;
+                }
+                else if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(float))
+                {
+                    sValueType = 3;
+                }
+                else if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(double))
+                {
+                    sValueType = 4;
+                }
+                else if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(String))
+                {
+                    sValueType = 5;
+                }
+                else
+                {
+                    throw new Exception("无法识别本程序所支持GeoJSON子集的属性信息类型");
+                }
+                MyMapObjects.moField sField = new MyMapObjects.moField(i, (MyMapObjects.moValueTypeConstant)sValueType);
+                sFields.Append(sField);
+            }
+
+            //解析每个要素
+            foreach (dynamic i in geojsonData.features)
+            {
+                MyMapObjects.moGeometry geomData;
+                if (geomType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    MyMapObjects.moPoint sPoint = new MyMapObjects.moPoint(i.geometry.coordinates[0].Value, i.geometry.coordinates[1].Value);
+                    geomData = sPoint;
+                }
+                else if (geomType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    MyMapObjects.moMultiPolyline sMultiPolyline = new MyMapObjects.moMultiPolyline();
+                    if (isMultiLineString)
+                    {
+                        foreach (dynamic j in i.geometry.coordinates)
+                        {
+                            MyMapObjects.moPoints sPoints = new MyMapObjects.moPoints();
+                            foreach (dynamic k in j)
+                            {
+                                sPoints.Add(new MyMapObjects.moPoint(k[0].Value, k[1].Value));
+                            }
+                            sMultiPolyline.Parts.Add(sPoints);
+                        }
+                    }
+                    else
+                    {
+                        MyMapObjects.moPoints sPoints = new MyMapObjects.moPoints();
+                        foreach (dynamic j in i.geometry.coordinates)
+                        {
+                            sPoints.Add(new MyMapObjects.moPoint(j[0].Value, j[1].Value));
+                        }
+                        sMultiPolyline.Parts.Add(sPoints);
+                    }
+                    sMultiPolyline.UpdateExtent();
+                    geomData = sMultiPolyline;
+                }
+                else if (geomType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    MyMapObjects.moMultiPolygon sMultiPolygon = new MyMapObjects.moMultiPolygon();
+                    foreach (dynamic j in i.geometry.coordinates)
+                    {
+                        MyMapObjects.moPoints sPoints = new MyMapObjects.moPoints();
+                        foreach (dynamic k in j)
+                        {
+                            sPoints.Add(new MyMapObjects.moPoint(k[0].Value, k[1].Value));
+                        }
+                        sMultiPolygon.Parts.Add(sPoints);
+                    }
+                    sMultiPolygon.UpdateExtent();
+                    geomData = sMultiPolygon;
+                }
+                else
+                {
+                    throw new Exception("用户输入的地理特征数据不在本程序支持的自己范围内，而且绕过了之前的检查");
+                }
+
+                MyMapObjects.moAttributes sAttributes = new MyMapObjects.moAttributes();
+                Dictionary<String, dynamic> jsonPropDict = i.properties.ToObject<Dictionary<string, dynamic>>();
+                for (int j = 0; j < sFields.Count; j++)
+                {
+                    MyMapObjects.moField sField = sFields.GetItem(j);
+                    object sValue = jsonPropDict[sField.Name];
+                    sAttributes.Append(sValue);
+                }
+                MyMapObjects.moFeature sFeature = new MyMapObjects.moFeature(geomType, geomData, sAttributes);
+                sFeatures.Add(sFeature);
+            }
+            MyMapObjects.moMapLayer sMapLayer = new MyMapObjects.moMapLayer(layerName, geomType, sFields);
+            sMapLayer.Features = sFeatures;
+            return sMapLayer;
+        }
+
+        private static String SaveLayerAsGeoJSONString(MyMapObjects.moMapLayer layer)
+        {
+            List<string> geojsonPropertyNameList = new List<string>();
+            List<MyMapObjects.moValueTypeConstant> geojsonPropertyValueList = new List<MyMapObjects.moValueTypeConstant>();
+            for (int i = 0; i < layer.AttributeFields.Count; i++)
+            {
+                geojsonPropertyNameList.Add(layer.AttributeFields.GetItem(i).Name);
+                geojsonPropertyValueList.Add(layer.AttributeFields.GetItem(i).ValueType);
+            }
+            Dictionary<String, dynamic> geojsonDict = new Dictionary<string, dynamic>();
+            geojsonDict["type"] = "FeatureCollection";
+            List<dynamic> geojsonFeatureList = new List<dynamic>();
+            geojsonDict["features"] = geojsonFeatureList;
+            for (int i = 0; i < layer.Features.Count; i++)
+            {
+                Dictionary<string, dynamic> singleFeatureDict = new Dictionary<string, dynamic>();
+                geojsonFeatureList.Add(singleFeatureDict);
+                singleFeatureDict["type"] = "Feature";
+                singleFeatureDict["id"] = i;
+                if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    singleFeatureDict["geometry"] = new Dictionary<string, dynamic>()
+                    {
+                        {"type","Point" },
+                        {"coordinates",new List<double>(){((MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry).X, ((MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry).Y} }
+                    };
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    singleFeatureDict["geometry"] = new Dictionary<string, dynamic>()
+                    {
+                        {"type","MultiLineString" }
+                    };
+                    List<dynamic> coordinatePartList = new List<dynamic>();
+                    var geomPolyline = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    for (int j = 0; j < geomPolyline.Parts.Count; j++)
+                    {
+                        List<dynamic> coordinatePointList = new List<dynamic>();
+                        for (int k = 0; k < geomPolyline.Parts.GetItem(j).Count; k++)
+                        {
+                            List<double> coordinate = new List<double>() { geomPolyline.Parts.GetItem(j).GetItem(k).X, geomPolyline.Parts.GetItem(j).GetItem(k).Y };
+                            coordinatePointList.Add(coordinate);
+                        }
+                        coordinatePartList.Add(coordinatePointList);
+                    }
+                    singleFeatureDict["geometry"]["coordinates"] = coordinatePartList;
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    singleFeatureDict["geometry"] = new Dictionary<string, dynamic>()
+                    {
+                        {"type","Polygon" }
+                    };
+                    List<dynamic> coordinatePartList = new List<dynamic>();
+                    var geomPolygon = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    for (int j = 0; j < geomPolygon.Parts.Count; j++)
+                    {
+                        List<dynamic> coordinatePointList = new List<dynamic>();
+                        for (int k = 0; k < geomPolygon.Parts.GetItem(j).Count; k++)
+                        {
+                            List<double> coordinate = new List<double>() { geomPolygon.Parts.GetItem(j).GetItem(k).X, geomPolygon.Parts.GetItem(j).GetItem(k).Y };
+                            coordinatePointList.Add(coordinate);
+                        }
+                        coordinatePartList.Add(coordinatePointList);
+                    }
+                    singleFeatureDict["geometry"]["coordinates"] = coordinatePartList;
+                }
+                Dictionary<string, dynamic> propertyDict = new Dictionary<string, dynamic>();
+                singleFeatureDict["properties"] = propertyDict;
+                for (int j = 0; j < geojsonPropertyValueList.Count; j++)
+                {
+                    if ((geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt16) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt32) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dInt64))
+                    {
+                        propertyDict[geojsonPropertyNameList[j]] = Convert.ToInt64(layer.Features.GetItem(i).Attributes.GetItem(j));
+                    }
+                    else if ((geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dDouble) || (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dSingle))
+                    {
+                        propertyDict[geojsonPropertyNameList[j]] = Convert.ToDouble(layer.Features.GetItem(i).Attributes.GetItem(j));
+                    }
+                    else if (geojsonPropertyValueList[j] == MyMapObjects.moValueTypeConstant.dText)
+                    {
+                        propertyDict[geojsonPropertyNameList[j]] = Convert.ToString(layer.Features.GetItem(i).Attributes.GetItem(j));
+                    }
+                }
+            }
+            string json = JsonConvert.SerializeObject(geojsonDict);
+            return json;
         }
 
         #endregion
