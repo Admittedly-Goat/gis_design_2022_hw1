@@ -28,7 +28,7 @@ namespace MyMapObjectsDemo2022
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("当前没有查询要素");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("当前没有查询要素");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -159,10 +159,10 @@ namespace MyMapObjectsDemo2022
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "Node0";
-            treeNode1.Text = "当前没有查询要素";
+            treeNode2.Name = "Node0";
+            treeNode2.Text = "当前没有查询要素";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.treeView1.Size = new System.Drawing.Size(173, 664);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -211,7 +211,7 @@ namespace MyMapObjectsDemo2022
             this.geoJSONToolStripMenuItem,
             this.lay文件课上实习格式ToolStripMenuItem});
             this.addLayer.Name = "addLayer";
-            this.addLayer.Size = new System.Drawing.Size(100, 22);
+            this.addLayer.Size = new System.Drawing.Size(180, 22);
             this.addLayer.Text = "打开";
             // 
             // 土木GISToolStripMenuItem
@@ -219,6 +219,7 @@ namespace MyMapObjectsDemo2022
             this.土木GISToolStripMenuItem.Name = "土木GISToolStripMenuItem";
             this.土木GISToolStripMenuItem.Size = new System.Drawing.Size(204, 22);
             this.土木GISToolStripMenuItem.Text = "土木GIS项目文件";
+            this.土木GISToolStripMenuItem.Click += new System.EventHandler(this.土木GISToolStripMenuItem_Click);
             // 
             // geoJSONToolStripMenuItem
             // 
@@ -240,19 +241,20 @@ namespace MyMapObjectsDemo2022
             this.保存当前项目为土木GIS工程文件ToolStripMenuItem,
             this.保存图层为GeoJSONToolStripMenuItem});
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.保存ToolStripMenuItem.Text = "保存";
             // 
             // 保存当前项目为土木GIS工程文件ToolStripMenuItem
             // 
             this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Name = "保存当前项目为土木GIS工程文件ToolStripMenuItem";
-            this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Text = "土木GIS工程文件";
+            this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Click += new System.EventHandler(this.保存当前项目为土木GIS工程文件ToolStripMenuItem_Click);
             // 
             // 保存图层为GeoJSONToolStripMenuItem
             // 
             this.保存图层为GeoJSONToolStripMenuItem.Name = "保存图层为GeoJSONToolStripMenuItem";
-            this.保存图层为GeoJSONToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.保存图层为GeoJSONToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.保存图层为GeoJSONToolStripMenuItem.Text = "GeoJSON";
             this.保存图层为GeoJSONToolStripMenuItem.Click += new System.EventHandler(this.保存图层为GeoJSONToolStripMenuItem_Click);
             // 
@@ -261,7 +263,7 @@ namespace MyMapObjectsDemo2022
             this.导出ToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.导出地图为bitmapToolStripMenuItem});
             this.导出ToolStripMenuItem1.Name = "导出ToolStripMenuItem1";
-            this.导出ToolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
+            this.导出ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.导出ToolStripMenuItem1.Text = "导出";
             // 
             // 导出地图为bitmapToolStripMenuItem

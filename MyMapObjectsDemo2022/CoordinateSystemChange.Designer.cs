@@ -37,7 +37,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 12;
             this.listBox1.Items.AddRange(new object[] {
-            "经纬度坐标系",
+            "WGS84经纬度坐标系",
             "兰伯特投影坐标系",
             "墨卡托投影坐标系"});
             this.listBox1.Location = new System.Drawing.Point(35, 12);

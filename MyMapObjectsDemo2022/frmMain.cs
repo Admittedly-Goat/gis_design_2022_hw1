@@ -75,6 +75,11 @@ namespace MyMapObjectsDemo2022
         #region 窗体和控件事件处理
         private void lay文件课上实习格式ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                return;
+            }
             OpenFileDialog sDialog = new OpenFileDialog();
             string sFileName = "";
             if (sDialog.ShowDialog(this)
@@ -1348,6 +1353,11 @@ namespace MyMapObjectsDemo2022
 
         private void 保存图层为GeoJSONToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
+                return;
+            }
             if (checkedListBox1.SelectedIndex == -1)
             {
                 MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
@@ -1413,6 +1423,11 @@ namespace MyMapObjectsDemo2022
 
         private void geoJSONToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                return;
+            }
             OpenFileDialog sDialog = new OpenFileDialog();
             string sFileName = "";
             if (sDialog.ShowDialog(this)
@@ -2282,7 +2297,7 @@ namespace MyMapObjectsDemo2022
                 string sProjCSName = "WGS_1984";
                 string sGeoCSName = "WGS_1984";
                 string sDatumName = "WGS_1984";
-                string sSpheroidName = "Krassowsky_1940";
+                string sSpheroidName = "WGS_1984";
                 double sSemiMajor = 6378137;
                 double sInverseFlattening = 298.257;
                 double sOriginLatitude = 0;
@@ -2317,6 +2332,28 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
                 MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.Lambert_Conformal_Conic_2SP;
                 var projectionCS=new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                    sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
+                    sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
+                moMap.ProjectionCS = projectionCS;
+            }
+            else if (coordinateSystemSelectIndex == 2)
+            {
+                string sProjCSName = "Mercator";
+                string sGeoCSName = "WGS_1984";
+                string sDatumName = "WGS_1984";
+                string sSpheroidName = "WGS_1984";
+                double sSemiMajor = 6378137;
+                double sInverseFlattening = 298.257;
+                double sOriginLatitude = 0;
+                double sCentralMeridian = 0;
+                double sFalseEasting = 0;
+                double sFalseNorthing = 0;
+                double sScaleFactor = 1;
+                double sStandardParallelOne = 0;
+                double sStandardParallelTwo = 0;
+                MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
+                MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.Mercator;
+                var projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
                     sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
                     sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
                 moMap.ProjectionCS = projectionCS;
@@ -2538,6 +2575,24 @@ namespace MyMapObjectsDemo2022
                     }
                 }
                 layer.UpdateExtent();
+            }
+        }
+
+        private void 土木GISToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                return;
+            }
+        }
+
+        private void 保存当前项目为土木GIS工程文件ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
+            {
+                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
+                return;
             }
         }
     }

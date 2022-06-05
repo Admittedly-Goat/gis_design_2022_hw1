@@ -216,7 +216,7 @@ namespace MyMapObjects
             if (_ProjType == moProjectionTypeConstant.None)
                 sResult = new moPoint(LngLat.X, LngLat.Y);
             else if (_ProjType == moProjectionTypeConstant.Mercator)
-                throw new NotImplementedException();
+                sResult = MercatorFwd(LngLat);
             else if (_ProjType == moProjectionTypeConstant.UTM)
                 throw new NotImplementedException();
             else if (_ProjType == moProjectionTypeConstant.Gauss_Kruger)
@@ -241,7 +241,7 @@ namespace MyMapObjects
             if (_ProjType == moProjectionTypeConstant.None)
                 sResult = new moPoint(ProjCo.X, ProjCo.Y);
             else if (_ProjType == moProjectionTypeConstant.Mercator)
-                throw new NotImplementedException();
+                sResult = MercatorInv(ProjCo);
             else if (_ProjType == moProjectionTypeConstant.UTM)
                 throw new NotImplementedException();
             else if (_ProjType == moProjectionTypeConstant.Gauss_Kruger)
@@ -326,7 +326,7 @@ namespace MyMapObjects
             ep2 = ep * ep;
             //根据投影类型设置特殊变量的值
             if (_ProjType == moProjectionTypeConstant.Mercator)
-            { throw new NotImplementedException(); }
+            { }
             else if (_ProjType == moProjectionTypeConstant.Gauss_Kruger)
             { throw new NotImplementedException(); }
             else if (_ProjType == moProjectionTypeConstant.UTM)
@@ -427,6 +427,22 @@ namespace MyMapObjects
             double y = _FalseNorthing + r0 - r * Math.Cos(theta);
             moPoint sResult = new moPoint(x, y);
             return sResult;
+        }
+
+        private moPoint MercatorFwd(moPoint LngLat)
+        {
+            double lng = ToRadians(LngLat.X);
+            double lat = ToRadians(LngLat.Y);
+            double x = SemiMajor * (lng - ToRadians(CentralMeridian)) + FalseEasting;
+            double y = SemiMajor * (Math.Log(Math.Tan(Math.PI / 4 + lat / 2))) + FalseNorthing;
+            return new moPoint(x, y);
+        }
+
+        private moPoint MercatorInv(moPoint ProjCo)
+        {
+            double lng = ToDegrees((ProjCo.X - FalseEasting) / SemiMajor + ToRadians(CentralMeridian));
+            double lat = ToDegrees((Math.Atan(Math.Pow(Math.E, (ProjCo.Y - FalseNorthing) / SemiMajor)) - Math.PI / 4) * 2);
+            return new moPoint(lng, lat);
         }
 
         //将投影坐标转换为经纬度
