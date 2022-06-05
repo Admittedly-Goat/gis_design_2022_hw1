@@ -35,11 +35,12 @@ namespace MyMapObjectsDemo2022
             // listBox1
             // 
             this.listBox1.AllowDrop = true;
+            this.listBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 12;
             this.listBox1.Location = new System.Drawing.Point(30, 33);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(193, 328);
+            this.listBox1.Size = new System.Drawing.Size(193, 616);
             this.listBox1.TabIndex = 0;
             this.listBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.listBox1_DragDrop);
             this.listBox1.DragOver += new System.Windows.Forms.DragEventHandler(this.listBox1_DragOver);
@@ -49,10 +50,10 @@ namespace MyMapObjectsDemo2022
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(254, 450);
+            this.ClientSize = new System.Drawing.Size(254, 666);
             this.Controls.Add(this.listBox1);
             this.Name = "ChangeLayerOrder";
-            this.Text = "ChangeLayerOrder";
+            this.Text = "图层列表";
             this.ResumeLayout(false);
 
         }
