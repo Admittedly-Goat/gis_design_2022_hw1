@@ -2241,6 +2241,11 @@ namespace MyMapObjectsDemo2022
 
         private void 更改图层注记ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
             identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
             MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
             MyMapObjects.moLabelRenderer sLabelRenderer = new MyMapObjects.moLabelRenderer();
