@@ -2277,7 +2277,55 @@ namespace MyMapObjectsDemo2022
             {
                 TransferCurrentLayerProjectionToLngLat(moMap.Layers.GetItem(i));
             }
-            
+            if (coordinateSystemSelectIndex == 0)
+            {
+                string sProjCSName = "WGS_1984";
+                string sGeoCSName = "WGS_1984";
+                string sDatumName = "WGS_1984";
+                string sSpheroidName = "Krassowsky_1940";
+                double sSemiMajor = 6378137;
+                double sInverseFlattening = 298.257;
+                double sOriginLatitude = 0;
+                double sCentralMeridian = 0;
+                double sFalseEasting = 0;
+                double sFalseNorthing = 0;
+                double sScaleFactor = 1;
+                double sStandardParallelOne = 0;
+                double sStandardParallelTwo = 0;
+                MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
+                MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.None;
+                var projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                    sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
+                    sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
+                moMap.ProjectionCS = projectionCS;
+            }
+            else if (coordinateSystemSelectIndex == 1)
+            {
+                string sProjCSName = "Beijing54 Lambert Conformal Conic 2SP";
+                string sGeoCSName = "Beijing 1954";
+                string sDatumName = "Beijing 1954";
+                string sSpheroidName = "Krassowsky_1940";
+                double sSemiMajor = 6378245;
+                double sInverseFlattening = 298.3;
+                double sOriginLatitude = 0;
+                double sCentralMeridian = 105;
+                double sFalseEasting = 0;
+                double sFalseNorthing = 0;
+                double sScaleFactor = 1;
+                double sStandardParallelOne = 30;
+                double sStandardParallelTwo = 62;
+                MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
+                MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.Lambert_Conformal_Conic_2SP;
+                var projectionCS=new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                    sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
+                    sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
+                moMap.ProjectionCS = projectionCS;
+            }
+            for (int i = 0; i < moMap.Layers.Count; i++)
+            {
+                TransferCurrentLayerProjectionToMap(moMap.Layers.GetItem(i));
+            }
+            moMap.FullExtent();
         }
 
         private bool CheckAllLayerProjectionLngLatIsValid()
@@ -2302,7 +2350,7 @@ namespace MyMapObjectsDemo2022
                     var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
                     try
                     {
-                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(moMap.ToMapPoint(geometry.X, geometry.Y));
+                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry);
                         if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
                         {
                             return false;
@@ -2322,7 +2370,7 @@ namespace MyMapObjectsDemo2022
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(moMap.ToMapPoint(geometry.Parts.GetItem(j).GetItem(k).X, geometry.Parts.GetItem(j).GetItem(k).Y));
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
                                 if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
                                 {
                                     return false;
@@ -2344,7 +2392,7 @@ namespace MyMapObjectsDemo2022
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(moMap.ToMapPoint(geometry.Parts.GetItem(j).GetItem(k).X, geometry.Parts.GetItem(j).GetItem(k).Y));
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
                                 if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
                                 {
                                     return false;
@@ -2370,7 +2418,7 @@ namespace MyMapObjectsDemo2022
                     var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
                     try
                     {
-                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(moMap.ToMapPoint(geometry.X, geometry.Y));
+                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry);
                         geometry.X = pointCurrentCoordinate.X;
                         geometry.Y = pointCurrentCoordinate.Y;
                     }
@@ -2388,7 +2436,7 @@ namespace MyMapObjectsDemo2022
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(moMap.ToMapPoint(geometry.Parts.GetItem(j).GetItem(k).X, geometry.Parts.GetItem(j).GetItem(k).Y));
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
                                 geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
                                 geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
                             }
@@ -2410,7 +2458,73 @@ namespace MyMapObjectsDemo2022
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(moMap.ToMapPoint(geometry.Parts.GetItem(j).GetItem(k).X, geometry.Parts.GetItem(j).GetItem(k).Y));
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
+                                geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
+                            }
+                            geometry.Parts.GetItem(j).UpdateExtent();
+                        }
+                        geometry.UpdateExtent();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                layer.UpdateExtent();
+            }
+        }
+
+        private void TransferCurrentLayerProjectionToMap(MyMapObjects.moMapLayer layer)
+        {
+            for (int i = 0; i < layer.Features.Count; i++)
+            {
+                if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry);
+                        geometry.X = pointCurrentCoordinate.X;
+                        geometry.Y = pointCurrentCoordinate.Y;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    var geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        for (int j = 0; j < geometry.Parts.Count; j++)
+                        {
+                            for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
+                            {
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry.Parts.GetItem(j).GetItem(k));
+                                geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
+                                geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
+                            }
+                            geometry.Parts.GetItem(j).UpdateExtent();
+                        }
+                        geometry.UpdateExtent();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                    }
+                }
+                else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    var geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    try
+                    {
+                        for (int j = 0; j < geometry.Parts.Count; j++)
+                        {
+                            for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
+                            {
+                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry.Parts.GetItem(j).GetItem(k));
                                 geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
                                 geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
                             }
