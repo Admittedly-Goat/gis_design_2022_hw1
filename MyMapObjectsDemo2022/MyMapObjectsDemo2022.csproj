@@ -78,6 +78,12 @@
     <Compile Include="ClassBreaksPolygon.Designer.cs">
       <DependentUpon>ClassBreaksPolygon.cs</DependentUpon>
     </Compile>
+    <Compile Include="CoordinateSystemChange.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CoordinateSystemChange.Designer.cs">
+      <DependentUpon>CoordinateSystemChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="CreateLineLayer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,6 +185,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ClassBreaksPolygon.resx">
       <DependentUpon>ClassBreaksPolygon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CoordinateSystemChange.resx">
+      <DependentUpon>CoordinateSystemChange.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CreateLineLayer.resx">
       <DependentUpon>CreateLineLayer.cs</DependentUpon>
