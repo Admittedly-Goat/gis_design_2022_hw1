@@ -1880,6 +1880,10 @@ namespace MyMapObjectsDemo2022
             SelectAttributeFields selectAttributeFieldsForm = new SelectAttributeFields(moMap.Layers.GetItem(selectedIndex));
             selectAttributeFieldsForm.ShowDialog();
             int selectedAttributeIndex = selectAttributeFieldsForm.SelectedFieldIndex;
+            if (selectedAttributeIndex == -1)
+            {
+                return;
+            }
             int operatorType = -1;
             if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dText)
             {
@@ -1891,6 +1895,10 @@ namespace MyMapObjectsDemo2022
                 OperatorTypeSelection operatorTypeSelection = new OperatorTypeSelection();
                 operatorTypeSelection.ShowDialog();
                 operatorType = operatorTypeSelection.OperatorType;
+            }
+            if (operatorType == -1)
+            {
+                return;
             }
             string selectValue = Microsoft.VisualBasic.Interaction.InputBox("请输入值");
             for (int i = 0; i < moMap.Layers.Count; i++)
@@ -2141,9 +2149,9 @@ namespace MyMapObjectsDemo2022
                     {
                         var featureValueConverted = Convert.ToString(featureValue);
                         var selectedValueConverted = Convert.ToString(selectValue);
-                        if (operatorType == 5)
+                        if (operatorType == 2)
                         {
-                            if (featureValueConverted != selectedValueConverted)
+                            if (featureValueConverted == selectedValueConverted)
                             {
                                 moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
                             }
