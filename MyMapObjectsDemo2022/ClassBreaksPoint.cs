@@ -26,10 +26,42 @@ namespace MyMapObjectsDemo2022
             {
                 listBox1.Items.Add(moMapLayer.AttributeFields.GetItem(i).Name);
             }
+            if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.Circle)
+                Circle.Checked = true;
+            else if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidCircle)
+                SolidCircle.Checked = true;
+            else if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.Triangle)
+                Triangle.Checked = true;
+            else if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidTriangle)
+                SolidTriangle.Checked = true;
+            else if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.Square)
+                Square.Checked = true;
+            else if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare)
+                SolidSquare.Checked = true;
+            else if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.CircleDot)
+                CircleDot.Checked = true;
+            else if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.CircleCircle)
+                CircleCircle.Checked = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (Circle.Checked)
+                moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.Circle;
+            else if (SolidCircle.Checked)
+                moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidCircle;
+            else if (Triangle.Checked)
+                moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.Triangle;
+            else if (SolidTriangle.Checked)
+                moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidTriangle;
+            else if (Square.Checked)
+                moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.Square;
+            else if (SolidSquare.Checked)
+                moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare;
+            else if (CircleDot.Checked)
+                moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.CircleDot;
+            else if (CircleCircle.Checked)
+                moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.CircleCircle;
             //获取级数
             int num = int.Parse(textBox1.Text);
             if (listBox1.SelectedIndex == -1)
@@ -63,6 +95,7 @@ namespace MyMapObjectsDemo2022
                     {
                         int sValue = sMinValue + (sMaxValue - sMinValue) * (i + 1) / num;
                         MyMapObjects.moSimpleMarkerSymbol sSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                        sSymbol.Style = moSimpleMarkerSymbol.Style;
                         moClassBreaksRenderer.AddBreakValue(sValue, sSymbol);
                     }
                     moClassBreaksRenderer.RampSize(moSimpleMarkerSymbol.Size);

@@ -423,7 +423,7 @@ namespace MyMapObjects
             {
                 SolidBrush sBrush = new SolidBrush(symbol.Color);
                 Pen pen = new Pen(symbol.Color);
-                Rectangle dot = new Rectangle(drawingArea.X + drawingArea.Width *5 / 12, drawingArea.Y + drawingArea.Height * 5 / 12, drawingArea.Width / 6, drawingArea.Width / 6);
+                Rectangle dot = new Rectangle(drawingArea.X + drawingArea.Width *5 / 12, drawingArea.Y + drawingArea.Height * 5 / 12, drawingArea.Width / 4, drawingArea.Width / 4);
                 g.DrawEllipse(pen, drawingArea);
                 g.FillEllipse(sBrush, dot);
                 pen.Dispose();
