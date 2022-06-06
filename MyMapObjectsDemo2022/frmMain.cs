@@ -2672,6 +2672,11 @@ namespace MyMapObjectsDemo2022
 
         private void 土木GISToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (moMap.Layers.Count != 0)
+            {
+                MessageBox.Show("您当前已经打开了图层，请删除所有图层后打开项目文件。");
+                return;
+            }
             if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
             {
                 MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
