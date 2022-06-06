@@ -21,6 +21,9 @@ namespace MyMapObjectsDemo2022
         private void button1_Click(object sender, EventArgs e)
         {
             MyMapObjects.moMapLayer sLayer = new MyMapObjects.moMapLayer();
+            var renderer = new MyMapObjects.moSimpleRenderer();
+            renderer.Symbol = new MyMapObjects.moSimpleLineSymbol();
+            sLayer.Renderer = renderer;
             sLayer.changeName(textBox1.Text);
             sLayer.changeShapeType(MyMapObjects.moGeometryTypeConstant.MultiPolyline);
             newLayer(sLayer);

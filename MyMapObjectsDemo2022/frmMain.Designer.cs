@@ -28,7 +28,7 @@ namespace MyMapObjectsDemo2022
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("当前没有查询要素");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("当前没有查询要素");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tssCoordinate = new System.Windows.Forms.ToolStripStatusLabel();
@@ -92,12 +92,12 @@ namespace MyMapObjectsDemo2022
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.moMap = new MyMapObjects.moMapControl();
             this.splitter3 = new System.Windows.Forms.Splitter();
             this.splitter2 = new System.Windows.Forms.Splitter();
             this.panel5 = new System.Windows.Forms.Panel();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.moMap = new MyMapObjects.moMapControl();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -159,10 +159,10 @@ namespace MyMapObjectsDemo2022
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            treeNode2.Name = "Node0";
-            treeNode2.Text = "当前没有查询要素";
+            treeNode1.Name = "Node0";
+            treeNode1.Text = "当前没有查询要素";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode1});
             this.treeView1.Size = new System.Drawing.Size(173, 664);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -211,7 +211,7 @@ namespace MyMapObjectsDemo2022
             this.geoJSONToolStripMenuItem,
             this.lay文件课上实习格式ToolStripMenuItem});
             this.addLayer.Name = "addLayer";
-            this.addLayer.Size = new System.Drawing.Size(180, 22);
+            this.addLayer.Size = new System.Drawing.Size(100, 22);
             this.addLayer.Text = "打开";
             // 
             // 土木GISToolStripMenuItem
@@ -241,20 +241,20 @@ namespace MyMapObjectsDemo2022
             this.保存当前项目为土木GIS工程文件ToolStripMenuItem,
             this.保存图层为GeoJSONToolStripMenuItem});
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.保存ToolStripMenuItem.Text = "保存";
             // 
             // 保存当前项目为土木GIS工程文件ToolStripMenuItem
             // 
             this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Name = "保存当前项目为土木GIS工程文件ToolStripMenuItem";
-            this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Text = "土木GIS工程文件";
             this.保存当前项目为土木GIS工程文件ToolStripMenuItem.Click += new System.EventHandler(this.保存当前项目为土木GIS工程文件ToolStripMenuItem_Click);
             // 
             // 保存图层为GeoJSONToolStripMenuItem
             // 
             this.保存图层为GeoJSONToolStripMenuItem.Name = "保存图层为GeoJSONToolStripMenuItem";
-            this.保存图层为GeoJSONToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存图层为GeoJSONToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.保存图层为GeoJSONToolStripMenuItem.Text = "GeoJSON";
             this.保存图层为GeoJSONToolStripMenuItem.Click += new System.EventHandler(this.保存图层为GeoJSONToolStripMenuItem_Click);
             // 
@@ -263,7 +263,7 @@ namespace MyMapObjectsDemo2022
             this.导出ToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.导出地图为bitmapToolStripMenuItem});
             this.导出ToolStripMenuItem1.Name = "导出ToolStripMenuItem1";
-            this.导出ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.导出ToolStripMenuItem1.Size = new System.Drawing.Size(100, 22);
             this.导出ToolStripMenuItem1.Text = "导出";
             // 
             // 导出地图为bitmapToolStripMenuItem
@@ -434,7 +434,7 @@ namespace MyMapObjectsDemo2022
             this.toolStripMenuItem1,
             this.编辑节点ToolStripMenuItem});
             this.几何编辑ToolStripMenuItem.Name = "几何编辑ToolStripMenuItem";
-            this.几何编辑ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.几何编辑ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.几何编辑ToolStripMenuItem.Text = "几何编辑";
             // 
             // 删除已选择的图形ToolStripMenuItem
@@ -533,7 +533,7 @@ namespace MyMapObjectsDemo2022
             // 坐标系统设置ToolStripMenuItem
             // 
             this.坐标系统设置ToolStripMenuItem.Name = "坐标系统设置ToolStripMenuItem";
-            this.坐标系统设置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.坐标系统设置ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.坐标系统设置ToolStripMenuItem.Text = "坐标系统设置";
             this.坐标系统设置ToolStripMenuItem.Click += new System.EventHandler(this.坐标系统设置ToolStripMenuItem_Click);
             // 
@@ -653,6 +653,26 @@ namespace MyMapObjectsDemo2022
             this.splitter1.TabIndex = 6;
             this.splitter1.TabStop = false;
             // 
+            // moMap
+            // 
+            this.moMap.BackColor = System.Drawing.Color.White;
+            this.moMap.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.moMap.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.moMap.FlashColor = System.Drawing.Color.Green;
+            this.moMap.Location = new System.Drawing.Point(0, 0);
+            this.moMap.Name = "moMap";
+            this.moMap.SelectionColor = System.Drawing.Color.Cyan;
+            this.moMap.Size = new System.Drawing.Size(768, 664);
+            this.moMap.TabIndex = 5;
+            this.moMap.MapScaleChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_MapScaleChanged);
+            this.moMap.LayerChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_LayerChanged);
+            this.moMap.AfterTrackingLayerDraw += new MyMapObjects.moMapControl.AfterTrackingLayerDrawHandle(this.moMap_AfterTrackingLayerDraw);
+            this.moMap.Load += new System.EventHandler(this.moMap_Load);
+            this.moMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseClick);
+            this.moMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseDown);
+            this.moMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseMove);
+            this.moMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseUp);
+            // 
             // splitter3
             // 
             this.splitter3.Dock = System.Windows.Forms.DockStyle.Right;
@@ -691,25 +711,6 @@ namespace MyMapObjectsDemo2022
             this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
             this.checkedListBox1.SelectedValueChanged += new System.EventHandler(this.checkedListBox1_SelectedValueChanged);
             this.checkedListBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.checkedListBox1_MouseUp);
-            // 
-            // moMap
-            // 
-            this.moMap.BackColor = System.Drawing.Color.White;
-            this.moMap.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.moMap.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.moMap.FlashColor = System.Drawing.Color.Green;
-            this.moMap.Location = new System.Drawing.Point(0, 0);
-            this.moMap.Name = "moMap";
-            this.moMap.SelectionColor = System.Drawing.Color.Cyan;
-            this.moMap.Size = new System.Drawing.Size(768, 664);
-            this.moMap.TabIndex = 5;
-            this.moMap.MapScaleChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_MapScaleChanged);
-            this.moMap.LayerChanged += new MyMapObjects.moMapControl.MapScaleChangedHandle(this.moMap_LayerChanged);
-            this.moMap.AfterTrackingLayerDraw += new MyMapObjects.moMapControl.AfterTrackingLayerDrawHandle(this.moMap_AfterTrackingLayerDraw);
-            this.moMap.MouseClick += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseClick);
-            this.moMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseDown);
-            this.moMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseMove);
-            this.moMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.moMap_MouseUp);
             // 
             // frmMain
             // 

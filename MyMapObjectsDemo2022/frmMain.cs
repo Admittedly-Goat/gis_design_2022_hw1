@@ -456,6 +456,7 @@ namespace MyMapObjectsDemo2022
 
         private void moMap_MouseDown(object sender, MouseEventArgs e)
         {
+            int selectedIndex = checkedListBox1.SelectedIndex;
             if (mMapOpStyle == 1) //放大
             {
                 OnZoomIn_MouseDown(e);
@@ -528,6 +529,11 @@ namespace MyMapObjectsDemo2022
                     vertexEditorForm.SelectByGeometryCallBack(newPoint);
                 }
             }
+            checkedListBox1.SelectedIndex = selectedIndex;
+            if (e.Button == MouseButtons.Middle)
+            {
+                OnPan_MouseMiddleDown(e);
+            }
         }
 
         private void OnEditingVertex_MouseDown(MouseEventArgs e)
@@ -597,6 +603,7 @@ namespace MyMapObjectsDemo2022
             mStartMouseLocation = e.Location;
             mOriginMouseLocation = e.Location;
             mIsInMovingShapes = true;
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         //查询状态下鼠标按下
@@ -670,6 +677,15 @@ namespace MyMapObjectsDemo2022
             }
         }
 
+        private void OnPan_MouseMiddleDown(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                mStartMouseLocation = e.Location;
+                mIsInPan = true;
+            }
+        }
+
         private void OnZoomIn_MouseDown(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -682,6 +698,7 @@ namespace MyMapObjectsDemo2022
 
         private void moMap_MouseUp(object sender, MouseEventArgs e)
         {
+            int selectedIndex = checkedListBox1.SelectedIndex;
             if (mMapOpStyle == 1) //放大
             {
                 OnZoomIn_MouseUp(e);
@@ -714,6 +731,11 @@ namespace MyMapObjectsDemo2022
             {
 
             }
+            if (e.Button == MouseButtons.Middle)
+            {
+                OnPan_MouseMiddleUp(e);
+            }
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         //移动图形状态下鼠标松开(需要实现展示移动结果)
@@ -746,6 +768,7 @@ namespace MyMapObjectsDemo2022
             //清除移动图形列表
             mMovingGeometries.Clear();
             checklistIndex = -1;
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         private void OnIdentify_MouseUp(MouseEventArgs e)
@@ -775,6 +798,18 @@ namespace MyMapObjectsDemo2022
 
         //漫游状态下鼠标松开
         private void OnPan_MouseUp(MouseEventArgs e)
+        {
+            if (mIsInPan == false)
+            {
+                return;
+            }
+            mIsInPan = false;
+            double sDeltaX = moMap.ToMapDistance(e.Location.X - mStartMouseLocation.X);
+            double sDeltaY = moMap.ToMapDistance(mStartMouseLocation.Y - e.Location.Y);
+            moMap.PanDelta(sDeltaX, sDeltaY);
+        }
+
+        private void OnPan_MouseMiddleUp(MouseEventArgs e)
         {
             if (mIsInPan == false)
             {
@@ -891,6 +926,7 @@ namespace MyMapObjectsDemo2022
 
         private void moMap_MouseMove(object sender, MouseEventArgs e)
         {
+            int selectedIndex = checkedListBox1.SelectedIndex;
             if (mMapOpStyle == 1) //放大
             {
                 OnZoomIn_MouseMove(e);
@@ -928,6 +964,11 @@ namespace MyMapObjectsDemo2022
                 OnSketchLine_MouseMove(e);
             }
             ShowCoordinates(e.Location); //显示鼠标位置的地图坐标
+            if (e.Button == MouseButtons.Middle)
+            {
+                OnPan_MouseMiddleMove(e);
+            }
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         //描绘线状态下鼠标移动
@@ -1022,6 +1063,15 @@ namespace MyMapObjectsDemo2022
         }
         //漫游状态下鼠标移动
         private void OnPan_MouseMove(MouseEventArgs e)
+        {
+            if (mIsInPan == false)
+            {
+                return;
+            }
+            moMap.PanMapImageTo(e.Location.X - mStartMouseLocation.X, e.Location.Y - mStartMouseLocation.Y);
+        }
+
+        private void OnPan_MouseMiddleMove(MouseEventArgs e)
         {
             if (mIsInPan == false)
             {
@@ -1353,8 +1403,10 @@ namespace MyMapObjectsDemo2022
 
         private void 详情面板ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var selectedIndex = checkedListBox1.SelectedIndex;
             ChangeLayerOrder cForm = new ChangeLayerOrder(moMap.Layers, moMap);
             cForm.ShowDialog();
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         private void 编辑节点ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1649,6 +1701,7 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moFeature feature = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
                 moMap.Layers.GetItem(selectedIndex).Features.Remove(feature);
             }
+            moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Clear();
             moMap.RefreshLayerList();
             moMap.RedrawTrackingShapes();
             moMap.RedrawMap();
@@ -1656,11 +1709,14 @@ namespace MyMapObjectsDemo2022
             {
                 propertyTableForm.ReloadPropList();
             }
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         private void 移动已选择ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int selectedIndex = checkedListBox1.SelectedIndex;
             btnMovePolygon_Click(sender, e);
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         private void 增加新要素ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1670,7 +1726,7 @@ namespace MyMapObjectsDemo2022
 
         private void 编辑节点ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            btnEditPolygon_Click(sender, e);
+            
         }
 
         private void 停止编辑ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1690,11 +1746,13 @@ namespace MyMapObjectsDemo2022
             if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
                 MessageBox.Show("选择要素与图层不匹配！");
+                checkedListBox1.SelectedIndex = selectedIndex;
                 return;
             }
             else
             {
                 btnSketchPolygon_Click(sender, e);
+                checkedListBox1.SelectedIndex = selectedIndex;
             }
         }
 
@@ -1709,10 +1767,12 @@ namespace MyMapObjectsDemo2022
             if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
                 MessageBox.Show("选择要素与图层不匹配！");
+                checkedListBox1.SelectedIndex = selectedIndex;
                 return;
             }
             else
             {
+                checkedListBox1.SelectedIndex = selectedIndex;
                 mMapOpStyle = 9;
             }
         }
@@ -1728,10 +1788,12 @@ namespace MyMapObjectsDemo2022
             if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.Point)
             {
                 MessageBox.Show("选择要素与图层不匹配！");
+                checkedListBox1.SelectedIndex = selectedIndex;
                 return;
             }
             else
             {
+                checkedListBox1.SelectedIndex = selectedIndex;
                 mMapOpStyle = 10;
             }
         }
@@ -1814,6 +1876,7 @@ namespace MyMapObjectsDemo2022
             {
                 btnEndPointSketch_Click(sender, e);
             }
+            checkedListBox1.SelectedIndex=selectedIndex;
         }
 
         private void 停止部分ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1832,17 +1895,25 @@ namespace MyMapObjectsDemo2022
             SelectAttributeFields selectAttributeFieldsForm = new SelectAttributeFields(moMap.Layers.GetItem(selectedIndex));
             selectAttributeFieldsForm.ShowDialog();
             int selectedAttributeIndex = selectAttributeFieldsForm.SelectedFieldIndex;
+            if (selectedAttributeIndex == -1)
+            {
+                return;
+            }
             int operatorType = -1;
             if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dText)
             {
                 MessageBox.Show("该字段为文本型，仅支持等于判断，已为您选择此操作类型。");
-                operatorType = 5;
+                operatorType = 2;
             }
             else
             {
                 OperatorTypeSelection operatorTypeSelection = new OperatorTypeSelection();
                 operatorTypeSelection.ShowDialog();
                 operatorType = operatorTypeSelection.OperatorType;
+            }
+            if (operatorType == -1)
+            {
+                return;
             }
             string selectValue = Microsoft.VisualBasic.Interaction.InputBox("请输入值");
             for (int i = 0; i < moMap.Layers.Count; i++)
@@ -2093,9 +2164,9 @@ namespace MyMapObjectsDemo2022
                     {
                         var featureValueConverted = Convert.ToString(featureValue);
                         var selectedValueConverted = Convert.ToString(selectValue);
-                        if (operatorType == 5)
+                        if (operatorType == 2)
                         {
-                            if (featureValueConverted != selectedValueConverted)
+                            if (featureValueConverted == selectedValueConverted)
                             {
                                 moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Add(moMap.Layers.GetItem(selectedIndex).Features.GetItem(i));
                             }
@@ -2184,6 +2255,7 @@ namespace MyMapObjectsDemo2022
 
         private void 打开节点编辑器ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
             if (checkedListBox1.SelectedIndex == -1)
             {
                 MessageBox.Show("您还未选择任何的图层，请在左侧点击图层以选择。");
@@ -2196,6 +2268,7 @@ namespace MyMapObjectsDemo2022
             if (sLayer.SelectedFeatures.Count != 1)
             {
                 MessageBox.Show("您选中了不止一个要素或者没有选择要素，请您重新选择仅一个要素。");
+                checkedListBox1.SelectedIndex = layerIndex;
                 return;
             }
             mEditingGeometry = sLayer.SelectedFeatures.GetItem(0).Geometry;
@@ -2206,6 +2279,7 @@ namespace MyMapObjectsDemo2022
 
             vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0), CallBackMovingVertex, CallBackNewPartMoMap, AddNewVertexMoMap, GeomSelect, ExitEditing);
             vertexEditorForm.Show();
+            checkedListBox1.SelectedIndex=layerIndex;
         }
 
         private void CallBackMovingVertex()
@@ -2621,11 +2695,35 @@ namespace MyMapObjectsDemo2022
 
         private void 土木GISToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (moMap.Layers.Count != 0)
+            {
+                MessageBox.Show("您当前已经打开了图层，请删除所有图层后打开项目文件。");
+                return;
+            }
             if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
             {
                 MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
                 return;
             }
+            OpenFileDialog sDialog = new OpenFileDialog();
+            string sFileName = "";
+            if (sDialog.ShowDialog(this)
+                == DialogResult.OK)
+            {
+                sFileName = sDialog.FileName;
+                sDialog.Dispose();
+            }
+            else
+            {
+                sDialog.Dispose();
+                return;
+            }
+            DataIOTools.LoadTuMuGISProjectFileToMoMapObject(moMap, sFileName);
+            moMap.FullExtent();
+            moMap.RedrawMap();
+            moMap_LayerChanged(null);
+
+
         }
 
         private void 保存当前项目为土木GIS工程文件ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2635,6 +2733,26 @@ namespace MyMapObjectsDemo2022
                 MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
                 return;
             }
+            SaveFileDialog sDialog = new SaveFileDialog();
+            sDialog.Filter = "土木GIS Project Files (*.tmproj)|*.tmproj";
+            string sFileName = "";
+            if (sDialog.ShowDialog(this)
+                == DialogResult.OK)
+            {
+                sFileName = sDialog.FileName;
+                sDialog.Dispose();
+            }
+            else
+            {
+                sDialog.Dispose();
+                return;
+            }
+            DataIOTools.SaveAsTuMuGISProjectFile(moMap, sFileName);
+        }
+
+        private void moMap_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

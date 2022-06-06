@@ -23,6 +23,9 @@ namespace MyMapObjectsDemo2022
         private void button1_Click(object sender, EventArgs e)
         {
             MyMapObjects.moMapLayer sLayer = new MyMapObjects.moMapLayer();
+            var renderer = new MyMapObjects.moSimpleRenderer();
+            renderer.Symbol = new MyMapObjects.moSimpleMarkerSymbol();
+            sLayer.Renderer = renderer;
             sLayer.changeName(textBox1.Text);
             newLayer(sLayer);
             this.Close();
