@@ -515,6 +515,10 @@ namespace MyMapObjectsDemo2022
                 }
             }
             checkedListBox1.SelectedIndex = selectedIndex;
+            if (e.Button == MouseButtons.Middle)
+            {
+                OnPan_MouseMiddleDown(e);
+            }
         }
 
         private void OnEditingVertex_MouseDown(MouseEventArgs e)
@@ -658,6 +662,15 @@ namespace MyMapObjectsDemo2022
             }
         }
 
+        private void OnPan_MouseMiddleDown(MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                mStartMouseLocation = e.Location;
+                mIsInPan = true;
+            }
+        }
+
         private void OnZoomIn_MouseDown(MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -702,6 +715,10 @@ namespace MyMapObjectsDemo2022
             else if (mMapOpStyle == 8) //编辑
             {
 
+            }
+            if (e.Button == MouseButtons.Middle)
+            {
+                OnPan_MouseMiddleUp(e);
             }
             checkedListBox1.SelectedIndex = selectedIndex;
         }
@@ -766,6 +783,18 @@ namespace MyMapObjectsDemo2022
 
         //漫游状态下鼠标松开
         private void OnPan_MouseUp(MouseEventArgs e)
+        {
+            if (mIsInPan == false)
+            {
+                return;
+            }
+            mIsInPan = false;
+            double sDeltaX = moMap.ToMapDistance(e.Location.X - mStartMouseLocation.X);
+            double sDeltaY = moMap.ToMapDistance(mStartMouseLocation.Y - e.Location.Y);
+            moMap.PanDelta(sDeltaX, sDeltaY);
+        }
+
+        private void OnPan_MouseMiddleUp(MouseEventArgs e)
         {
             if (mIsInPan == false)
             {
@@ -920,6 +949,10 @@ namespace MyMapObjectsDemo2022
                 OnSketchLine_MouseMove(e);
             }
             ShowCoordinates(e.Location); //显示鼠标位置的地图坐标
+            if (e.Button == MouseButtons.Middle)
+            {
+                OnPan_MouseMiddleMove(e);
+            }
             checkedListBox1.SelectedIndex = selectedIndex;
         }
 
@@ -1015,6 +1048,15 @@ namespace MyMapObjectsDemo2022
         }
         //漫游状态下鼠标移动
         private void OnPan_MouseMove(MouseEventArgs e)
+        {
+            if (mIsInPan == false)
+            {
+                return;
+            }
+            moMap.PanMapImageTo(e.Location.X - mStartMouseLocation.X, e.Location.Y - mStartMouseLocation.Y);
+        }
+
+        private void OnPan_MouseMiddleMove(MouseEventArgs e)
         {
             if (mIsInPan == false)
             {
@@ -2678,6 +2720,11 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             DataIOTools.SaveAsTuMuGISProjectFile(moMap, sFileName);
+        }
+
+        private void moMap_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
