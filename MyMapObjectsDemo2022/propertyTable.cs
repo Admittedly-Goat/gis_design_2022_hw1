@@ -219,6 +219,10 @@ namespace MyMapObjectsDemo2022
                     {
                         Layer.Features.GetItem(Convert.ToInt32(propertyGrid.Rows[e.RowIndex].Cells[0].Value)).Attributes.SetItem(i, Convert.ToDouble(value));
                     }
+                    else if (Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dInt16)
+                    {
+                        Layer.Features.GetItem(Convert.ToInt32(propertyGrid.Rows[e.RowIndex].Cells[0].Value)).Attributes.SetItem(i, Convert.ToInt16(value));
+                    }
                     else if (Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dInt32)
                     {
                         Layer.Features.GetItem(Convert.ToInt32(propertyGrid.Rows[e.RowIndex].Cells[0].Value)).Attributes.SetItem(i, Convert.ToInt32(value));
