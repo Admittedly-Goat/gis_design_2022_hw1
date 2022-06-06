@@ -47,17 +47,19 @@ namespace MyMapObjectsDemo2022
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(447, 253);
+            this.label4.Location = new System.Drawing.Point(643, 337);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 12);
+            this.label4.Size = new System.Drawing.Size(37, 15);
             this.label4.TabIndex = 43;
             this.label4.Text = "毫米";
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(467, 360);
+            this.button2.Location = new System.Drawing.Point(636, 467);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(78, 31);
+            this.button2.Size = new System.Drawing.Size(104, 39);
             this.button2.TabIndex = 42;
             this.button2.Text = "取消";
             this.button2.UseVisualStyleBackColor = true;
@@ -65,9 +67,10 @@ namespace MyMapObjectsDemo2022
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(291, 360);
+            this.button1.Location = new System.Drawing.Point(299, 467);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(78, 31);
+            this.button1.Size = new System.Drawing.Size(104, 39);
             this.button1.TabIndex = 41;
             this.button1.Text = "确定";
             this.button1.UseVisualStyleBackColor = true;
@@ -77,9 +80,10 @@ namespace MyMapObjectsDemo2022
             // 
             this.DashDotDot.AutoSize = true;
             this.DashDotDot.Font = new System.Drawing.Font("宋体", 16F);
-            this.DashDotDot.Location = new System.Drawing.Point(467, 103);
+            this.DashDotDot.Location = new System.Drawing.Point(670, 130);
+            this.DashDotDot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.DashDotDot.Name = "DashDotDot";
-            this.DashDotDot.Size = new System.Drawing.Size(94, 26);
+            this.DashDotDot.Size = new System.Drawing.Size(117, 31);
             this.DashDotDot.TabIndex = 37;
             this.DashDotDot.Text = "-••-••";
             this.DashDotDot.UseVisualStyleBackColor = true;
@@ -88,9 +92,10 @@ namespace MyMapObjectsDemo2022
             // 
             this.DashDot.AutoSize = true;
             this.DashDot.Font = new System.Drawing.Font("宋体", 16F);
-            this.DashDot.Location = new System.Drawing.Point(339, 166);
+            this.DashDot.Location = new System.Drawing.Point(499, 209);
+            this.DashDot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.DashDot.Name = "DashDot";
-            this.DashDot.Size = new System.Drawing.Size(72, 26);
+            this.DashDot.Size = new System.Drawing.Size(89, 31);
             this.DashDot.TabIndex = 36;
             this.DashDot.Text = "-•-•";
             this.DashDot.UseVisualStyleBackColor = true;
@@ -99,9 +104,10 @@ namespace MyMapObjectsDemo2022
             // 
             this.Dot.AutoSize = true;
             this.Dot.Font = new System.Drawing.Font("宋体", 16F);
-            this.Dot.Location = new System.Drawing.Point(339, 103);
+            this.Dot.Location = new System.Drawing.Point(499, 130);
+            this.Dot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Dot.Name = "Dot";
-            this.Dot.Size = new System.Drawing.Size(72, 26);
+            this.Dot.Size = new System.Drawing.Size(89, 31);
             this.Dot.TabIndex = 35;
             this.Dot.Text = "••••";
             this.Dot.UseVisualStyleBackColor = true;
@@ -110,9 +116,10 @@ namespace MyMapObjectsDemo2022
             // 
             this.Dash.AutoSize = true;
             this.Dash.Font = new System.Drawing.Font("宋体", 16F);
-            this.Dash.Location = new System.Drawing.Point(210, 166);
+            this.Dash.Location = new System.Drawing.Point(327, 209);
+            this.Dash.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Dash.Name = "Dash";
-            this.Dash.Size = new System.Drawing.Size(72, 26);
+            this.Dash.Size = new System.Drawing.Size(89, 31);
             this.Dash.TabIndex = 34;
             this.Dash.Text = "----";
             this.Dash.UseVisualStyleBackColor = true;
@@ -121,9 +128,10 @@ namespace MyMapObjectsDemo2022
             // 
             this.Solid.AutoSize = true;
             this.Solid.Font = new System.Drawing.Font("宋体", 16F);
-            this.Solid.Location = new System.Drawing.Point(210, 103);
+            this.Solid.Location = new System.Drawing.Point(327, 130);
+            this.Solid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Solid.Name = "Solid";
-            this.Solid.Size = new System.Drawing.Size(72, 26);
+            this.Solid.Size = new System.Drawing.Size(87, 31);
             this.Solid.TabIndex = 33;
             this.Solid.Text = "——";
             this.Solid.UseVisualStyleBackColor = true;
@@ -131,44 +139,48 @@ namespace MyMapObjectsDemo2022
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.textBox1.Location = new System.Drawing.Point(322, 246);
+            this.textBox1.Location = new System.Drawing.Point(476, 329);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 26);
+            this.textBox1.Size = new System.Drawing.Size(132, 30);
             this.textBox1.TabIndex = 32;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("宋体", 12F);
-            this.label3.Location = new System.Drawing.Point(164, 249);
+            this.label3.Location = new System.Drawing.Point(266, 332);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(152, 16);
+            this.label3.Size = new System.Drawing.Size(189, 20);
             this.label3.TabIndex = 31;
             this.label3.Text = "设置线要素的宽度：";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(233, 63);
+            this.label2.Location = new System.Drawing.Point(358, 80);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(0, 12);
+            this.label2.Size = new System.Drawing.Size(0, 15);
             this.label2.TabIndex = 30;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 12F);
-            this.label1.Location = new System.Drawing.Point(164, 60);
+            this.label1.Location = new System.Drawing.Point(266, 76);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(152, 16);
+            this.label1.Size = new System.Drawing.Size(189, 20);
             this.label1.TabIndex = 29;
             this.label1.Text = "选择线要素的形状：";
             // 
             // SimpleRendererLine
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1067, 562);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -181,6 +193,7 @@ namespace MyMapObjectsDemo2022
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.Name = "SimpleRendererLine";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
