@@ -82,6 +82,7 @@ namespace MyMapObjectsDemo2022
                 HighlightedPoints.Clear();
                 HighlightedPoints.UpdateExtent();
                 RedrawMap();
+                return;
             }
             string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
             if (selectedText.EndsWith("部分"))
