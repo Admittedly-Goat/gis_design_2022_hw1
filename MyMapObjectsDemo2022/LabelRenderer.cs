@@ -90,9 +90,43 @@ namespace MyMapObjectsDemo2022
                 this.sLabelRenderer.TextSymbol.Font = new Font(FontFamily, FontSize);
             }
 
-           
 
-            //字体颜色
+
+            //描边
+            sLabelRenderer.TextSymbol.UseMask = this.checkBoxMask.Checked;
+
+            //描边宽度
+            double MaskWidth = 0.5;
+            try
+            {
+                MaskWidth = float.Parse(this.textBoxMaskWidth.Text);
+            }
+            catch (OverflowException)
+            {
+                MessageBox.Show("err:转化的不是一个float型数据");
+                this.textBoxMaskWidth.Text = "0.5";
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("err:格式错误");
+                this.textBoxMaskWidth.Text = "0.5";
+            }
+            catch (ArgumentNullException)
+            {
+                MessageBox.Show("err:null");
+                this.textBoxMaskWidth.Text = "0.5";
+            }
+            //设定范围在5--72之间
+            if (MaskWidth < 0 || MaskWidth > 10)
+            {
+                MessageBox.Show("err:请输入0-10之间的数");
+                this.textBoxMaskWidth.Text = "0.5";
+            }
+            else
+            {
+                this.sLabelRenderer.TextSymbol.MaskWidth = MaskWidth;
+            }
+
 
             //渲染
             sLayer.LabelRenderer = sLabelRenderer;
@@ -117,6 +151,18 @@ namespace MyMapObjectsDemo2022
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void buttonMaskColor_Click(object sender, EventArgs e)
+        {
+            //显示颜色对话框
+            DialogResult dr = colorDialog1.ShowDialog();
+            //选择符号颜色
+            if (dr == DialogResult.OK)
+            {
+                this.sLabelRenderer.TextSymbol.MaskColor = colorDialog1.Color;
+            }
+
         }
 
         //if (moMap.Layers.Count == 0)

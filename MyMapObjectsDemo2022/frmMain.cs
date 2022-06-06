@@ -81,11 +81,13 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             OpenFileDialog sDialog = new OpenFileDialog();
-            string sFileName = "";
+            sDialog.Multiselect = true; //开启多选
+
+            string[] sFileNames = new string[] { };
             if (sDialog.ShowDialog(this)
                 == DialogResult.OK)
             {
-                sFileName = sDialog.FileName;
+                sFileNames = sDialog.FileNames;
                 sDialog.Dispose();
             }
             else
@@ -94,30 +96,43 @@ namespace MyMapObjectsDemo2022
                 return;
             }
 
-            try
+            if (sFileNames.Length == 0)
             {
-                FileStream sStream =
-                    new FileStream(sFileName, FileMode.Open);
-                BinaryReader sr = new BinaryReader(sStream);
-                MyMapObjects.moMapLayer sLayer =
-                    DataIOTools.LoadMapLayer(sr, sFileName);
-                moMap.Layers.Add(sLayer);
-                if (moMap.Layers.Count == 1)
-                {
-                    moMap.FullExtent();
-                }
-                else
-                {
-                    moMap.RedrawMap();
-                }
-                sr.Dispose();
-                sStream.Dispose();
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.ToString());
+                MessageBox.Show("没有选择任何文件");
                 return;
             }
+
+            for(int i=0;i<sFileNames.Length;i++)
+            {
+                string sFileName = sFileNames[i];
+                try
+                {
+                    //MessageBox.Show(sFileName);//绝对路径
+                    FileStream sStream =
+                        new FileStream(sFileName, FileMode.Open);
+                    BinaryReader sr = new BinaryReader(sStream);
+                    MyMapObjects.moMapLayer sLayer =
+                        DataIOTools.LoadMapLayer(sr, sFileName);
+                    moMap.Layers.Add(sLayer);
+                    if (moMap.Layers.Count == 1)
+                    {
+                        moMap.FullExtent();
+                    }
+                    else
+                    {
+                        moMap.RedrawMap();
+                    }
+                    sr.Dispose();
+                    sStream.Dispose();
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(error.ToString());
+                    return;
+                }
+
+            }
+            
         }
 
         private void btnFullExtent_Click(object sender, EventArgs e)
