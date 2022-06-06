@@ -1497,11 +1497,11 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             OpenFileDialog sDialog = new OpenFileDialog();
-            string sFileName = "";
+            string[] sFileNames = new string[] { };
             if (sDialog.ShowDialog(this)
                 == DialogResult.OK)
             {
-                sFileName = sDialog.FileName;
+                sFileNames = sDialog.FileNames;
                 sDialog.Dispose();
             }
             else
@@ -1509,25 +1509,37 @@ namespace MyMapObjectsDemo2022
                 sDialog.Dispose();
                 return;
             }
-
-            try
+            if (sFileNames.Length == 0)
             {
-                moMap.Layers.Add(DataIOTools.LoadMapLayerFromGeoJSON(sFileName));
-            }
-
-            catch (Exception error)
-            {
-                MessageBox.Show(error.ToString());
+                MessageBox.Show("没有选择任何文件");
                 return;
             }
-            if (moMap.Layers.Count == 1)
+
+            for(int i = 0; i < sFileNames.Length; i++)
             {
-                moMap.FullExtent();
+                string sFileName = sFileNames[i];
+
+                try
+                {
+                    moMap.Layers.Add(DataIOTools.LoadMapLayerFromGeoJSON(sFileName));
+                }
+
+                catch (Exception error)
+                {
+                    MessageBox.Show(error.ToString());
+                    return;
+                }
+                if (moMap.Layers.Count == 1)
+                {
+                    moMap.FullExtent();
+                }
+                else
+                {
+                    moMap.RedrawMap();
+                }
             }
-            else
-            {
-                moMap.RedrawMap();
-            }
+
+            
         }
 
         private void tssMapScale_Click(object sender, EventArgs e)

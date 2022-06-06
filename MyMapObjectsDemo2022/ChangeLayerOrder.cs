@@ -27,28 +27,36 @@ namespace MyMapObjectsDemo2022
             {
                 MyMapObjects.moMapLayer moMapLayer = moLayers.GetItem(i);
                 string item = moLayers.GetItem(i).Name+"\n" + "\n";
-                item += "  -图层类型：" + moMapLayer.ShapeType.ToString() + "\n" + "\n";
-                item += "  -图层字段："+ "\n";
+                item += "  - 图层类型：" + moMapLayer.ShapeType.ToString() + "\n" + "\n";
+                item += "  - 图层字段：";
                 for (int j = 0; j < moMapLayer.AttributeFields.Count; j++)
                 {
                     MyMapObjects.moField moField = moMapLayer.AttributeFields.GetItem(j);
-                    item += "    -" + moMapLayer.AttributeFields.GetItem(j).Name +"\n";
+                    if (j == moMapLayer.AttributeFields.Count - 1)
+                    {
+                        item += moMapLayer.AttributeFields.GetItem(j).Name;
+                    }
+                    else
+                    {
+                        item += moMapLayer.AttributeFields.GetItem(j).Name + ",";
+                    }
+ 
 
                 }
 
-                item += "\n"+"  -渲染类型：" + moMapLayer.Renderer.RendererType.ToString() + "\n" + "\n";
+                item += "\n"+"\n"+"  - 渲染类型：" + moMapLayer.Renderer.RendererType.ToString() + "\n" + "\n";
 
                 if (moMapLayer.LabelRenderer == null)
                 {
-                    item += "  -未设置注记";
+                    item += "  - 未设置注记";
                 }
                 else
                 {
                     string isvisible = moMapLayer.LabelRenderer.LabelFeatures.ToString();
-                    item += "  -注记可见：" + isvisible + "\n" + "\n";
+                    item += "  - 注记可见：" + isvisible + "\n" + "\n";
                     if (moMapLayer.LabelRenderer.LabelFeatures == true)
                     {
-                        item += "    -注记字段：" + moMapLayer.LabelRenderer.Field + "\n" + "\n";
+                        item += "  - 注记字段：" + moMapLayer.LabelRenderer.Field + "\n" + "\n";
                     }
 
                 }
