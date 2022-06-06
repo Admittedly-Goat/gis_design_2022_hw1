@@ -35,6 +35,8 @@ namespace MyMapObjectsDemo2022
                 DashDot.Checked = true;
             else if (moSimpleLineSymbol.Style == MyMapObjects.moSimpleLineSymbolStyleConstant.DashDotDot)
                 DashDotDot.Checked = true;
+            string size = moSimpleLineSymbol.Size.ToString();
+            textBox1.Text = size;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -49,6 +51,7 @@ namespace MyMapObjectsDemo2022
                 moSimpleLineSymbol.Style = MyMapObjects.moSimpleLineSymbolStyleConstant.DashDot;
             else if (DashDotDot.Checked)
                 moSimpleLineSymbol.Style = MyMapObjects.moSimpleLineSymbolStyleConstant.DashDotDot;
+            moSimpleLineSymbol.Size = float.Parse(textBox1.Text);
             if (listBox1.SelectedIndex == -1)
             {
                 MessageBox.Show("未选择绑定字段");
@@ -69,6 +72,7 @@ namespace MyMapObjectsDemo2022
                 {
                     MyMapObjects.moSimpleLineSymbol sSymbol = new MyMapObjects.moSimpleLineSymbol();
                     sSymbol.Style = moSimpleLineSymbol.Style;
+                    sSymbol.Size = moSimpleLineSymbol.Size;
                     moUniqueValueRenderer.AddUniqueValue(sNames[i].ToString(), sSymbol);
                 }
                 moUniqueValueRenderer.DefaultSymbol = new MyMapObjects.moSimpleLineSymbol();

@@ -41,6 +41,8 @@ namespace MyMapObjectsDemo2022
                 CircleDot.Checked = true;
             else if (moSimpleMarkerSymbol.Style == MyMapObjects.moSimpleMarkerSymbolStyleConstant.CircleCircle)
                 CircleCircle.Checked = true;
+            string size = moSimpleMarkerSymbol.Size.ToString();
+            textBox1.Text = size;
         }
 
 
@@ -72,6 +74,7 @@ namespace MyMapObjectsDemo2022
                 moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.CircleDot;
             else if (CircleCircle.Checked)
                 moSimpleMarkerSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.CircleCircle;
+            moSimpleMarkerSymbol.Size = float.Parse(textBox1.Text);
             if (listBox1.SelectedIndex == -1)
             {
                 MessageBox.Show("未选择绑定字段");
@@ -92,6 +95,7 @@ namespace MyMapObjectsDemo2022
                 {
                     MyMapObjects.moSimpleMarkerSymbol sSymbol = new MyMapObjects.moSimpleMarkerSymbol();
                     sSymbol.Style = moSimpleMarkerSymbol.Style;
+                    sSymbol.Size = moSimpleMarkerSymbol.Size;
                     moUniqueValueRenderer.AddUniqueValue(sNames[i].ToString(), sSymbol);
                 }
                 moUniqueValueRenderer.DefaultSymbol = new MyMapObjects.moSimpleMarkerSymbol();
