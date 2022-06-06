@@ -182,7 +182,7 @@ namespace MyMapObjects
                 double minSize = size * 2 / sBreakCount;
                 for(int i =0;i<sBreakCount;i++)
                 {
-                    Size[i] = i * minSize;
+                    Size[i] = (i+1) * minSize;
                 }
             }
             else
@@ -190,7 +190,7 @@ namespace MyMapObjects
                 double minSize = size / 4;
                 for(int i=0;i<sBreakCount;i++)
                 {
-                    Size[i] = i * minSize;
+                    Size[i] = (i+1) * minSize;
                 }
             }
             for (Int32 i = 0; i < sBreakCount ; i++)
