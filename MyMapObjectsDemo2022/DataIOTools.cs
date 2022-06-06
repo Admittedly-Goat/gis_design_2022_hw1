@@ -573,13 +573,14 @@ namespace MyMapObjectsDemo2022
                 else
                 {
                     string field = newLayerAppendixInfo["Field"];
-                    string font= newLayerAppendixInfo["Font"];
-                    int fontSize= newLayerAppendixInfo["FontSize"];
+                    string font= (newLayerAppendixInfo["Font"].ToObject<Dictionary<string, string>>())["Name"];
+                    int fontSize=Convert.ToInt32(newLayerAppendixInfo["FontSize"]);
                     List<int> colorList= newLayerAppendixInfo["Color"].ToObject<List<int>>();
                     newLayer.LabelRenderer = new MyMapObjects.moLabelRenderer();
                     newLayer.LabelRenderer.Field = field;
                     newLayer.LabelRenderer.TextSymbol.Font = new System.Drawing.Font(font, fontSize);
                     newLayer.LabelRenderer.TextSymbol.FontColor = System.Drawing.Color.FromArgb(colorList[0], colorList[1], colorList[2]);
+                    newLayer.LabelRenderer.LabelFeatures = true;
                 }
 
                 Dictionary<string, dynamic> newLayerRendererInfo = layerJsonDict["Renderer"].ToObject<Dictionary<string,dynamic>>();
