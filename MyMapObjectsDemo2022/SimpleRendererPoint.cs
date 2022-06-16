@@ -72,5 +72,9 @@ namespace MyMapObjectsDemo2022
             this.Close();
         }
 
+        private void SolidCircle_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -84,6 +84,12 @@
     <Compile Include="ClassBreaksPolygon.Designer.cs">
       <DependentUpon>ClassBreaksPolygon.cs</DependentUpon>
     </Compile>
+    <Compile Include="ColorComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorComboBox.Designer.cs">
+      <DependentUpon>ColorComboBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="CoordinateSystemChange.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +141,12 @@
     <Compile Include="propertyTable.Designer.cs">
       <DependentUpon>propertyTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="RenderLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RenderLayer.Designer.cs">
+      <DependentUpon>RenderLayer.cs</DependentUpon>
+    </Compile>
     <Compile Include="SelectAttributeFields.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +170,24 @@
     </Compile>
     <Compile Include="SimpleRendererPoint.designer.cs">
       <DependentUpon>SimpleRendererPoint.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SymbolFill.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SymbolFill.Designer.cs">
+      <DependentUpon>SymbolFill.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SymbolLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SymbolLine.Designer.cs">
+      <DependentUpon>SymbolLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SymbolPoint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SymbolPoint.Designer.cs">
+      <DependentUpon>SymbolPoint.cs</DependentUpon>
     </Compile>
     <Compile Include="UniqueValueLIne.cs">
       <SubType>Form</SubType>
@@ -234,6 +264,9 @@
     <EmbeddedResource Include="propertyTable.resx">
       <DependentUpon>propertyTable.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="RenderLayer.resx">
+      <DependentUpon>RenderLayer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SelectAttributeFields.resx">
       <DependentUpon>SelectAttributeFields.cs</DependentUpon>
     </EmbeddedResource>
@@ -245,6 +278,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SimpleRendererPoint.resx">
       <DependentUpon>SimpleRendererPoint.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SymbolFill.resx">
+      <DependentUpon>SymbolFill.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SymbolLine.resx">
+      <DependentUpon>SymbolLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SymbolPoint.resx">
+      <DependentUpon>SymbolPoint.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UniqueValueLIne.resx">
       <DependentUpon>UniqueValueLIne.cs</DependentUpon>

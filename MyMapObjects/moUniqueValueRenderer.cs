@@ -18,7 +18,7 @@ namespace MyMapObjects
         private List<string> _Values = new List<string>();
         private List<moSymbol> _Symbols = new List<moSymbol>();
         private moSymbol _DefaultSymbol;    //默认符号
-        private bool _ShowDefaultSymbol = true;
+        private bool _ShowDefaultSymbol = false;
         //在图层显示控件中是否显示默认符号 
 
         #endregion
@@ -68,7 +68,17 @@ namespace MyMapObjects
             set { _DefaultSymbol = value; }
         }
         //其他属性不再编写,自行添加
+        public List<moSymbol> Symbols
+        {
+            get { return _Symbols; }
+            set { _Symbols = value; }
+        }
 
+        public List<string> Values
+        {
+            get { return _Values; }
+            set { _Values = value; }
+        }
         #endregion
 
         #region 方法

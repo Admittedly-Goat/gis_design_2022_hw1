@@ -181,12 +181,13 @@ namespace MyMapObjectsDemo2022
             else
             {
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
-                MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();
+                MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();// 新建渲染类
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
                     MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol_clone = new MyMapObjects.moSimpleMarkerSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
                     mSimpleRendererPointSymbol_clone = mSimpleRendererPointSymbol.Clone1();
                     SimpleRendererPoint cForm = new SimpleRendererPoint(mSimpleRendererPointSymbol);
+                    //SymbolPoint cForm = new SymbolPoint(mSimpleRendererPointSymbol);
                     cForm.ShowDialog();
                     sRenderer.Symbol = mSimpleRendererPointSymbol;
                     if (mSimpleRendererPointSymbol.Color != mSimpleRendererPointSymbol_clone.Color ||
@@ -2763,6 +2764,37 @@ namespace MyMapObjectsDemo2022
         }
 
         private void moMap_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void 渲染ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (checkedListBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                return;
+            }
+            identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
+            moMap.Refresh();
+            if (moMap.Layers.Count == 0)
+            {
+                return;
+            }
+            else
+            {
+                MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
+                RenderLayer cForm = new RenderLayer(sLayer,moMap);
+                cForm.ShowDialog();
+            }
+            checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
+        
+
+
+
+    }
+
+        private void 修改样式ToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }

@@ -92,7 +92,8 @@ namespace MyMapObjectsDemo2022
             this.Circle.Size = new System.Drawing.Size(50, 26);
             this.Circle.TabIndex = 18;
             this.Circle.Text = "○";
-            this.Circle.UseVisualStyleBackColor = true;          // 
+            this.Circle.UseVisualStyleBackColor = true;
+            // 
             // SolidCircle
             // 
             this.SolidCircle.AutoSize = true;
@@ -103,6 +104,7 @@ namespace MyMapObjectsDemo2022
             this.SolidCircle.TabIndex = 19;
             this.SolidCircle.Text = "●";
             this.SolidCircle.UseVisualStyleBackColor = true;
+            this.SolidCircle.CheckedChanged += new System.EventHandler(this.SolidCircle_CheckedChanged);
             // 
             // Triangle
             // 
@@ -130,6 +132,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.Square.AutoSize = true;
             this.Square.Font = new System.Drawing.Font("宋体", 16F);
+            this.Square.ForeColor = System.Drawing.Color.MediumPurple;
             this.Square.Location = new System.Drawing.Point(453, 98);
             this.Square.Name = "Square";
             this.Square.Size = new System.Drawing.Size(50, 26);
@@ -182,12 +185,15 @@ namespace MyMapObjectsDemo2022
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.White;
+            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.MediumPurple;
+            this.button2.FlatAppearance.BorderSize = 10;
             this.button2.Location = new System.Drawing.Point(453, 355);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(78, 31);
             this.button2.TabIndex = 27;
             this.button2.Text = "取消";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label4
