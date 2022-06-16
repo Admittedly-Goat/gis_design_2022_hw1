@@ -214,8 +214,11 @@ namespace MyMapObjectsDemo2022
             }
             else if (this._renderType == MyMapObjects.moRendererTypeConstant.ClassBreaks)
             {
-
-
+                DataGridView sDataGridView = (DataGridView)_fatherForm.Controls.Find("dataGridViewClassBreak", true)[0];
+                sDataGridView.Rows[this._index].Cells[0].Value = getSymbolStyleString(simpleMarkerSymbol.Style.ToString());
+                sDataGridView.Rows[this._index].Cells[0].Style.Font = new System.Drawing.Font("宋体", (float)simpleMarkerSymbol.Size * (float)2.83, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134))); ;
+                sDataGridView.Rows[this._index].Cells[0].Style.ForeColor = simpleMarkerSymbol.Color;
+                this.Close();
             }
             
 

@@ -51,9 +51,16 @@ namespace MyMapObjectsDemo2022
             int countFields = this._Layer.AttributeFields.Count;
             for (int i = 0; i < countFields; i++)
             {
-
+                if(this._Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dDouble||
+                    this._Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dInt16||
+                    this._Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dInt32||
+                    this._Layer.AttributeFields.GetItem(i).ValueType == MyMapObjects.moValueTypeConstant.dInt64){
+                    this.comboBoxClassBreakSelectField.Items.Add(this._Layer.AttributeFields.GetItem(i).Name);
+                }
                 this.comboBoxUniqueValueSelectField.Items.Add(this._Layer.AttributeFields.GetItem(i).Name);
+                
             }
+
 
         }
 
@@ -74,18 +81,15 @@ namespace MyMapObjectsDemo2022
             //初始化分级渲染界面
             else if(this._Layer.Renderer.RendererType == MyMapObjects.moRendererTypeConstant.UniqueValue)
             {
-                //this.tabControlRenderType.SelectedIndex = 1;
-                ////MessageBox.Show("1");
-                //this._UniqueValueRenderer = (MyMapObjects.moUniqueValueRenderer)_Layer.Renderer;
-                ////选择字段
-                //this.comboBoxUniqueValueSelectField.SelectedItem = _UniqueValueRenderer.Field;
-                //this.comboBoxUniqueValueSelectField.Text = _UniqueValueRenderer.Field;
-
-                //showExistUniqueValue((MyMapObjects.moUniqueValueRenderer)this._Layer.Renderer);
                 iniUniqueRenderer();
                 showPointSymbolButton(this.buttonSimpleShowSymbol, this._SimpleMarkerSymbol);
             }
             //初始化分级渲染界面
+            else if (this._Layer.Renderer.RendererType == MyMapObjects.moRendererTypeConstant.ClassBreaks)
+            {
+                iniClassBreakRenderer();
+                showPointSymbolButton(this.buttonSimpleShowSymbol, this._SimpleMarkerSymbol);
+            }
 
         }
         private void iniMultiPolylineLayer()
@@ -103,10 +107,14 @@ namespace MyMapObjectsDemo2022
             {
                 iniUniqueRenderer();
                 showLineSymbolButton(this.buttonSimpleShowSymbol, this._SimpleLineSymbol);
-
+            }
+            else if (this._Layer.Renderer.RendererType == MyMapObjects.moRendererTypeConstant.ClassBreaks)
+            {
+                iniClassBreakRenderer();
+                showLineSymbolButton(this.buttonSimpleShowSymbol, this._SimpleLineSymbol);
             }
 
-           
+
 
 
         }
@@ -126,6 +134,11 @@ namespace MyMapObjectsDemo2022
                 iniUniqueRenderer();
                 showFillSymbolButton(this.buttonSimpleShowSymbol, this._SimpleFillSymbol);
             }
+            else if (this._Layer.Renderer.RendererType == MyMapObjects.moRendererTypeConstant.ClassBreaks)
+            {
+                iniClassBreakRenderer();
+                showFillSymbolButton(this.buttonSimpleShowSymbol, this._SimpleFillSymbol);
+            }
 
 
 
@@ -135,13 +148,23 @@ namespace MyMapObjectsDemo2022
         private void iniUniqueRenderer()
         {
             this.tabControlRenderType.SelectedIndex = 1;
-            //MessageBox.Show("1");
             this._UniqueValueRenderer = (MyMapObjects.moUniqueValueRenderer)_Layer.Renderer;
             //选择字段
             this.comboBoxUniqueValueSelectField.SelectedItem = _UniqueValueRenderer.Field;
             this.comboBoxUniqueValueSelectField.Text = _UniqueValueRenderer.Field;
 
             showExistUniqueValue((MyMapObjects.moUniqueValueRenderer)this._Layer.Renderer);
+        }
+
+        private void iniClassBreakRenderer()
+        {
+            this.tabControlRenderType.SelectedIndex = 2;
+            this._ClassBreaksRenderer = (MyMapObjects.moClassBreaksRenderer)_Layer.Renderer;
+            //选择字段
+            this.comboBoxClassBreakSelectField.SelectedItem = _ClassBreaksRenderer.Field;
+            this.comboBoxClassBreakSelectField.Text = _ClassBreaksRenderer.Field;
+
+            showExistClassBreak((MyMapObjects.moClassBreaksRenderer)_Layer.Renderer);
         }
         #endregion
 
@@ -219,9 +242,8 @@ namespace MyMapObjectsDemo2022
                 //}
                 if (this._UniqueValueRenderer.Field == this.comboBoxUniqueValueSelectField.SelectedItem.ToString())
                 {
-                    MessageBox.Show("2");
+                    //MessageBox.Show("2");
                     showExistUniqueValue(this._UniqueValueRenderer);
-
                 }
                 else
                 {
@@ -328,10 +350,131 @@ namespace MyMapObjectsDemo2022
             {
                 MessageBox.Show("请先选择字段");
             }
+            else
+            {
+                
+                    //清空行
+                    this.dataGridViewClassBreak.Rows.Clear();
+                    int sFeatureCount = this._Layer.Features.Count;//当前图层的要素个数
+                    Int32 sFieldIndex = this._Layer.AttributeFields.FindField(this.comboBoxClassBreakSelectField.SelectedItem.ToString());//当前选择字段的索引
+
+                    //创建三个List，分别记录了该字段上的值的集合、每个值对应的符号的集合、每个值对应的要素个数集合
+                    List<double> sBreakValues = new List<double>();
+                    List<MyMapObjects.moSymbol> sSymbols = new List<MyMapObjects.moSymbol>();
+                    List<int> sValueCount = new List<int>();
+
+                    //初始化sBreakValues列表
+                    List<double> sValues = new List<double>();
+                    for (Int32 i = 0; i < sFeatureCount - 1; i++)
+                    {
+                        //MessageBox.Show(this._Layer.Features.GetItem(i).Attributes.GetItem(sFieldIndex).ToString());
+                        double sValue = double.Parse(_Layer.Features.GetItem(i).Attributes.GetItem(sFieldIndex).ToString());
+
+                        sValues.Add(sValue);
+                    }
+                    double sMinValue = sValues.Min();
+                    double sMaxValue = sValues.Max();
+
+                    int sBreakCount = int.Parse(this.numericUpDownClassNumber.Value.ToString());
+                    double step = (sMaxValue-sMinValue)/sBreakCount;
+
+
+                    for(int i = 0; i < sBreakCount; i++)
+                    {
+                        sBreakValues.Add(sMinValue + step * (i + 1));
+                        sValueCount.Add(0);
+
+                        MyMapObjects.moSymbol sCurrentSymbol;
+                        if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                        {
+                            sCurrentSymbol = new MyMapObjects.moSimpleMarkerSymbol();
+                            sSymbols.Add(sCurrentSymbol);
+                        }
+                        else if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                        {
+                            sCurrentSymbol = new MyMapObjects.moSimpleLineSymbol();
+                            sSymbols.Add(sCurrentSymbol);
+                        }
+                        else if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                        {
+                            sCurrentSymbol = new MyMapObjects.moSimpleFillSymbol();
+                            sSymbols.Add(sCurrentSymbol);
+                        }
+                    }
+
+
+                    for (int i = 0; i < _Layer.Features.Count; i++)
+                    {
+                        double sCurrentFeatureValue = double.Parse(_Layer.Features.GetItem(i).Attributes.GetItem(sFieldIndex).ToString());
+                        if (sCurrentFeatureValue < sBreakValues[0])
+                        {
+                            sValueCount[0]++;
+                        }
+                        for (int j = 1; j < sBreakValues.Count; j++)
+                        {
+                            if (sCurrentFeatureValue < sBreakValues[j] &&
+                               sCurrentFeatureValue > sBreakValues[j - 1])
+                            {
+                                sValueCount[j]++;
+                            }
+                        }
+
+                    }
+
+
+
+
+
+
+                    //赋值给_UniqueValueRenderer
+                    //赋值给UniqueRenderer
+                    this._ClassBreaksRenderer.Field = this.comboBoxClassBreakSelectField.SelectedItem.ToString();
+                    this._ClassBreaksRenderer.Symbols = sSymbols;
+                    this._ClassBreaksRenderer.BreakValues = sBreakValues;
+                    //this._ClassBreaksRenderer.BreakCount = sBreakCount;
+
+
+                    //在表格中显示值
+                    drawClassBreakDataGridView(sSymbols, sBreakValues, sValueCount);
+
+                
+
+            }
+
+
 
         }
         private void buttonClassBreakConfirm_Click(object sender, EventArgs e)
         {
+            this._Layer.Renderer = this._ClassBreaksRenderer;
+            this._moMap.RedrawMap();
+
+        }
+        private void dataGridViewClassBreak_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == 0)
+            {
+                int sClickIndex = e.RowIndex;
+                if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    SymbolPoint cForm = new SymbolPoint(this, (MyMapObjects.moSimpleMarkerSymbol)this._ClassBreaksRenderer.Symbols[sClickIndex], MyMapObjects.moRendererTypeConstant.ClassBreaks, sClickIndex);
+                    cForm.ShowDialog();
+
+                }
+                else if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    SymbolLine cForm = new SymbolLine(this, (MyMapObjects.moSimpleLineSymbol)this._ClassBreaksRenderer.Symbols[sClickIndex], MyMapObjects.moRendererTypeConstant.ClassBreaks, sClickIndex);
+                    cForm.ShowDialog();
+
+                }
+                else if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    SymbolFill cForm = new SymbolFill(this, (MyMapObjects.moSimpleFillSymbol)this._ClassBreaksRenderer.Symbols[sClickIndex], MyMapObjects.moRendererTypeConstant.ClassBreaks, sClickIndex);
+                    cForm.ShowDialog();
+                }
+
+            }
+
 
         }
         #endregion
@@ -424,6 +567,53 @@ namespace MyMapObjectsDemo2022
             }
 
         }
+        private void drawClassBreakDataGridView(List<MyMapObjects.moSymbol> sSymbols, List<double> sBreakValues, List<int> sValueCount)
+        {
+            this.dataGridViewClassBreak.Rows.Clear();
+            for (int i = 0; i < sBreakValues.Count; i++)
+            {
+                DataGridViewRow sRow = new DataGridViewRow();
+                DataGridViewTextBoxCell sSymbolCell = new DataGridViewTextBoxCell();
+                DataGridViewTextBoxCell sValueCell = new DataGridViewTextBoxCell();
+                DataGridViewTextBoxCell sCountCell = new DataGridViewTextBoxCell();
+                if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
+                {
+                    MyMapObjects.moSimpleMarkerSymbol sCurrentSymbol = (MyMapObjects.moSimpleMarkerSymbol)sSymbols[i];
+                    sSymbolCell.Value = getMarkerSymbolStyleString(sCurrentSymbol.Style.ToString());
+                    sSymbolCell.Style.Font = new System.Drawing.Font("宋体", (float)sCurrentSymbol.Size * (float)2.83, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+                    sSymbolCell.Style.ForeColor = sCurrentSymbol.Color;
+                }
+                else if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
+                {
+                    MyMapObjects.moSimpleLineSymbol sCurrentSymbol = (MyMapObjects.moSimpleLineSymbol)sSymbols[i];
+                    //显示当前的符号
+                    sSymbolCell.Value = getLineSymbolStyleString(sCurrentSymbol.Style.ToString());
+                    sSymbolCell.Style.Font = new System.Drawing.Font("宋体", (float)sCurrentSymbol.Size * (float)2.83 * 10, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+                    sSymbolCell.Style.ForeColor = sCurrentSymbol.Color;
+
+                }
+                else if (this._Layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
+                {
+                    MyMapObjects.moSimpleFillSymbol sCurrentSymbol = (MyMapObjects.moSimpleFillSymbol)sSymbols[i]; //面符号
+                    MyMapObjects.moSimpleLineSymbol sOutLine = sCurrentSymbol.Outline;
+                    //显示当前的符号
+                    sSymbolCell.Style.BackColor = sCurrentSymbol.Color;
+                    sSymbolCell.Value = getLineSymbolStyleString(sOutLine.Style.ToString());
+                    sSymbolCell.Style.Font = new System.Drawing.Font("宋体", (float)sOutLine.Size * (float)2.83 * 10, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+                    sSymbolCell.Style.ForeColor = sOutLine.Color;
+
+                }
+                sValueCell.Value = sBreakValues[i];
+                sCountCell.Value = sValueCount[i];
+
+                sRow.Cells.Add(sSymbolCell);
+                sRow.Cells.Add(sValueCell);
+                sRow.Cells.Add(sCountCell);
+
+                this.dataGridViewClassBreak.Rows.Add(sRow);
+
+            }
+        }
         /// <summary>
         /// 显示已经存在UniqueValueRenderer
         /// </summary>
@@ -449,6 +639,37 @@ namespace MyMapObjectsDemo2022
                 i++;
             }
             drawUniqueValueDataGridView(sSymbols, sValues, sValueCount);
+        }
+        private void showExistClassBreak(MyMapObjects.moClassBreaksRenderer sClassBreakRenderer)
+        {
+            Int32 sFieldIndex = this._Layer.AttributeFields.FindField(sClassBreakRenderer.Field);//当前选择字段的索引
+            List<MyMapObjects.moSymbol> sSymbols = sClassBreakRenderer.Symbols;
+            List<double> sBreakValues = sClassBreakRenderer.BreakValues;
+            List<int> sValueCount = new List<int>();
+
+            for(int i = 0; i < sBreakValues.Count; i++)
+            {
+                sValueCount.Add(0);
+            }
+            for(int i = 0; i < _Layer.Features.Count; i++)
+            {
+                double sCurrentFeatureValue = double.Parse(_Layer.Features.GetItem(i).Attributes.GetItem(sFieldIndex).ToString());
+                if (sCurrentFeatureValue < sBreakValues[0])
+                {
+                    sValueCount[0]++;
+                }
+                for (int j = 1; j < sBreakValues.Count; j++)
+                {
+                    if(sCurrentFeatureValue<sBreakValues[j]&&
+                       sCurrentFeatureValue > sBreakValues[j - 1])
+                    {
+                        sValueCount[j]++;
+                    }
+                }
+
+            }
+            drawClassBreakDataGridView(sSymbols, sBreakValues, sValueCount);
+
         }
         /// <summary>
         /// 通过名称获取点符号
@@ -574,12 +795,10 @@ namespace MyMapObjectsDemo2022
             button.ForeColor = simpleLineSymbol.Color;
             button.BackColor = simpleFillSymbol.Color;
         }
+
+
+
         #endregion
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
 
 
     }

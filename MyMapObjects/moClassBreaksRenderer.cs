@@ -40,6 +40,7 @@ namespace MyMapObjects
                 return moRendererTypeConstant.ClassBreaks;
             }
         }
+        
 
         /// <summary>
         /// 获取或设置绑定字段名称
@@ -69,6 +70,17 @@ namespace MyMapObjects
         {
             get { return _DefaultSymbol; }
             set { _DefaultSymbol = value; }
+        }
+
+        public List<moSymbol> Symbols
+        {
+            get { return _Symbols; }
+            set { _Symbols = value; }
+        }
+        public List<double> BreakValues
+        {
+            get { return _BreakValues; }
+            set { _BreakValues = value; }
         }
 
         #endregion

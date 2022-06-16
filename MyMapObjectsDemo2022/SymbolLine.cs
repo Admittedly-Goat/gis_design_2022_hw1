@@ -168,6 +168,11 @@ namespace MyMapObjectsDemo2022
             }
             else if (this._renderType == MyMapObjects.moRendererTypeConstant.ClassBreaks)
             {
+                DataGridView sDataGridView = (DataGridView)_fatherForm.Controls.Find("dataGridViewClassBreak", true)[0];
+                sDataGridView.Rows[this._index].Cells[0].Value = getSymbolStyleString(_simpleLineSymbol.Style.ToString());
+                sDataGridView.Rows[this._index].Cells[0].Style.Font = new System.Drawing.Font("宋体", (float)_simpleLineSymbol.Size * (float)2.83, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134))); ;
+                sDataGridView.Rows[this._index].Cells[0].Style.ForeColor = _simpleLineSymbol.Color;
+                this.Close();
 
             }
 
