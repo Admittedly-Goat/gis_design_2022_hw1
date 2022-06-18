@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MyMapObjects
+﻿namespace MyMapObjects
 {
     public class moFeature
     {
         #region 字段
 
-        private moGeometryTypeConstant _ShapeType
-            = moGeometryTypeConstant.MultiPolygon; //几何类型
-        private moGeometry _Geometry;   //几何图形
-        private moAttributes _Attributes;   //属性集合
-        private moSymbol _Symbol;       //为该要素配置的符号
 
         #endregion
 
@@ -22,9 +12,9 @@ namespace MyMapObjects
         public moFeature(moGeometryTypeConstant shapeType,
             moGeometry geometry, moAttributes attributes)
         {
-            _ShapeType = shapeType;
-            _Geometry = geometry;
-            _Attributes = attributes;
+            ShapeType = shapeType;
+            Geometry = geometry;
+            Attributes = attributes;
         }
 
         #endregion
@@ -34,38 +24,22 @@ namespace MyMapObjects
         /// <summary>
         /// 获取或设置几何类型
         /// </summary>
-        public moGeometryTypeConstant ShapeType
-        {
-            get { return _ShapeType; }
-            set { _ShapeType = value; }
-        }
+        public moGeometryTypeConstant ShapeType { get; set; } = moGeometryTypeConstant.MultiPolygon;
 
         /// <summary>
         /// 获取或设置几何图形
         /// </summary>
-        public moGeometry Geometry
-        {
-            get { return _Geometry; }
-            set { _Geometry = value; }
-        }
+        public moGeometry Geometry { get; set; }
 
         /// <summary>
         /// 获取或设置属性集合
         /// </summary>
-        public moAttributes Attributes
-        {
-            get { return _Attributes; }
-            set { _Attributes = value; }
-        }
+        public moAttributes Attributes { get; set; }
 
         /// <summary>
         /// 获取或设置要素符号
         /// </summary>
-        internal moSymbol Symbol
-        {
-            get { return _Symbol; }
-            set { _Symbol = value; }
-        }
+        internal moSymbol Symbol { get; set; }
 
         #endregion
 
@@ -77,36 +51,36 @@ namespace MyMapObjects
         /// <returns></returns>
         public moRectangle GetEnvelope()
         {
-            moRectangle sRect = null;
-            if (_ShapeType == moGeometryTypeConstant.Point)
+            moRectangle sRect;
+            if (ShapeType == moGeometryTypeConstant.Point)
             {
-                
-                if(_Geometry.GetType()==typeof(moPoint))
+
+                if (Geometry.GetType() == typeof(moPoint))
                 {
-                    moPoint sPoint = (moPoint)_Geometry;
+                    moPoint sPoint = (moPoint)Geometry;
                     sRect = new moRectangle(sPoint.X, sPoint.X,
                     sPoint.Y, sPoint.Y);
                 }
                 else
                 {
-                    moPoints sPoints = (moPoints)_Geometry;
+                    moPoints sPoints = (moPoints)Geometry;
                     moPoint sPoint = sPoints.GetItem(0);
                     sRect = new moRectangle(sPoint.X, sPoint.X,
                     sPoint.Y, sPoint.Y);
-                }   
-                
+                }
+
             }
-            else if (_ShapeType ==
+            else if (ShapeType ==
                 moGeometryTypeConstant.MultiPolyline)
             {
                 moMultiPolyline sMultiPolyline
-                    = (moMultiPolyline)_Geometry;
+                    = (moMultiPolyline)Geometry;
                 sRect = sMultiPolyline.GetEnvelope();
             }
             else
             {
                 moMultiPolygon sMultiPolygon
-                    = (moMultiPolygon)_Geometry;
+                    = (moMultiPolygon)Geometry;
                 sRect = sMultiPolygon.GetEnvelope();
             }
             return sRect;
@@ -118,22 +92,22 @@ namespace MyMapObjects
         /// <returns></returns>
         public moFeature Clone()
         {
-            moGeometryTypeConstant sShapeType = _ShapeType;
+            moGeometryTypeConstant sShapeType = ShapeType;
             moGeometry sGeometry = null;
-            moAttributes sAttributes = _Attributes.Clone();
-            if (_ShapeType == moGeometryTypeConstant.Point)
+            moAttributes sAttributes = Attributes.Clone();
+            if (ShapeType == moGeometryTypeConstant.Point)
             {
-                moPoint sPoint = (moPoint)_Geometry;
+                moPoint sPoint = (moPoint)Geometry;
                 sGeometry = sPoint.Clone();
             }
-            else if (_ShapeType == moGeometryTypeConstant.MultiPolyline)
+            else if (ShapeType == moGeometryTypeConstant.MultiPolyline)
             {
-                moMultiPolyline sMultiPolyline = (moMultiPolyline)_Geometry;
+                moMultiPolyline sMultiPolyline = (moMultiPolyline)Geometry;
                 sGeometry = sMultiPolyline.Clone();
             }
-            else if (_ShapeType == moGeometryTypeConstant.MultiPolygon)
+            else if (ShapeType == moGeometryTypeConstant.MultiPolygon)
             {
-                moMultiPolygon sMultiPolygon = (moMultiPolygon)_Geometry;
+                moMultiPolygon sMultiPolygon = (moMultiPolygon)Geometry;
                 sGeometry = sMultiPolygon.Clone();
             }
             moFeature sFeature = new moFeature(sShapeType, sGeometry, sAttributes);

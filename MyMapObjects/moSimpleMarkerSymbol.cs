@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace MyMapObjects
 {
     public class moSimpleMarkerSymbol : moSymbol
     {
         #region 字段
-        private string _Label = "";     //符号标签
-        private bool _Visible = true;   //是否可见
-        private moSimpleMarkerSymbolStyleConstant _Style =
-            moSimpleMarkerSymbolStyleConstant.SolidCircle;  //形状
-        private Color _Color = Color.LightPink; //颜色
-        private double _Size = 3;   //尺寸，默认为毫米
 
         #endregion
         #region 构造函数
@@ -27,7 +17,7 @@ namespace MyMapObjects
 
         public moSimpleMarkerSymbol(string label)
         {
-            _Label = label;
+            Label = label;
             CreateRandomColor();
         }
 
@@ -36,56 +26,30 @@ namespace MyMapObjects
         /// <summary>
         /// 获取符号类型
         /// </summary>
-        public override moSymbolTypeConstant SymbolType
-        {
-            get
-            {
-                return moSymbolTypeConstant.SimpleMarkerSymbol;
-            }
-        }
+        public override moSymbolTypeConstant SymbolType => moSymbolTypeConstant.SimpleMarkerSymbol;
 
         /// <summary>
         /// 获取或设置符号标签
         /// </summary>
-        public string Label
-        {
-            get { return _Label; }
-            set { _Label = value; }
-        }
+        public string Label { get; set; } = "";
 
         /// <summary>
         /// 指示是否可见
         /// </summary>
-        public bool Visible
-        {
-            get { return _Visible; }
-            set { _Visible = value; }
-        }
+        public bool Visible { get; set; } = true;
         /// <summary>
         /// 获取或设置形状类型
         /// </summary>
-        public moSimpleMarkerSymbolStyleConstant Style
-        {
-            get { return _Style; }
-            set { _Style = value; }
-        }
+        public moSimpleMarkerSymbolStyleConstant Style { get; set; } = moSimpleMarkerSymbolStyleConstant.SolidCircle;
 
         /// <summary>
         /// 获取或设置颜色
         /// </summary>
-        public Color Color
-        {
-            get { return _Color; }
-            set { _Color = value; }
-        }
+        public Color Color { get; set; } = Color.LightPink;
         /// <summary>
         /// 获取或设置尺寸
         /// </summary>
-        public double Size
-        {
-            get { return _Size; }
-            set { _Size = value; }
-        }
+        public double Size { get; set; } = 3;
         #endregion
 
         #region 方法
@@ -96,12 +60,14 @@ namespace MyMapObjects
         /// <returns></returns>
         public override moSymbol Clone()
         {
-            moSimpleMarkerSymbol sSymbol = new moSimpleMarkerSymbol();
-            sSymbol._Label = _Label;
-            sSymbol._Visible = _Visible;
-            sSymbol._Style = _Style;
-            sSymbol._Color = _Color;
-            sSymbol._Size = _Size;
+            moSimpleMarkerSymbol sSymbol = new moSimpleMarkerSymbol
+            {
+                Label = Label,
+                Visible = Visible,
+                Style = Style,
+                Color = Color,
+                Size = Size
+            };
             return sSymbol;
         }
         /// <summary>
@@ -110,12 +76,14 @@ namespace MyMapObjects
         /// <returns></returns>
         public moSimpleMarkerSymbol Clone1()
         {
-            moSimpleMarkerSymbol sSymbol = new moSimpleMarkerSymbol();
-            sSymbol._Label = _Label;
-            sSymbol._Visible = _Visible;
-            sSymbol._Style = _Style;
-            sSymbol._Color = _Color;
-            sSymbol._Size = _Size;
+            moSimpleMarkerSymbol sSymbol = new moSimpleMarkerSymbol
+            {
+                Label = Label,
+                Visible = Visible,
+                Style = Style,
+                Color = Color,
+                Size = Size
+            };
             return sSymbol;
         }
 
@@ -131,27 +99,27 @@ namespace MyMapObjects
             byte[] sBytes = new byte[4];
             RNGCryptoServiceProvider sChanelRng = new RNGCryptoServiceProvider();
             sChanelRng.GetBytes(sBytes);
-            Int32 sChanelValue = sBytes[0];
+            int sChanelValue = sBytes[0];
             byte A = 255, R, G, B;
             if (sChanelValue <= 85)
             {
                 R = 252;
-                G = (byte)(179 + 66 * sBytes[2] / 255);
-                B = (byte)(179 + 66 * sBytes[3] / 255);
+                G = (byte)(179 + (66 * sBytes[2] / 255));
+                B = (byte)(179 + (66 * sBytes[3] / 255));
             }
             else if (sChanelValue <= 170)
             {
                 G = 252;
-                R = (byte)(179 + 66 * sBytes[1] / 255);
-                B = (byte)(179 + 66 * sBytes[3] / 255);
+                R = (byte)(179 + (66 * sBytes[1] / 255));
+                B = (byte)(179 + (66 * sBytes[3] / 255));
             }
             else
             {
                 B = 252;
-                R = (byte)(179 + 66 * sBytes[1] / 255);
-                G = (byte)(179 + 66 * sBytes[2] / 255);
+                R = (byte)(179 + (66 * sBytes[1] / 255));
+                G = (byte)(179 + (66 * sBytes[2] / 255));
             }
-            _Color = Color.FromArgb(A, R, G, B);
+            Color = Color.FromArgb(A, R, G, B);
         }
         #endregion
 

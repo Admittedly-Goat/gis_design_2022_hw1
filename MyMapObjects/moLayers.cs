@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace MyMapObjects
 {
@@ -12,7 +9,7 @@ namespace MyMapObjects
     {
         #region 字段
 
-        private List<moMapLayer> _Layers = new List<moMapLayer>();
+        private readonly List<moMapLayer> _Layers = new List<moMapLayer>();
 
         #endregion
 
@@ -28,10 +25,7 @@ namespace MyMapObjects
         /// <summary>
         /// 获取图层数量
         /// </summary>
-        public Int32 Count
-        {
-            get { return _Layers.Count; }
-        }
+        public int Count => _Layers.Count;
 
         #endregion
 
@@ -42,7 +36,7 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public moMapLayer GetItem(Int32 index)
+        public moMapLayer GetItem(int index)
         {
             return _Layers[index];
         }
@@ -62,14 +56,14 @@ namespace MyMapObjects
         /// <param name="mapLayer"></param>
         public void Remove(moMapLayer mapLayer)
         {
-            _Layers.Remove(mapLayer);
+            _ = _Layers.Remove(mapLayer);
         }
 
         /// <summary>
         /// 移除指定索引号的图层
         /// </summary>
         /// <param name="index"></param>
-        public void RemoveAt(Int32 index)
+        public void RemoveAt(int index)
         {
             _Layers.RemoveAt(index);
         }
@@ -87,10 +81,12 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="fromIndex"></param>
         /// <param name="toIndex"></param>
-        public void MoveTo(Int32 fromIndex, Int32 toIndex)
+        public void MoveTo(int fromIndex, int toIndex)
         {
             if (fromIndex == toIndex)
+            {
                 return;
+            }
             else
             {
                 moMapLayer sLayer = _Layers[fromIndex];

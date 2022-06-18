@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MyMapObjectsDemo2022
@@ -13,13 +10,13 @@ namespace MyMapObjectsDemo2022
     public partial class frmMain : Form
     {
         // 选项变量
-        private Color mZoomBoxColor = Color.DeepPink; // 缩放盒颜色
-        private double mZoomBoxWidth = 0.53; // 缩放盒边界宽度，单位毫米
-        private Color mSelectBoxColor = Color.DarkGreen; // 选择盒颜色
-        private double mSelectBoxWidth = 0.53; // 选择盒边界宽度
-        private double mZoomRatioFixed = 2; // 固定放大系数
-        private double mZoomRatioMouseWheel = 1.2; // 滑轮放大系数
-        private double mSelectingTolerance = 3; // 选择容限，像素
+        private readonly Color mZoomBoxColor = Color.DeepPink; // 缩放盒颜色
+        private readonly double mZoomBoxWidth = 0.53; // 缩放盒边界宽度，单位毫米
+        private readonly Color mSelectBoxColor = Color.DarkGreen; // 选择盒颜色
+        private readonly double mSelectBoxWidth = 0.53; // 选择盒边界宽度
+        private readonly double mZoomRatioFixed = 2; // 固定放大系数
+        private readonly double mZoomRatioMouseWheel = 1.2; // 滑轮放大系数
+        private readonly double mSelectingTolerance = 3; // 选择容限，像素
         private MyMapObjects.moSimpleFillSymbol mSelectingBoxSymbol; // 选择盒符号
         private MyMapObjects.moSimpleFillSymbol mZoomBoxSymbol; // 缩放盒符号
         private MyMapObjects.moSimpleFillSymbol mMovingPolygonSymbol; // 正在移动的多边形符号
@@ -30,37 +27,32 @@ namespace MyMapObjectsDemo2022
         private MyMapObjects.moSimpleMarkerSymbol mEditingVertexSymbol; // 正在编辑的图形顶点符号
         private MyMapObjects.moSimpleMarkerSymbol mEditingHighlightedVertexSymbol; // 正在编辑的高亮的图形顶点符号
         private MyMapObjects.moSimpleLineSymbol mElasticSymbol; // 橡皮筋符号
-        private MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前简单渲染的点符号
-        private MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前简单渲染的线符号
-        private MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();//当前简单渲染的面符号
+        private readonly MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();//当前简单渲染的点符号
+        private readonly MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol = new MyMapObjects.moSimpleLineSymbol();//当前简单渲染的线符号
+        private readonly MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();//当前简单渲染的面符号
         private bool mShowLngLat = false; // 是否显示经纬度
         private int checklistIndex = -1;   //全局图层列表索引
 
         // 与地图操作有关的变量
-        private Int32 mMapOpStyle = 0; // 0：无，1：放大，2：缩小，3：漫游，4：选择，5：查询，6：移动，7：描绘，8：编辑
+        private int mMapOpStyle = 0; // 0：无，1：放大，2：缩小，3：漫游，4：选择，5：查询，6：移动，7：描绘，8：编辑
         private PointF mStartMouseLocation;
         private PointF mOriginMouseLocation;
         private bool mIsInZoomIn = true;
         private bool mIsInPan = false;
         private bool mIsInSelect = false;
-        private bool mIsInIdentify = false;
+        private readonly bool mIsInIdentify = false;
         private bool mIsInMovingShapes = false;
-        private List<MyMapObjects.moGeometry> mMovingGeometries = new List<MyMapObjects.moGeometry>(); // 正在移动的图形的集合
-        private List<MyMapObjects.moFeature> mMovingFeatures = new List<MyMapObjects.moFeature>(); //正在移动的要素集合，index和上面的移动图形集合对应。
+        private readonly List<MyMapObjects.moGeometry> mMovingGeometries = new List<MyMapObjects.moGeometry>(); // 正在移动的图形的集合
+        private readonly List<MyMapObjects.moFeature> mMovingFeatures = new List<MyMapObjects.moFeature>(); //正在移动的要素集合，index和上面的移动图形集合对应。
         private MyMapObjects.moGeometry mEditingGeometry; // 正在编辑的图形
         private List<MyMapObjects.moPoints> mSketchingShape; // 正在描绘的图形，用一个多点集合存储
-        MyMapObjects.moSimpleMarkerSymbol pSymbol = new MyMapObjects.moSimpleMarkerSymbol();  //描绘点
-        MyMapObjects.moSimpleLineSymbol lineSymbol = new MyMapObjects.moSimpleLineSymbol();   //描绘线
+        private readonly MyMapObjects.moSimpleMarkerSymbol pSymbol = new MyMapObjects.moSimpleMarkerSymbol();  //描绘点
+        private readonly MyMapObjects.moSimpleLineSymbol lineSymbol = new MyMapObjects.moSimpleLineSymbol();   //描绘线
         private int identifySelectedLayerIndex = -1; //查询功能选择的Layer
         private propertyTable propertyTableForm; //属性表对象，作为窗体的一个附属类来进行操作，不使用复杂的委托等功能。
         private VertexEditor vertexEditorForm; //顶点编辑窗体
         private bool isPropertyTableShowing //属性表是否正在显示
-        {
-            get
-            {
-                return propertyTableForm != null;
-            }
-        }
+=> propertyTableForm != null;
 
         public frmMain()
         {
@@ -72,13 +64,15 @@ namespace MyMapObjectsDemo2022
         {
             if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
             {
-                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                _ = MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
                 return;
             }
-            OpenFileDialog sDialog = new OpenFileDialog();
-            sDialog.Multiselect = true; //开启多选
-
-            string[] sFileNames = new string[] { };
+            OpenFileDialog sDialog = new OpenFileDialog
+            {
+                Multiselect = true //开启多选
+            };
+            _ = new string[] { };
+            string[] sFileNames;
             if (sDialog.ShowDialog(this)
                 == DialogResult.OK)
             {
@@ -93,11 +87,11 @@ namespace MyMapObjectsDemo2022
 
             if (sFileNames.Length == 0)
             {
-                MessageBox.Show("没有选择任何文件");
+                _ = MessageBox.Show("没有选择任何文件");
                 return;
             }
 
-            for(int i=0;i<sFileNames.Length;i++)
+            for (int i = 0; i < sFileNames.Length; i++)
             {
                 string sFileName = sFileNames[i];
                 try
@@ -122,12 +116,12 @@ namespace MyMapObjectsDemo2022
                 }
                 catch (Exception error)
                 {
-                    MessageBox.Show(error.ToString());
+                    _ = MessageBox.Show(error.ToString());
                     return;
                 }
 
             }
-            
+
         }
 
         private void btnFullExtent_Click(object sender, EventArgs e)
@@ -164,7 +158,7 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
@@ -179,11 +173,11 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moSimpleRenderer sRenderer = new MyMapObjects.moSimpleRenderer();// 新建渲染类
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol_clone = new MyMapObjects.moSimpleMarkerSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
-                    mSimpleRendererPointSymbol_clone = mSimpleRendererPointSymbol.Clone1();
+                    _ = new MyMapObjects.moSimpleMarkerSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    MyMapObjects.moSimpleMarkerSymbol mSimpleRendererPointSymbol_clone = mSimpleRendererPointSymbol.Clone1();
                     SimpleRendererPoint cForm = new SimpleRendererPoint(mSimpleRendererPointSymbol);
                     //SymbolPoint cForm = new SymbolPoint(mSimpleRendererPointSymbol);
-                    cForm.ShowDialog();
+                    _ = cForm.ShowDialog();
                     sRenderer.Symbol = mSimpleRendererPointSymbol;
                     if (mSimpleRendererPointSymbol.Color != mSimpleRendererPointSymbol_clone.Color ||
                         mSimpleRendererPointSymbol.Size != mSimpleRendererPointSymbol_clone.Size ||
@@ -195,10 +189,10 @@ namespace MyMapObjectsDemo2022
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol_clone = new MyMapObjects.moSimpleLineSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
-                    mSimpleRendererLineSymbol_clone = mSimpleRendererLineSymbol.Clone1();
+                    _ = new MyMapObjects.moSimpleLineSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    MyMapObjects.moSimpleLineSymbol mSimpleRendererLineSymbol_clone = mSimpleRendererLineSymbol.Clone1();
                     SimpleRendererLine cForm = new SimpleRendererLine(mSimpleRendererLineSymbol);
-                    cForm.ShowDialog();
+                    _ = cForm.ShowDialog();
                     sRenderer.Symbol = mSimpleRendererLineSymbol;
                     if (mSimpleRendererLineSymbol.Color != mSimpleRendererLineSymbol_clone.Color ||
                         mSimpleRendererLineSymbol.Size != mSimpleRendererLineSymbol_clone.Size ||
@@ -210,8 +204,8 @@ namespace MyMapObjectsDemo2022
                 }
                 else
                 {
-                    MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol_clone = new MyMapObjects.moSimpleFillSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
-                    mSimpleRendererPolygonSymbol_clone = mSimpleRendererPolygonSymbol.Clone1();
+                    _ = new MyMapObjects.moSimpleFillSymbol();//用于判断是否进行了渲染操作，进而确认是否需要重绘地图
+                    MyMapObjects.moSimpleFillSymbol mSimpleRendererPolygonSymbol_clone = mSimpleRendererPolygonSymbol.Clone1();
                     DialogResult dr = colorDialog1.ShowDialog();
                     //选择填充颜色
                     if (dr == DialogResult.OK)
@@ -234,7 +228,7 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
@@ -247,23 +241,23 @@ namespace MyMapObjectsDemo2022
             {
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
                 MyMapObjects.moUniqueValueRenderer sRenderer = new MyMapObjects.moUniqueValueRenderer();
-                MyMapObjects.moUniqueValueRenderer sRenderer_clone = new MyMapObjects.moUniqueValueRenderer();
-                sRenderer_clone = sRenderer.Clone1();
+                _ = new MyMapObjects.moUniqueValueRenderer();
+                MyMapObjects.moUniqueValueRenderer sRenderer_clone = sRenderer.Clone1();
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
                     UniqueValuePoint cForm = new UniqueValuePoint(sLayer, sRenderer, mSimpleRendererPointSymbol);
-                    cForm.ShowDialog();
+                    _ = cForm.ShowDialog();
 
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
                     UniqueValueLIne cForm = new UniqueValueLIne(sLayer, sRenderer, mSimpleRendererLineSymbol);
-                    cForm.ShowDialog();
+                    _ = cForm.ShowDialog();
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
                     UniqueValuePolygon cForm = new UniqueValuePolygon(sLayer, sRenderer, mSimpleRendererPolygonSymbol);
-                    cForm.ShowDialog();
+                    _ = cForm.ShowDialog();
                 }
                 if (sRenderer_clone.Field != sRenderer.Field)
                 {
@@ -281,7 +275,7 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
@@ -298,20 +292,20 @@ namespace MyMapObjectsDemo2022
                 if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
                     ClassBreaksPoint cForm = new ClassBreaksPoint(sLayer, sRenderer, mSimpleRendererPointSymbol);
-                    cForm.ShowDialog();
+                    _ = cForm.ShowDialog();
                     sRenderer.DefaultSymbol = mSimpleRendererPointSymbol;
 
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
                     ClassBreaksLine cForm = new ClassBreaksLine(sLayer, sRenderer, mSimpleRendererLineSymbol);
-                    cForm.ShowDialog();
+                    _ = cForm.ShowDialog();
                     sRenderer.DefaultSymbol = mSimpleRendererLineSymbol;
                 }
                 else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
                     ClassBreaksPolygon cForm = new ClassBreaksPolygon(sLayer, sRenderer, mSimpleRendererPolygonSymbol);
-                    cForm.ShowDialog();
+                    _ = cForm.ShowDialog();
                     sRenderer.DefaultSymbol = mSimpleRendererPolygonSymbol;
                 }
                 if (sRenderer.Field != sRenderer_clone.Field)
@@ -336,9 +330,11 @@ namespace MyMapObjectsDemo2022
             //获取第一个图层
             MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(0);
             //新建一个注记渲染对象
-            MyMapObjects.moLabelRenderer sLabelRenderer = new MyMapObjects.moLabelRenderer();
-            //设置绑定字段为索引号为0的字段
-            sLabelRenderer.Field = sLayer.AttributeFields.GetItem(0).Name;
+            MyMapObjects.moLabelRenderer sLabelRenderer = new MyMapObjects.moLabelRenderer
+            {
+                //设置绑定字段为索引号为0的字段
+                Field = sLayer.AttributeFields.GetItem(0).Name
+            };
             //设置注记符号
             Font sOldFont = sLabelRenderer.TextSymbol.Font;
             sLabelRenderer.TextSymbol.Font = new Font(sOldFont.Name, 12);
@@ -384,7 +380,7 @@ namespace MyMapObjectsDemo2022
             }
             if (mSketchingShape.Last().Count == 0)
             {
-                mSketchingShape.Remove(mSketchingShape.Last());
+                _ = mSketchingShape.Remove(mSketchingShape.Last());
 
             }
             if (mSketchingShape.Count > 0)
@@ -491,7 +487,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (mMapOpStyle == 21)
             {
-                var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+                MyMapObjects.moPoint newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
                 if (vertexEditorForm != null)
                 {
                     vertexEditorForm.HighlightedPoints.Add(newPoint);
@@ -511,7 +507,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (mMapOpStyle == 22)
             {
-                var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+                MyMapObjects.moPoint newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
                 if (vertexEditorForm != null)
                 {
                     vertexEditorForm.AddVertexCallBack(newPoint);
@@ -519,7 +515,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (mMapOpStyle == 23)
             {
-                var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+                MyMapObjects.moPoint newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
                 if (vertexEditorForm != null)
                 {
                     vertexEditorForm.SelectByGeometryCallBack(newPoint);
@@ -534,7 +530,7 @@ namespace MyMapObjectsDemo2022
 
         private void OnEditingVertex_MouseDown(MouseEventArgs e)
         {
-            var newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
+            MyMapObjects.moPoint newPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
             if (vertexEditorForm != null)
             {
                 vertexEditorForm.MoveVertexCallBack(newPoint);
@@ -551,14 +547,14 @@ namespace MyMapObjectsDemo2022
             }
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
             checklistIndex = selectedIndex;
             MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(selectedIndex);
             //判断是否有选中的要素
-            Int32 sSelFeatureCount = sLayer.SelectedFeatures.Count;
+            int sSelFeatureCount = sLayer.SelectedFeatures.Count;
             if (sSelFeatureCount == 0)
             {
                 return;
@@ -567,7 +563,7 @@ namespace MyMapObjectsDemo2022
             mMovingGeometries.Clear();
             if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
-                for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
+                for (int i = 0; i <= sSelFeatureCount - 1; i++)
                 {
                     MyMapObjects.moMultiPolygon sOriPolygon = (MyMapObjects.moMultiPolygon)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moMultiPolygon sDesPolygon = sOriPolygon.Clone();
@@ -577,7 +573,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
-                for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
+                for (int i = 0; i <= sSelFeatureCount - 1; i++)
                 {
                     MyMapObjects.moMultiPolyline sOriPolyline = (MyMapObjects.moMultiPolyline)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moMultiPolyline sDesPolyline = sOriPolyline.Clone();
@@ -587,7 +583,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (sLayer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
             {
-                for (Int32 i = 0; i <= sSelFeatureCount - 1; i++)
+                for (int i = 0; i <= sSelFeatureCount - 1; i++)
                 {
                     MyMapObjects.moPoint sOriPoint = (MyMapObjects.moPoint)sLayer.SelectedFeatures.GetItem(i).Geometry;
                     MyMapObjects.moPoint sDesPoint = sOriPoint.Clone();
@@ -607,7 +603,7 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
@@ -623,7 +619,9 @@ namespace MyMapObjectsDemo2022
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
                 MyMapObjects.moFeatures sFeatures = sLayer.SearchByBox(sBox, sTolerance);
                 if (sLayer.Visible == false)
+                {
                     return;
+                }
                 // 只选择最上部的那个对象
                 if (sFeatures.Count > 0)
                 {
@@ -631,19 +629,19 @@ namespace MyMapObjectsDemo2022
                     sGeometries[0] = sFeatures.GetItem(sFeatures.Count - 1).Geometry;
                     treeView1.BeginUpdate();
                     treeView1.Nodes.Clear();
-                    treeView1.Nodes.Add("要素内部ID");
+                    _ = treeView1.Nodes.Add("要素内部ID");
                     //比对并获取要素内部ID
                     for (int i = 0; i < sLayer.Features.Count; i++)
                     {
                         if (sLayer.Features.GetItem(i) == sFeatures.GetItem(sFeatures.Count - 1))
                         {
-                            treeView1.Nodes[0].Nodes.Add(Convert.ToString(i));
+                            _ = treeView1.Nodes[0].Nodes.Add(Convert.ToString(i));
                         }
                     }
                     for (int i = 0; i < sLayer.AttributeFields.Count; i++)
                     {
-                        treeView1.Nodes.Add(sLayer.AttributeFields.GetItem(i).Name);
-                        treeView1.Nodes[i + 1].Nodes.Add(sFeatures.GetItem(sFeatures.Count - 1).Attributes.GetItem(i).ToString());
+                        _ = treeView1.Nodes.Add(sLayer.AttributeFields.GetItem(i).Name);
+                        _ = treeView1.Nodes[i + 1].Nodes.Add(sFeatures.GetItem(sFeatures.Count - 1).Attributes.GetItem(i).ToString());
                     }
                     treeView1.ExpandAll();
                     treeView1.EndUpdate();
@@ -743,15 +741,15 @@ namespace MyMapObjectsDemo2022
             }
             mIsInMovingShapes = false;
             //更新图层要素的数据
-            int sCount = mMovingGeometries.Count;
-            MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(checklistIndex);
+            _ = mMovingGeometries.Count;
+            _ = moMap.Layers.GetItem(checklistIndex);
 
             //删除原有选中要素（删除的是选中要素list，如果多图层选中的话有问题）
             int selectedIndex = checklistIndex;
             int count = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Count;
-            for (Int32 i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
-                MyMapObjects.moFeature feature = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
+                _ = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
                 moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i).Geometry = mMovingGeometries[i];
             }
             //更新新要素的坐标（距离有问题）
@@ -972,9 +970,12 @@ namespace MyMapObjectsDemo2022
         {
             MyMapObjects.moPoint sCurPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
             if (mSketchingShape.Count == 0)
+            {
                 return;
+            }
+
             MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
-            Int32 sPointCount = sLastPart.Count;
+            int sPointCount = sLastPart.Count;
             if (sPointCount == 0)
             {
             }
@@ -988,7 +989,7 @@ namespace MyMapObjectsDemo2022
             else
             {
                 moMap.Refresh();
-                MyMapObjects.moPoint sFirstPoint = sLastPart.GetItem(0);
+                _ = sLastPart.GetItem(0);
                 MyMapObjects.moPoint sLastPoint = sLastPart.GetItem(sPointCount - 1);
                 MyMapObjects.moUserDrawingTool sDrawingTool = moMap.GetDrawingTool();
                 //sDrawingTool.DrawLine(sFirstPoint, sCurPoint, mElasticSymbol);
@@ -1001,9 +1002,12 @@ namespace MyMapObjectsDemo2022
         {
             MyMapObjects.moPoint sCurPoint = moMap.ToMapPoint(e.Location.X, e.Location.Y);
             if (mSketchingShape.Count == 0)
+            {
                 return;
+            }
+
             MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
-            Int32 sPointCount = sLastPart.Count;
+            int sPointCount = sLastPart.Count;
             if (sPointCount == 0)
             {
             }
@@ -1126,40 +1130,60 @@ namespace MyMapObjectsDemo2022
         // 初始化符号
         private void InitializeSymbols()
         {
-            mSelectingBoxSymbol = new MyMapObjects.moSimpleFillSymbol();
-            mSelectingBoxSymbol.Color = Color.Transparent;
+            mSelectingBoxSymbol = new MyMapObjects.moSimpleFillSymbol
+            {
+                Color = Color.Transparent
+            };
             mSelectingBoxSymbol.Outline.Color = mSelectBoxColor;
             mSelectingBoxSymbol.Outline.Size = mSelectBoxWidth;
-            mZoomBoxSymbol = new MyMapObjects.moSimpleFillSymbol();
-            mZoomBoxSymbol.Color = Color.Transparent;
+            mZoomBoxSymbol = new MyMapObjects.moSimpleFillSymbol
+            {
+                Color = Color.Transparent
+            };
             mZoomBoxSymbol.Outline.Color = mZoomBoxColor;
             mZoomBoxSymbol.Outline.Size = mZoomBoxWidth;
-            mMovingPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();
-            mMovingPolygonSymbol.Color = Color.Transparent;
+            mMovingPolygonSymbol = new MyMapObjects.moSimpleFillSymbol
+            {
+                Color = Color.Transparent
+            };
             mMovingPolygonSymbol.Outline.Color = Color.Black;
-            mMovingPolylineSymbol = new MyMapObjects.moSimpleLineSymbol();
-            mMovingPolylineSymbol.Color = Color.Black;
-            mMovingPointSymbol = new MyMapObjects.moSimpleMarkerSymbol();
-            mMovingPointSymbol.Color = Color.Black;
-            mEditingPolygonSymbol = new MyMapObjects.moSimpleFillSymbol();
-            mEditingPolygonSymbol.Color = Color.Transparent;
+            mMovingPolylineSymbol = new MyMapObjects.moSimpleLineSymbol
+            {
+                Color = Color.Black
+            };
+            mMovingPointSymbol = new MyMapObjects.moSimpleMarkerSymbol
+            {
+                Color = Color.Black
+            };
+            mEditingPolygonSymbol = new MyMapObjects.moSimpleFillSymbol
+            {
+                Color = Color.Transparent
+            };
             mEditingPolygonSymbol.Outline.Color = Color.DarkGreen;
             mEditingPolygonSymbol.Outline.Size = 0.53;
-            mEditingLineSymbol = new MyMapObjects.moSimpleLineSymbol();
-            mEditingLineSymbol.Color = Color.DarkGreen;
-            mEditingLineSymbol.Size = 0.53;
-            mEditingVertexSymbol = new MyMapObjects.moSimpleMarkerSymbol();
-            mEditingVertexSymbol.Color = Color.DarkGreen;
-            mEditingVertexSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare;
-            mEditingVertexSymbol.Size = 2;
-            mElasticSymbol = new MyMapObjects.moSimpleLineSymbol();
-            mElasticSymbol.Color = Color.DarkGreen;
-            mElasticSymbol.Size = 0.52;
-            mElasticSymbol.Style = MyMapObjects.moSimpleLineSymbolStyleConstant.Dash;
-            mEditingHighlightedVertexSymbol = new MyMapObjects.moSimpleMarkerSymbol();
-            mEditingHighlightedVertexSymbol.Color = Color.Red;
-            mEditingHighlightedVertexSymbol.Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare;
-            mEditingHighlightedVertexSymbol.Size = 4;
+            mEditingLineSymbol = new MyMapObjects.moSimpleLineSymbol
+            {
+                Color = Color.DarkGreen,
+                Size = 0.53
+            };
+            mEditingVertexSymbol = new MyMapObjects.moSimpleMarkerSymbol
+            {
+                Color = Color.DarkGreen,
+                Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare,
+                Size = 2
+            };
+            mElasticSymbol = new MyMapObjects.moSimpleLineSymbol
+            {
+                Color = Color.DarkGreen,
+                Size = 0.52,
+                Style = MyMapObjects.moSimpleLineSymbolStyleConstant.Dash
+            };
+            mEditingHighlightedVertexSymbol = new MyMapObjects.moSimpleMarkerSymbol
+            {
+                Color = Color.Red,
+                Style = MyMapObjects.moSimpleMarkerSymbolStyleConstant.SolidSquare,
+                Size = 4
+            };
         }
 
         // 初始化描绘图形
@@ -1211,9 +1235,9 @@ namespace MyMapObjectsDemo2022
         //获取一个多边形图层
         private MyMapObjects.moMapLayer GetPolygonLayer()
         {
-            Int32 sLayerCount = moMap.Layers.Count;
+            int sLayerCount = moMap.Layers.Count;
             MyMapObjects.moMapLayer sLayer = null;
-            for (Int32 i = 0; i <= sLayerCount - 1; i++)
+            for (int i = 0; i <= sLayerCount - 1; i++)
             {
                 if (moMap.Layers.GetItem(i).ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
@@ -1227,9 +1251,9 @@ namespace MyMapObjectsDemo2022
         //获取一个线图层
         private MyMapObjects.moMapLayer GetLineLayer()
         {
-            Int32 sLayerCount = moMap.Layers.Count;
+            int sLayerCount = moMap.Layers.Count;
             MyMapObjects.moMapLayer sLayer = null;
-            for (Int32 i = 0; i <= sLayerCount - 1; i++)
+            for (int i = 0; i <= sLayerCount - 1; i++)
             {
                 if (moMap.Layers.GetItem(i).ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
@@ -1243,9 +1267,9 @@ namespace MyMapObjectsDemo2022
         //获取一个点图层
         private MyMapObjects.moMapLayer GetPointLayer()
         {
-            Int32 sLayerCount = moMap.Layers.Count;
+            int sLayerCount = moMap.Layers.Count;
             MyMapObjects.moMapLayer sLayer = null;
-            for (Int32 i = 0; i <= sLayerCount - 1; i++)
+            for (int i = 0; i <= sLayerCount - 1; i++)
             {
                 if (moMap.Layers.GetItem(i).ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
@@ -1259,22 +1283,22 @@ namespace MyMapObjectsDemo2022
         //根据指定的平移量修改移动图形的坐标
         private void ModifyMovingGeometries(double deltaX, double deltaY)
         {
-            Int32 sCount = mMovingGeometries.Count;
-            for (Int32 i = 0; i <= sCount - 1; i++)
+            int sCount = mMovingGeometries.Count;
+            for (int i = 0; i <= sCount - 1; i++)
             {
                 if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolygon))
                 {
                     MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mMovingGeometries[i];
-                    Int32 sPartCount = sMultiPolygon.Parts.Count;
-                    for (Int32 j = 0; j <= sPartCount - 1; j++)
+                    int sPartCount = sMultiPolygon.Parts.Count;
+                    for (int j = 0; j <= sPartCount - 1; j++)
                     {
                         MyMapObjects.moPoints sPoints = sMultiPolygon.Parts.GetItem(j);
-                        Int32 sPointCount = sPoints.Count;
-                        for (Int32 k = 0; k <= sPointCount - 1; k++)
+                        int sPointCount = sPoints.Count;
+                        for (int k = 0; k <= sPointCount - 1; k++)
                         {
                             MyMapObjects.moPoint sPoint = sPoints.GetItem(k);
-                            sPoint.X = sPoint.X + deltaX;
-                            sPoint.Y = sPoint.Y + deltaY;
+                            sPoint.X += deltaX;
+                            sPoint.Y += deltaY;
                         }
                     }
                     sMultiPolygon.UpdateExtent();
@@ -1282,16 +1306,16 @@ namespace MyMapObjectsDemo2022
                 else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolyline))
                 {
                     MyMapObjects.moMultiPolyline sMultiPolyline = (MyMapObjects.moMultiPolyline)mMovingGeometries[i];
-                    Int32 sPartCount = sMultiPolyline.Parts.Count;
-                    for (Int32 j = 0; j <= sPartCount - 1; j++)
+                    int sPartCount = sMultiPolyline.Parts.Count;
+                    for (int j = 0; j <= sPartCount - 1; j++)
                     {
                         MyMapObjects.moPoints sPoints = sMultiPolyline.Parts.GetItem(j);
-                        Int32 sPointCount = sPoints.Count;
-                        for (Int32 k = 0; k <= sPointCount - 1; k++)
+                        int sPointCount = sPoints.Count;
+                        for (int k = 0; k <= sPointCount - 1; k++)
                         {
                             MyMapObjects.moPoint sPoint = sPoints.GetItem(k);
-                            sPoint.X = sPoint.X + deltaX;
-                            sPoint.Y = sPoint.Y + deltaY;
+                            sPoint.X += deltaX;
+                            sPoint.Y += deltaY;
                         }
                     }
                     sMultiPolyline.UpdateExtent();
@@ -1299,8 +1323,8 @@ namespace MyMapObjectsDemo2022
                 else if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moPoint))
                 {
                     MyMapObjects.moPoint sPoint = (MyMapObjects.moPoint)mMovingGeometries[i];
-                    sPoint.X = sPoint.X + deltaX;
-                    sPoint.Y = sPoint.Y + deltaY;
+                    sPoint.X += deltaX;
+                    sPoint.Y += deltaY;
                 }
             }
         }
@@ -1309,8 +1333,8 @@ namespace MyMapObjectsDemo2022
         private void DrawMovingShapes()
         {
             MyMapObjects.moUserDrawingTool sDrawingTool = moMap.GetDrawingTool();
-            Int32 sCount = mMovingGeometries.Count;
-            for (Int32 i = 0; i <= sCount - 1; i++)
+            int sCount = mMovingGeometries.Count;
+            for (int i = 0; i <= sCount - 1; i++)
             {
                 if (mMovingGeometries[i].GetType() == typeof(MyMapObjects.moMultiPolygon))
                 {
@@ -1334,21 +1358,29 @@ namespace MyMapObjectsDemo2022
         private void DrawSketchingShapes(MyMapObjects.moUserDrawingTool drawingTool)
         {
             if (mSketchingShape == null)
+            {
                 return;
-            Int32 sPartCount = mSketchingShape.Count;
+            }
+
+            int sPartCount = mSketchingShape.Count;
             //绘制已经描绘完成的部分
-            for (Int32 i = 0; i <= sPartCount - 2; i++)
+            for (int i = 0; i <= sPartCount - 2; i++)
             {
                 drawingTool.DrawPolygon(mSketchingShape[i], mEditingPolygonSymbol);
             }
             //正在描绘的部分（只有一个Part）
             if (mSketchingShape.Count == 0)
+            {
                 return;
+            }
+
             MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
             if (sLastPart.Count >= 2)
+            {
                 drawingTool.DrawPolyline(sLastPart, mEditingPolygonSymbol.Outline);
+            }
             //绘制所有顶点手柄
-            for (Int32 i = 0; i <= sPartCount - 1; i++)
+            for (int i = 0; i <= sPartCount - 1; i++)
             {
                 MyMapObjects.moPoints sPoints = mSketchingShape[i];
                 drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
@@ -1359,21 +1391,29 @@ namespace MyMapObjectsDemo2022
         private void DrawSketchingShapesLine(MyMapObjects.moUserDrawingTool drawingTool)
         {
             if (mSketchingShape == null)
+            {
                 return;
-            Int32 sPartCount = mSketchingShape.Count;
+            }
+
+            int sPartCount = mSketchingShape.Count;
             //绘制已经描绘完成的部分
-            for (Int32 i = 0; i <= sPartCount - 2; i++)
+            for (int i = 0; i <= sPartCount - 2; i++)
             {
                 drawingTool.DrawPolyline(mSketchingShape[i], mEditingLineSymbol);
             }
             //正在描绘的部分（只有一个Part）
             if (mSketchingShape.Count == 0)
+            {
                 return;
+            }
+
             MyMapObjects.moPoints sLastPart = mSketchingShape.Last();
             if (sLastPart.Count >= 2)
+            {
                 drawingTool.DrawPolyline(sLastPart, mEditingLineSymbol);
+            }
             //绘制所有顶点手柄
-            for (Int32 i = 0; i <= sPartCount - 1; i++)
+            for (int i = 0; i <= sPartCount - 1; i++)
             {
                 MyMapObjects.moPoints sPoints = mSketchingShape[i];
                 drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
@@ -1392,9 +1432,9 @@ namespace MyMapObjectsDemo2022
 
         private void 详情面板ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedIndex = checkedListBox1.SelectedIndex;
+            int selectedIndex = checkedListBox1.SelectedIndex;
             ChangeLayerOrder cForm = new ChangeLayerOrder(moMap.Layers, moMap);
-            cForm.ShowDialog();
+            _ = cForm.ShowDialog();
             checkedListBox1.SelectedIndex = selectedIndex;
         }
 
@@ -1412,18 +1452,20 @@ namespace MyMapObjectsDemo2022
         {
             if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
             {
-                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
+                _ = MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
                 return;
             }
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = Convert.ToInt32(checkedListBox1.SelectedIndex);
-            SaveFileDialog sDialog = new SaveFileDialog();
-            sDialog.Filter = "GeoJSON Files (*.geojson)|*.geojson";
-            string sFileName = "";
+            SaveFileDialog sDialog = new SaveFileDialog
+            {
+                Filter = "GeoJSON Files (*.geojson)|*.geojson"
+            };
+            string sFileName;
             if (sDialog.ShowDialog(this)
                 == DialogResult.OK)
             {
@@ -1462,7 +1504,7 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             btnIdentify_Click(sender, e);
@@ -1482,11 +1524,12 @@ namespace MyMapObjectsDemo2022
         {
             if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
             {
-                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                _ = MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
                 return;
             }
             OpenFileDialog sDialog = new OpenFileDialog();
-            string[] sFileNames = new string[] { };
+            _ = new string[] { };
+            string[] sFileNames;
             if (sDialog.ShowDialog(this)
                 == DialogResult.OK)
             {
@@ -1500,11 +1543,11 @@ namespace MyMapObjectsDemo2022
             }
             if (sFileNames.Length == 0)
             {
-                MessageBox.Show("没有选择任何文件");
+                _ = MessageBox.Show("没有选择任何文件");
                 return;
             }
 
-            for(int i = 0; i < sFileNames.Length; i++)
+            for (int i = 0; i < sFileNames.Length; i++)
             {
                 string sFileName = sFileNames[i];
 
@@ -1515,7 +1558,7 @@ namespace MyMapObjectsDemo2022
 
                 catch (Exception error)
                 {
-                    MessageBox.Show(error.ToString());
+                    _ = MessageBox.Show(error.ToString());
                     return;
                 }
                 if (moMap.Layers.Count == 1)
@@ -1528,7 +1571,7 @@ namespace MyMapObjectsDemo2022
                 }
             }
 
-            
+
         }
 
         private void tssMapScale_Click(object sender, EventArgs e)
@@ -1547,7 +1590,7 @@ namespace MyMapObjectsDemo2022
             checkedListBox1.Items.Clear();
             for (int i = 0; i < moMap.Layers.Count; i++)
             {
-                checkedListBox1.Items.Add($"[{i}] " + moMap.Layers.GetItem(i).Name, moMap.Layers.GetItem(i).Visible);
+                _ = checkedListBox1.Items.Add($"[{i}] " + moMap.Layers.GetItem(i).Name, moMap.Layers.GetItem(i).Visible);
             }
             moMap.isAlreadyRedrawLayer = false;
         }
@@ -1565,9 +1608,9 @@ namespace MyMapObjectsDemo2022
         private void checkedListBox1_MouseUp(object sender, MouseEventArgs e)
         {
             moMap.isAlreadyRedrawLayer = true;
-            var currentLayerList = checkedListBox1.CheckedItems;
+            CheckedListBox.CheckedItemCollection currentLayerList = checkedListBox1.CheckedItems;
             // [ true, false, true ...], index represents layer sequence
-            var currentVisibilityCondition = new List<bool>();
+            List<bool> currentVisibilityCondition = new List<bool>();
             for (int i = 0; i < moMap.Layers.Count; i++)
             {
                 currentVisibilityCondition.Add(false);
@@ -1598,7 +1641,7 @@ namespace MyMapObjectsDemo2022
         {
             CreatePointLayer cForm = new CreatePointLayer();
             cForm.CreateLayer += CreateLayer;
-            cForm.ShowDialog();
+            _ = cForm.ShowDialog();
         }
 
 
@@ -1620,21 +1663,21 @@ namespace MyMapObjectsDemo2022
         {
             CreateLineLayer cForm = new CreateLineLayer();
             cForm.CreateLayer += CreateLayer;
-            cForm.ShowDialog();
+            _ = cForm.ShowDialog();
         }
 
         private void 新建面图层ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CreatePolygonLayer cForm = new CreatePolygonLayer();
             cForm.CreateLayer += CreateLayer;
-            cForm.ShowDialog();
+            _ = cForm.ShowDialog();
         }
 
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
@@ -1647,12 +1690,12 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
             ChangeNameOfLayer cForm = new ChangeNameOfLayer(moMap.Layers.GetItem(selectedIndex));
-            cForm.ShowDialog();
+            _ = cForm.ShowDialog();
             moMap.RefreshLayerList();
             moMap.RedrawMap();
         }
@@ -1661,12 +1704,12 @@ namespace MyMapObjectsDemo2022
         {
             if (isPropertyTableShowing)
             {
-                MessageBox.Show("当前正在显示属性表，请关闭后重试。");
+                _ = MessageBox.Show("当前正在显示属性表，请关闭后重试。");
                 return;
             }
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
@@ -1692,12 +1735,12 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
             int count = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.Count;
-            for (Int32 i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 MyMapObjects.moFeature feature = moMap.Layers.GetItem(selectedIndex).SelectedFeatures.GetItem(i);
                 moMap.Layers.GetItem(selectedIndex).Features.Remove(feature);
@@ -1727,7 +1770,7 @@ namespace MyMapObjectsDemo2022
 
         private void 编辑节点ToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            
+
         }
 
         private void 停止编辑ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1740,13 +1783,13 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
             if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
-                MessageBox.Show("选择要素与图层不匹配！");
+                _ = MessageBox.Show("选择要素与图层不匹配！");
                 checkedListBox1.SelectedIndex = selectedIndex;
                 return;
             }
@@ -1761,13 +1804,13 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
             if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
-                MessageBox.Show("选择要素与图层不匹配！");
+                _ = MessageBox.Show("选择要素与图层不匹配！");
                 checkedListBox1.SelectedIndex = selectedIndex;
                 return;
             }
@@ -1782,13 +1825,13 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
             if (moMap.Layers.GetItem(selectedIndex).ShapeType != MyMapObjects.moGeometryTypeConstant.Point)
             {
-                MessageBox.Show("选择要素与图层不匹配！");
+                _ = MessageBox.Show("选择要素与图层不匹配！");
                 checkedListBox1.SelectedIndex = selectedIndex;
                 return;
             }
@@ -1807,7 +1850,7 @@ namespace MyMapObjectsDemo2022
             }
             if (mSketchingShape.Last().Count == 0)
             {
-                mSketchingShape.Remove(mSketchingShape.Last());
+                _ = mSketchingShape.Remove(mSketchingShape.Last());
 
             }
             if (mSketchingShape.Count > 0)
@@ -1831,7 +1874,7 @@ namespace MyMapObjectsDemo2022
         {
             if (mSketchingShape.Last().Count == 0)
             {
-                mSketchingShape.Remove(mSketchingShape.Last());
+                _ = mSketchingShape.Remove(mSketchingShape.Last());
 
             }
             if (mSketchingShape.Count > 0)
@@ -1861,7 +1904,7 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             int selectedIndex = checkedListBox1.SelectedIndex;
@@ -1877,7 +1920,7 @@ namespace MyMapObjectsDemo2022
             {
                 btnEndPointSketch_Click(sender, e);
             }
-            checkedListBox1.SelectedIndex=selectedIndex;
+            checkedListBox1.SelectedIndex = selectedIndex;
         }
 
         private void 停止部分ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1889,27 +1932,27 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还未选择任何的对象，点击左侧列表中的条目即可选取。");
+                _ = MessageBox.Show("您还未选择任何的对象，点击左侧列表中的条目即可选取。");
                 return;
             }
-            var selectedIndex = checkedListBox1.SelectedIndex;
+            int selectedIndex = checkedListBox1.SelectedIndex;
             SelectAttributeFields selectAttributeFieldsForm = new SelectAttributeFields(moMap.Layers.GetItem(selectedIndex));
-            selectAttributeFieldsForm.ShowDialog();
+            _ = selectAttributeFieldsForm.ShowDialog();
             int selectedAttributeIndex = selectAttributeFieldsForm.SelectedFieldIndex;
             if (selectedAttributeIndex == -1)
             {
                 return;
             }
-            int operatorType = -1;
+            int operatorType;
             if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dText)
             {
-                MessageBox.Show("该字段为文本型，仅支持等于判断，已为您选择此操作类型。");
+                _ = MessageBox.Show("该字段为文本型，仅支持等于判断，已为您选择此操作类型。");
                 operatorType = 2;
             }
             else
             {
                 OperatorTypeSelection operatorTypeSelection = new OperatorTypeSelection();
-                operatorTypeSelection.ShowDialog();
+                _ = operatorTypeSelection.ShowDialog();
                 operatorType = operatorTypeSelection.OperatorType;
             }
             if (operatorType == -1)
@@ -1923,13 +1966,14 @@ namespace MyMapObjectsDemo2022
             }
             try
             {
+                // 根据不同的值类型，选择不同的比较方式
                 for (int i = 0; i < moMap.Layers.GetItem(selectedIndex).Features.Count; i++)
                 {
                     object featureValue = moMap.Layers.GetItem(selectedIndex).Features.GetItem(i).Attributes.GetItem(selectedAttributeIndex);
                     if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt16)
                     {
-                        var featureValueConverted = Convert.ToInt16(featureValue);
-                        var selectedValueConverted = Convert.ToInt16(selectValue);
+                        short featureValueConverted = Convert.ToInt16(featureValue);
+                        short selectedValueConverted = Convert.ToInt16(selectValue);
                         if (operatorType == 0)
                         {
                             if (featureValueConverted > selectedValueConverted)
@@ -1975,8 +2019,8 @@ namespace MyMapObjectsDemo2022
                     }
                     else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt32)
                     {
-                        var featureValueConverted = Convert.ToInt32(featureValue);
-                        var selectedValueConverted = Convert.ToInt32(selectValue);
+                        int featureValueConverted = Convert.ToInt32(featureValue);
+                        int selectedValueConverted = Convert.ToInt32(selectValue);
                         if (operatorType == 0)
                         {
                             if (featureValueConverted > selectedValueConverted)
@@ -2022,8 +2066,8 @@ namespace MyMapObjectsDemo2022
                     }
                     else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dInt64)
                     {
-                        var featureValueConverted = Convert.ToInt64(featureValue);
-                        var selectedValueConverted = Convert.ToInt64(selectValue);
+                        long featureValueConverted = Convert.ToInt64(featureValue);
+                        long selectedValueConverted = Convert.ToInt64(selectValue);
                         if (operatorType == 0)
                         {
                             if (featureValueConverted > selectedValueConverted)
@@ -2069,8 +2113,8 @@ namespace MyMapObjectsDemo2022
                     }
                     else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dSingle)
                     {
-                        var featureValueConverted = Convert.ToSingle(featureValue);
-                        var selectedValueConverted = Convert.ToSingle(selectValue);
+                        float featureValueConverted = Convert.ToSingle(featureValue);
+                        float selectedValueConverted = Convert.ToSingle(selectValue);
                         if (operatorType == 0)
                         {
                             if (featureValueConverted > selectedValueConverted)
@@ -2116,8 +2160,8 @@ namespace MyMapObjectsDemo2022
                     }
                     else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dDouble)
                     {
-                        var featureValueConverted = Convert.ToDouble(featureValue);
-                        var selectedValueConverted = Convert.ToDouble(selectValue);
+                        double featureValueConverted = Convert.ToDouble(featureValue);
+                        double selectedValueConverted = Convert.ToDouble(selectValue);
                         if (operatorType == 0)
                         {
                             if (featureValueConverted > selectedValueConverted)
@@ -2163,8 +2207,8 @@ namespace MyMapObjectsDemo2022
                     }
                     else if (moMap.Layers.GetItem(selectedIndex).AttributeFields.GetItem(selectAttributeFieldsForm.SelectedFieldIndex).ValueType == MyMapObjects.moValueTypeConstant.dText)
                     {
-                        var featureValueConverted = Convert.ToString(featureValue);
-                        var selectedValueConverted = Convert.ToString(selectValue);
+                        string featureValueConverted = Convert.ToString(featureValue);
+                        string selectedValueConverted = Convert.ToString(selectValue);
                         if (operatorType == 2)
                         {
                             if (featureValueConverted == selectedValueConverted)
@@ -2177,7 +2221,7 @@ namespace MyMapObjectsDemo2022
             }
             catch
             {
-                MessageBox.Show("输入的值有误，请重新选择。");
+                _ = MessageBox.Show("输入的值有误，请重新选择。");
             }
             moMap.RedrawMap();
             moMap.RedrawTrackingShapes();
@@ -2192,22 +2236,25 @@ namespace MyMapObjectsDemo2022
 
         private void 查看操作指南ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("首先，您需要在左侧选定一个想要编辑的图层。\n之后，请选择您需要编辑的对象，之后开始编辑节点。\n之后，在新对话框上，您可以看到一些新的功能，包括几何选点、删除节点、删除部分等。");
+            _ = MessageBox.Show("首先，您需要在左侧选定一个想要编辑的图层。\n之后，请选择您需要编辑的对象，之后开始编辑节点。\n之后，在新对话框上，您可以看到一些新的功能，包括几何选点、删除节点、删除部分等。");
         }
 
         //绘制正在编辑的图形
         private void DrawEditingShapes(MyMapObjects.moUserDrawingTool drawingTool)
         {
             if (mEditingGeometry == null)
+            {
                 return;
+            }
+
             if (mEditingGeometry.GetType() == typeof(MyMapObjects.moMultiPolygon))
             {
                 MyMapObjects.moMultiPolygon sMultiPolygon = (MyMapObjects.moMultiPolygon)mEditingGeometry;
                 //绘制边界
                 drawingTool.DrawMultiPolygon(sMultiPolygon, mEditingPolygonSymbol);
                 //绘制顶点手柄
-                Int32 sPartCount = sMultiPolygon.Parts.Count;
-                for (Int32 i = 0; i <= sPartCount - 1; i++)
+                int sPartCount = sMultiPolygon.Parts.Count;
+                for (int i = 0; i <= sPartCount - 1; i++)
                 {
                     MyMapObjects.moPoints sPoints = sMultiPolygon.Parts.GetItem(i);
                     drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
@@ -2224,8 +2271,8 @@ namespace MyMapObjectsDemo2022
                 //绘制边界
                 drawingTool.DrawMultiPolyline(sMultiPolyline, mEditingPolygonSymbol.Outline);
                 //绘制顶点手柄
-                Int32 sPartCount = sMultiPolyline.Parts.Count;
-                for (Int32 i = 0; i <= sPartCount - 1; i++)
+                int sPartCount = sMultiPolyline.Parts.Count;
+                for (int i = 0; i <= sPartCount - 1; i++)
                 {
                     MyMapObjects.moPoints sPoints = sMultiPolyline.Parts.GetItem(i);
                     drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
@@ -2256,19 +2303,19 @@ namespace MyMapObjectsDemo2022
 
         private void 打开节点编辑器ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还未选择任何的图层，请在左侧点击图层以选择。");
+                _ = MessageBox.Show("您还未选择任何的图层，请在左侧点击图层以选择。");
                 return;
             }
-            var layerIndex = checkedListBox1.SelectedIndex;
+            int layerIndex = checkedListBox1.SelectedIndex;
             //查找多边形图层
             MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(layerIndex);
             //是否有且只有一个选中的图形
             if (sLayer.SelectedFeatures.Count != 1)
             {
-                MessageBox.Show("您选中了不止一个要素或者没有选择要素，请您重新选择仅一个要素。");
+                _ = MessageBox.Show("您选中了不止一个要素或者没有选择要素，请您重新选择仅一个要素。");
                 checkedListBox1.SelectedIndex = layerIndex;
                 return;
             }
@@ -2280,7 +2327,7 @@ namespace MyMapObjectsDemo2022
 
             vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0), CallBackMovingVertex, CallBackNewPartMoMap, AddNewVertexMoMap, GeomSelect, ExitEditing);
             vertexEditorForm.Show();
-            checkedListBox1.SelectedIndex=layerIndex;
+            checkedListBox1.SelectedIndex = layerIndex;
         }
 
         private void CallBackMovingVertex()
@@ -2333,14 +2380,14 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
             MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
             MyMapObjects.moLabelRenderer sLabelRenderer = new MyMapObjects.moLabelRenderer();
             LabelRenderer cForm = new LabelRenderer(sLayer, sLabelRenderer, moMap);
-            cForm.ShowDialog();
+            _ = cForm.ShowDialog();
 
 
 
@@ -2352,21 +2399,23 @@ namespace MyMapObjectsDemo2022
 
 
         //}
-    
+
 
         private void 导出地图为bitmapToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                var scale = Microsoft.VisualBasic.Interaction.InputBox("请输入解析度，即1图上像素代表多少屏幕像素", "解析度输入");
-                var scaleDouble = Convert.ToDouble(scale);
+                string scale = Microsoft.VisualBasic.Interaction.InputBox("请输入解析度，即1图上像素代表多少屏幕像素", "解析度输入");
+                double scaleDouble = Convert.ToDouble(scale);
                 if (scaleDouble < 1)
                 {
-                    MessageBox.Show("解析度请不要小于1，请重新操作。");
+                    _ = MessageBox.Show("解析度请不要小于1，请重新操作。");
                     return;
                 }
-                SaveFileDialog sDialog = new SaveFileDialog();
-                sDialog.Filter = "Bitmap Files (*.bmp)|*.bmp";
+                SaveFileDialog sDialog = new SaveFileDialog
+                {
+                    Filter = "Bitmap Files (*.bmp)|*.bmp"
+                };
                 string sFileName = "";
                 if (sDialog.ShowDialog(this)
                     == DialogResult.OK)
@@ -2383,7 +2432,7 @@ namespace MyMapObjectsDemo2022
             }
             catch (Exception ex)
             {
-                MessageBox.Show("出现问题，请重试。问题：" + ex.Message);
+                _ = MessageBox.Show("出现问题，请重试。问题：" + ex.Message);
 
             }
 
@@ -2398,13 +2447,13 @@ namespace MyMapObjectsDemo2022
         {
             if (!CheckAllLayerProjectionLngLatIsValid())
             {
-                MessageBox.Show("您的地理数据中有一些要素超过了经度在-180到180度，纬度在-90到90度之间的经纬度限制，无法从当前的投影直角坐标系转换到经纬度坐标，再切换到其它坐标系。您需要首先解决这些要素，然后重新转换。");
+                _ = MessageBox.Show("您的地理数据中有一些要素超过了经度在-180到180度，纬度在-90到90度之间的经纬度限制，无法从当前的投影直角坐标系转换到经纬度坐标，再切换到其它坐标系。您需要首先解决这些要素，然后重新转换。");
                 return;
             }
-            var coordinateSelectForm = new CoordinateSystemChange();
-            coordinateSelectForm.ShowDialog();
+            CoordinateSystemChange coordinateSelectForm = new CoordinateSystemChange();
+            _ = coordinateSelectForm.ShowDialog();
             int coordinateSystemSelectIndex = coordinateSelectForm.coordinateSystemSelected;
-            for(int i = 0; i < moMap.Layers.Count; i++)
+            for (int i = 0; i < moMap.Layers.Count; i++)
             {
                 TransferCurrentLayerProjectionToLngLat(moMap.Layers.GetItem(i));
             }
@@ -2425,7 +2474,7 @@ namespace MyMapObjectsDemo2022
                 double sStandardParallelTwo = 0;
                 MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
                 MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.None;
-                var projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                MyMapObjects.moProjectionCS projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
                     sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
                     sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
                 moMap.ProjectionCS = projectionCS;
@@ -2447,7 +2496,7 @@ namespace MyMapObjectsDemo2022
                 double sStandardParallelTwo = 62;
                 MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
                 MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.Lambert_Conformal_Conic_2SP;
-                var projectionCS=new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                MyMapObjects.moProjectionCS projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
                     sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
                     sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
                 moMap.ProjectionCS = projectionCS;
@@ -2469,7 +2518,7 @@ namespace MyMapObjectsDemo2022
                 double sStandardParallelTwo = 0;
                 MyMapObjects.moLinearUnitConstant sLinearUnit = MyMapObjects.moLinearUnitConstant.Meter;
                 MyMapObjects.moProjectionTypeConstant sProjType = MyMapObjects.moProjectionTypeConstant.Mercator;
-                var projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
+                MyMapObjects.moProjectionCS projectionCS = new MyMapObjects.moProjectionCS(sProjCSName, sGeoCSName, sDatumName, sSpheroidName, sSemiMajor,
                     sInverseFlattening, sProjType, sOriginLatitude, sCentralMeridian, sFalseEasting,
                     sFalseNorthing, sScaleFactor, sStandardParallelOne, sStandardParallelTwo, sLinearUnit);
                 moMap.ProjectionCS = projectionCS;
@@ -2485,7 +2534,7 @@ namespace MyMapObjectsDemo2022
         {
             for (int i = 0; i < moMap.Layers.Count; i++)
             {
-                var layer = moMap.Layers.GetItem(i);
+                MyMapObjects.moMapLayer layer = moMap.Layers.GetItem(i);
                 if (!CheckCurrentLayerProjectionIsValid(layer))
                 {
                     return false;
@@ -2500,10 +2549,10 @@ namespace MyMapObjectsDemo2022
             {
                 if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moPoint geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
                     try
                     {
-                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry);
+                        MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry);
                         if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
                         {
                             return false;
@@ -2516,14 +2565,14 @@ namespace MyMapObjectsDemo2022
                 }
                 else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    var geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moMultiPolyline geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
                     try
                     {
                         for (int j = 0; j < geometry.Parts.Count; j++)
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
                                 if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
                                 {
                                     return false;
@@ -2538,14 +2587,14 @@ namespace MyMapObjectsDemo2022
                 }
                 else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    var geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moMultiPolygon geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
                     try
                     {
                         for (int j = 0; j < geometry.Parts.Count; j++)
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
                                 if (pointCurrentCoordinate.X < -180 || pointCurrentCoordinate.X > 180 || pointCurrentCoordinate.Y <= -90 || pointCurrentCoordinate.Y >= 90)
                                 {
                                     return false;
@@ -2568,28 +2617,28 @@ namespace MyMapObjectsDemo2022
             {
                 if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moPoint geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
                     try
                     {
-                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry);
+                        MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry);
                         geometry.X = pointCurrentCoordinate.X;
                         geometry.Y = pointCurrentCoordinate.Y;
                     }
                     catch
                     {
-                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                        _ = MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
                     }
                 }
                 else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    var geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moMultiPolyline geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
                     try
                     {
                         for (int j = 0; j < geometry.Parts.Count; j++)
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
                                 geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
                                 geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
                             }
@@ -2599,19 +2648,19 @@ namespace MyMapObjectsDemo2022
                     }
                     catch
                     {
-                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                        _ = MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
                     }
                 }
                 else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    var geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moMultiPolygon geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
                     try
                     {
                         for (int j = 0; j < geometry.Parts.Count; j++)
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
+                                MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToLngLat(geometry.Parts.GetItem(j).GetItem(k));
                                 geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
                                 geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
                             }
@@ -2621,7 +2670,7 @@ namespace MyMapObjectsDemo2022
                     }
                     catch
                     {
-                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                        _ = MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
                     }
                 }
                 layer.UpdateExtent();
@@ -2634,28 +2683,28 @@ namespace MyMapObjectsDemo2022
             {
                 if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    var geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moPoint geometry = (MyMapObjects.moPoint)layer.Features.GetItem(i).Geometry;
                     try
                     {
-                        var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry);
+                        MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry);
                         geometry.X = pointCurrentCoordinate.X;
                         geometry.Y = pointCurrentCoordinate.Y;
                     }
                     catch
                     {
-                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                        _ = MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
                     }
                 }
                 else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    var geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moMultiPolyline geometry = (MyMapObjects.moMultiPolyline)layer.Features.GetItem(i).Geometry;
                     try
                     {
                         for (int j = 0; j < geometry.Parts.Count; j++)
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry.Parts.GetItem(j).GetItem(k));
+                                MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry.Parts.GetItem(j).GetItem(k));
                                 geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
                                 geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
                             }
@@ -2665,19 +2714,19 @@ namespace MyMapObjectsDemo2022
                     }
                     catch
                     {
-                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                        _ = MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
                     }
                 }
                 else if (layer.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    var geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
+                    MyMapObjects.moMultiPolygon geometry = (MyMapObjects.moMultiPolygon)layer.Features.GetItem(i).Geometry;
                     try
                     {
                         for (int j = 0; j < geometry.Parts.Count; j++)
                         {
                             for (int k = 0; k < geometry.Parts.GetItem(j).Count; k++)
                             {
-                                var pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry.Parts.GetItem(j).GetItem(k));
+                                MyMapObjects.moPoint pointCurrentCoordinate = moMap.ProjectionCS.TransferToProjCo(geometry.Parts.GetItem(j).GetItem(k));
                                 geometry.Parts.GetItem(j).GetItem(k).X = pointCurrentCoordinate.X;
                                 geometry.Parts.GetItem(j).GetItem(k).Y = pointCurrentCoordinate.Y;
                             }
@@ -2687,7 +2736,7 @@ namespace MyMapObjectsDemo2022
                     }
                     catch
                     {
-                        MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
+                        _ = MessageBox.Show("内部错误，坐标转换失败；建议您重启本程序以避免出现未定义的问题。");
                     }
                 }
                 layer.UpdateExtent();
@@ -2698,16 +2747,16 @@ namespace MyMapObjectsDemo2022
         {
             if (moMap.Layers.Count != 0)
             {
-                MessageBox.Show("您当前已经打开了图层，请删除所有图层后打开项目文件。");
+                _ = MessageBox.Show("您当前已经打开了图层，请删除所有图层后打开项目文件。");
                 return;
             }
             if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
             {
-                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
+                _ = MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再打开。");
                 return;
             }
             OpenFileDialog sDialog = new OpenFileDialog();
-            string sFileName = "";
+            string sFileName;
             if (sDialog.ShowDialog(this)
                 == DialogResult.OK)
             {
@@ -2731,12 +2780,14 @@ namespace MyMapObjectsDemo2022
         {
             if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
             {
-                MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
+                _ = MessageBox.Show("根据IETF官方范式要求，本程序的标准格式——GeoJSON，的坐标系只能为WGS84经纬度，请先将坐标系统调整为WGS84后再保存。");
                 return;
             }
-            SaveFileDialog sDialog = new SaveFileDialog();
-            sDialog.Filter = "土木GIS Project Files (*.tmproj)|*.tmproj";
-            string sFileName = "";
+            SaveFileDialog sDialog = new SaveFileDialog
+            {
+                Filter = "土木GIS Project Files (*.tmproj)|*.tmproj"
+            };
+            string sFileName;
             if (sDialog.ShowDialog(this)
                 == DialogResult.OK)
             {
@@ -2760,7 +2811,7 @@ namespace MyMapObjectsDemo2022
         {
             if (checkedListBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
+                _ = MessageBox.Show("您还没有在左侧选择任何图层，单击图层文本即可选取。");
                 return;
             }
             identifySelectedLayerIndex = checkedListBox1.SelectedIndex;
@@ -2772,15 +2823,15 @@ namespace MyMapObjectsDemo2022
             else
             {
                 MyMapObjects.moMapLayer sLayer = moMap.Layers.GetItem(identifySelectedLayerIndex); //获得选中的图层
-                RenderLayer cForm = new RenderLayer(sLayer,moMap);
-                cForm.ShowDialog();
+                RenderLayer cForm = new RenderLayer(sLayer, moMap);
+                _ = cForm.ShowDialog();
             }
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
-        
 
 
 
-    }
+
+        }
 
         private void 修改样式ToolStripMenuItem_Click(object sender, EventArgs e)
         {

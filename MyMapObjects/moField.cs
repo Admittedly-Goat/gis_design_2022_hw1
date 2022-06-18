@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MyMapObjects
+﻿namespace MyMapObjects
 {
     /// <summary>
     /// 字段
@@ -12,11 +7,6 @@ namespace MyMapObjects
     {
         #region 字段
 
-        private string _Name = "";  //字段名称
-        private string _AliasName = ""; //字段别名
-        private moValueTypeConstant _ValueType
-            = moValueTypeConstant.dInt32;
-        private Int32 _Length;  //字段长度
 
         #endregion
 
@@ -24,15 +14,15 @@ namespace MyMapObjects
 
         public moField(string name)
         {
-            _Name = name;
-            _AliasName = name;
+            Name = name;
+            AliasName = name;
         }
 
         public moField(string name, moValueTypeConstant valueType)
         {
-            _Name = name;
-            _AliasName = name;
-            _ValueType = valueType;
+            Name = name;
+            AliasName = name;
+            ValueType = valueType;
         }
 
         #endregion
@@ -42,39 +32,22 @@ namespace MyMapObjects
         /// <summary>
         /// 获取字段名称
         /// </summary>
-        public string Name
-        {
-            get { return _Name; }
-            set
-            {
-                _Name = value;
-            }
-        }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 获取或设置字段别名
         /// </summary>
-        public string AliasName
-        {
-            get { return _AliasName; }
-            set { _AliasName = value; }
-        }
+        public string AliasName { get; set; } = "";
 
         /// <summary>
         /// 获取值类型
         /// </summary>
-        public moValueTypeConstant ValueType
-        {
-            get { return _ValueType; }
-        }
+        public moValueTypeConstant ValueType { get; } = moValueTypeConstant.dInt32;
 
         /// <summary>
         /// 获取字段长度
         /// </summary>
-        public Int32 Length
-        {
-            get { return _Length; }
-        }
+        public int Length { get; private set; }
 
         #endregion
 
@@ -86,9 +59,11 @@ namespace MyMapObjects
         /// <returns></returns>
         public moField Clone()
         {
-            moField sField = new moField(_Name, _ValueType);
-            sField._AliasName = _AliasName;
-            sField._Length = _Length;
+            moField sField = new moField(Name, ValueType)
+            {
+                AliasName = AliasName,
+                Length = Length
+            };
             return sField;
         }
         #endregion

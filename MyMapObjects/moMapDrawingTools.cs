@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
 
 namespace MyMapObjects
 {
@@ -13,11 +9,20 @@ namespace MyMapObjects
         internal static void DrawGeometry(Graphics g, moRectangle extent, double mapScale, double dpm, double mpu, moGeometry geometry, moSymbol symbol)
         {
             if (extent == null)
+            {
                 return;
+            }
+
             if (geometry == null)
+            {
                 return;
+            }
+
             if (symbol == null)
+            {
                 return;
+            }
+
             if (geometry.GetType() == typeof(moPoint))
             {
                 moPoint sPoint = (moPoint)geometry;
@@ -42,7 +47,9 @@ namespace MyMapObjects
             {
                 moSimpleMarkerSymbol sSymbol = (moSimpleMarkerSymbol)symbol;
                 if (sSymbol.Visible == true)
+                {
                     DrawPointBySimpleMarker(g, extent, mapScale, dpm, mpu, point, sSymbol);
+                }
             }
         }
 
@@ -53,7 +60,9 @@ namespace MyMapObjects
             {
                 moSimpleLineSymbol sSymbol = (moSimpleLineSymbol)symbol;
                 if (sSymbol.Visible == true)
+                {
                     DrawLineBySimpleLine(g, extent, mapScale, dpm, mpu, point1, point2, sSymbol);
+                }
             }
         }
 
@@ -65,8 +74,8 @@ namespace MyMapObjects
                 moSimpleMarkerSymbol sSymbol = (moSimpleMarkerSymbol)symbol;
                 if (sSymbol.Visible == true)
                 {
-                    Int32 sPointCount = points.Count;
-                    for (Int32 i = 0; i <= sPointCount - 1; i++)
+                    int sPointCount = points.Count;
+                    for (int i = 0; i <= sPointCount - 1; i++)
                     {
                         moPoint sPoint = points.GetItem(i);
                         DrawPointBySimpleMarker(g, extent, mapScale, dpm, mpu, sPoint, sSymbol);
@@ -121,7 +130,9 @@ namespace MyMapObjects
             {
                 moSimpleLineSymbol sSymbol = (moSimpleLineSymbol)symbol;
                 if (sSymbol.Visible == true)
+                {
                     DrawMultiPolylineBySimpleLine(g, extent, mapScale, dpm, mpu, multiPolyline, sSymbol);
+                }
             }
         }
 
@@ -132,7 +143,9 @@ namespace MyMapObjects
             {
                 moSimpleFillSymbol sSymbol = (moSimpleFillSymbol)symbol;
                 if (sSymbol.Visible == true)
+                {
                     DrawMultiPolygonBySimpleFill(g, extent, mapScale, dpm, mpu, multiPolygon, sSymbol);
+                }
             }
         }
 
@@ -148,7 +161,7 @@ namespace MyMapObjects
             if (textSymbol.UseMask == true)
             {   //需要描边
                 GraphicsPath sGraphicPath = new GraphicsPath();
-                sGraphicPath.AddString(labelText, textSymbol.Font.FontFamily, (Int32)textSymbol.Font.Style, textSymbol.Font.Size * dpi / 72, OriPoint, StringFormat.GenericDefault);
+                sGraphicPath.AddString(labelText, textSymbol.Font.FontFamily, (int)textSymbol.Font.Style, textSymbol.Font.Size * dpi / 72, OriPoint, StringFormat.GenericDefault);
                 g.DrawPath(sMaskPen, sGraphicPath);
                 g.FillPath(sTextBrush, sGraphicPath);
                 sGraphicPath.Dispose();
@@ -173,15 +186,19 @@ namespace MyMapObjects
         {
             double sOffsetX = extent.MinX, sOffsetY = extent.MaxY;  //获取投影坐标系相对屏幕坐标系的平移量
             //（1）转换为屏幕坐标
-            PointF sScreenPoint = new PointF();
-            sScreenPoint.X = (float)((point.X - sOffsetX) * mpu / mapScale * dpm);
-            sScreenPoint.Y = (float)((sOffsetY - point.Y) * mpu / mapScale * dpm);
+            PointF sScreenPoint = new PointF
+            {
+                X = (float)((point.X - sOffsetX) * mpu / mapScale * dpm),
+                Y = (float)((sOffsetY - point.Y) * mpu / mapScale * dpm)
+            };
             //（2）计算符号大小
             float sSize = (float)(symbol.Size / 1000 * dpm);     //符号大小，像素
             if (sSize < 1)
+            {
                 sSize = 1;
+            }
             //（3）定义绘制区域并绘制
-            Rectangle sDrawingArea = new Rectangle((Int32)(sScreenPoint.X - sSize / 2), (Int32)(sScreenPoint.Y - sSize / 2), (Int32)sSize, (Int32)sSize);
+            Rectangle sDrawingArea = new Rectangle((int)(sScreenPoint.X - (sSize / 2)), (int)(sScreenPoint.Y - (sSize / 2)), (int)sSize, (int)sSize);
             DrawSimpleMarker(g, sDrawingArea, dpm, symbol);
         }
 
@@ -198,8 +215,10 @@ namespace MyMapObjects
             sScreenPoint2.X = (float)((point2.X - sOffsetX) * mpu / mapScale * dpm);
             sScreenPoint2.Y = (float)((sOffsetY - point2.Y) * mpu / mapScale * dpm);
             //（2）绘制
-            Pen sPen = new Pen(symbol.Color, (float)(symbol.Size / 1000 * dpm));
-            sPen.DashStyle = (DashStyle)symbol.Style;
+            Pen sPen = new Pen(symbol.Color, (float)(symbol.Size / 1000 * dpm))
+            {
+                DashStyle = (DashStyle)symbol.Style
+            };
             g.DrawLine(sPen, sScreenPoint1, sScreenPoint2);
             sPen.Dispose();
         }
@@ -211,9 +230,9 @@ namespace MyMapObjects
             double sOffsetX = extent.MinX, sOffsetY = extent.MaxY;  //获取投影坐标系相对屏幕坐标系的平移量
             //（1）转换为屏幕坐标
             GraphicsPath sGraphicPath = new GraphicsPath();     //用于屏幕绘制
-            Int32 sPointCount = points.Count;  //顶点数目
+            int sPointCount = points.Count;  //顶点数目
             PointF[] sScreenPoints = new PointF[sPointCount];
-            for (Int32 j = 0; j <= sPointCount - 1; j++)
+            for (int j = 0; j <= sPointCount - 1; j++)
             {
                 PointF sScreenPoint = new PointF();
                 moPoint sCurPoint = points.GetItem(j);
@@ -223,13 +242,15 @@ namespace MyMapObjects
             }
             sGraphicPath.AddLines(sScreenPoints);
             //（2）绘制
-            Pen sPen = new Pen(symbol.Color, (float)(symbol.Size / 1000 * dpm));
-            sPen.DashStyle = (DashStyle)symbol.Style;
+            Pen sPen = new Pen(symbol.Color, (float)(symbol.Size / 1000 * dpm))
+            {
+                DashStyle = (DashStyle)symbol.Style
+            };
             g.DrawPath(sPen, sGraphicPath);
             sPen.Dispose();
-           
+
         }
-        
+
 
         //采用简单线符号绘制复合折线
         private static void DrawMultiPolylineBySimpleLine(Graphics g, moRectangle extent, double mapScale, double dpm,
@@ -237,13 +258,13 @@ namespace MyMapObjects
         {
             double sOffsetX = extent.MinX, sOffsetY = extent.MaxY;  //获取投影坐标系相对屏幕坐标系的平移量
             //（1）转换为屏幕坐标
-            Int32 sPartCount = multiPolyline.Parts.Count;        //简单折线的数目
+            int sPartCount = multiPolyline.Parts.Count;        //简单折线的数目
             GraphicsPath sGraphicPath = new GraphicsPath();     //定义复合多边形，用于屏幕绘制
-            for (Int32 i = 0; i <= sPartCount - 1; i++)
+            for (int i = 0; i <= sPartCount - 1; i++)
             {
-                Int32 sPointCount = multiPolyline.Parts.GetItem(i).Count;  //当前简单折线的顶点数目
+                int sPointCount = multiPolyline.Parts.GetItem(i).Count;  //当前简单折线的顶点数目
                 PointF[] sScreenPoints = new PointF[sPointCount];
-                for (Int32 j = 0; j <= sPointCount - 1; j++)
+                for (int j = 0; j <= sPointCount - 1; j++)
                 {
                     PointF sScreenPoint = new PointF();
                     moPoint sCurPoint = multiPolyline.Parts.GetItem(i).GetItem(j);
@@ -255,8 +276,10 @@ namespace MyMapObjects
                 sGraphicPath.StartFigure();
             }
             //（2）绘制
-            Pen sPen = new Pen(symbol.Color, (float)(symbol.Size / 1000 * dpm));
-            sPen.DashStyle = (DashStyle)symbol.Style;
+            Pen sPen = new Pen(symbol.Color, (float)(symbol.Size / 1000 * dpm))
+            {
+                DashStyle = (DashStyle)symbol.Style
+            };
             g.DrawPath(sPen, sGraphicPath);
             sPen.Dispose();
         }
@@ -267,13 +290,17 @@ namespace MyMapObjects
         {
             double sOffsetX = extent.MinX, sOffsetY = extent.MaxY;  //获取投影坐标系相对屏幕坐标系的平移量
             //（1）转换为屏幕坐标并生成矩形
-            Point sTopLeftPoint = new Point(), sBottomRightPoint = new Point();
-            sTopLeftPoint.X = (Int32)((rectangle.MinX - sOffsetX) * mpu / mapScale * dpm);
-            sTopLeftPoint.Y = (Int32)((sOffsetY - rectangle.MaxY) * mpu / mapScale * dpm);
-            sBottomRightPoint.X = (Int32)((rectangle.MaxX - sOffsetX) * mpu / mapScale * dpm);
-            sBottomRightPoint.Y = (Int32)((sOffsetY - rectangle.MinY) * mpu / mapScale * dpm);
-            Int32 sWidth = sBottomRightPoint.X - sTopLeftPoint.X;
-            Int32 sHeight = sBottomRightPoint.Y - sTopLeftPoint.Y;
+            Point sTopLeftPoint = new Point
+            {
+                X = (int)((rectangle.MinX - sOffsetX) * mpu / mapScale * dpm),
+                Y = (int)((sOffsetY - rectangle.MaxY) * mpu / mapScale * dpm)
+            }, sBottomRightPoint = new Point
+            {
+                X = (int)((rectangle.MaxX - sOffsetX) * mpu / mapScale * dpm),
+                Y = (int)((sOffsetY - rectangle.MinY) * mpu / mapScale * dpm)
+            };
+            int sWidth = sBottomRightPoint.X - sTopLeftPoint.X;
+            int sHeight = sBottomRightPoint.Y - sTopLeftPoint.Y;
             Rectangle sRect = new Rectangle(sTopLeftPoint.X, sTopLeftPoint.Y, sWidth, sHeight);
             //（2）填充
             if (symbol.Color != Color.Transparent)
@@ -288,8 +315,10 @@ namespace MyMapObjects
                 moSimpleLineSymbol sOutline = symbol.Outline;
                 if (sOutline.Visible == true)
                 {
-                    Pen sPen = new Pen(sOutline.Color, (float)(sOutline.Size / 1000 * dpm));
-                    sPen.DashStyle = (DashStyle)sOutline.Style;
+                    Pen sPen = new Pen(sOutline.Color, (float)(sOutline.Size / 1000 * dpm))
+                    {
+                        DashStyle = (DashStyle)sOutline.Style
+                    };
                     g.DrawRectangle(sPen, sRect);
                     sPen.Dispose();
                 }
@@ -303,9 +332,9 @@ namespace MyMapObjects
             double sOffsetX = extent.MinX, sOffsetY = extent.MaxY;  //获取投影坐标系相对屏幕坐标系的平移量
             //（1）转换为屏幕坐标
             GraphicsPath sGraphicPath = new GraphicsPath();     //用于屏幕绘制
-            Int32 sPointCount = points.Count;  //顶点数目
+            int sPointCount = points.Count;  //顶点数目
             PointF[] sScreenPoints = new PointF[sPointCount];
-            for (Int32 j = 0; j <= sPointCount - 1; j++)
+            for (int j = 0; j <= sPointCount - 1; j++)
             {
                 PointF sScreenPoint = new PointF();
                 moPoint sCurPoint = points.GetItem(j);
@@ -324,8 +353,10 @@ namespace MyMapObjects
                 moSimpleLineSymbol sOutline = symbol.Outline;
                 if (sOutline.Visible == true)
                 {
-                    Pen sPen = new Pen(sOutline.Color, (float)(sOutline.Size / 1000 * dpm));
-                    sPen.DashStyle = (DashStyle)sOutline.Style;
+                    Pen sPen = new Pen(sOutline.Color, (float)(sOutline.Size / 1000 * dpm))
+                    {
+                        DashStyle = (DashStyle)sOutline.Style
+                    };
                     g.DrawPath(sPen, sGraphicPath);
                     sPen.Dispose();
                 }
@@ -338,13 +369,13 @@ namespace MyMapObjects
         {
             double sOffsetX = extent.MinX, sOffsetY = extent.MaxY;  //获取投影坐标系相对屏幕坐标系的平移量
             //（1）转换为屏幕坐标
-            Int32 sPartCount = multiPolygon.Parts.Count;        //简单多边形的数目
+            int sPartCount = multiPolygon.Parts.Count;        //简单多边形的数目
             GraphicsPath sGraphicPath = new GraphicsPath();     //定义复合多边形，用于屏幕绘制
-            for (Int32 i = 0; i <= sPartCount - 1; i++)
+            for (int i = 0; i <= sPartCount - 1; i++)
             {
-                Int32 sPointCount = multiPolygon.Parts.GetItem(i).Count;  //当前简单多边形的顶点数目
+                int sPointCount = multiPolygon.Parts.GetItem(i).Count;  //当前简单多边形的顶点数目
                 PointF[] sScreenPoints = new PointF[sPointCount];
-                for (Int32 j = 0; j <= sPointCount - 1; j++)
+                for (int j = 0; j <= sPointCount - 1; j++)
                 {
                     PointF sScreenPoint = new PointF();
                     moPoint sCurPoint = multiPolygon.Parts.GetItem(i).GetItem(j);
@@ -364,8 +395,10 @@ namespace MyMapObjects
                 moSimpleLineSymbol sOutline = symbol.Outline;
                 if (sOutline.Visible == true)
                 {
-                    Pen sPen = new Pen(sOutline.Color, (float)(sOutline.Size / 1000 * dpm));
-                    sPen.DashStyle = (DashStyle)sOutline.Style;
+                    Pen sPen = new Pen(sOutline.Color, (float)(sOutline.Size / 1000 * dpm))
+                    {
+                        DashStyle = (DashStyle)sOutline.Style
+                    };
                     g.DrawPath(sPen, sGraphicPath);
                     sPen.Dispose();
                 }
@@ -390,9 +423,9 @@ namespace MyMapObjects
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.Triangle)
             {
                 Pen pen = new Pen(symbol.Color);
-                Point p1 = new Point(drawingArea.X + drawingArea.Width / 2, drawingArea.Y + drawingArea.Height / 6);
-                Point p2 = new Point(drawingArea.X + drawingArea.Width / 6, drawingArea.Y + drawingArea.Height * 5 / 6);
-                Point p3 = new Point(drawingArea.X + drawingArea.Width * 5 / 6, drawingArea.Y + drawingArea.Height * 5 / 6);
+                Point p1 = new Point(drawingArea.X + (drawingArea.Width / 2), drawingArea.Y + (drawingArea.Height / 6));
+                Point p2 = new Point(drawingArea.X + (drawingArea.Width / 6), drawingArea.Y + (drawingArea.Height * 5 / 6));
+                Point p3 = new Point(drawingArea.X + (drawingArea.Width * 5 / 6), drawingArea.Y + (drawingArea.Height * 5 / 6));
                 Point[] pArr = { p1, p2, p3 };
                 g.DrawPolygon(pen, pArr);
                 pen.Dispose();
@@ -400,9 +433,9 @@ namespace MyMapObjects
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.SolidTriangle)
             {
                 SolidBrush sBrush = new SolidBrush(symbol.Color);
-                Point p1 = new Point(drawingArea.X + drawingArea.Width / 2, drawingArea.Y + drawingArea.Height / 6);
-                Point p2 = new Point(drawingArea.X + drawingArea.Width / 6, drawingArea.Y + drawingArea.Height * 5 / 6);
-                Point p3 = new Point(drawingArea.X + drawingArea.Width * 5 / 6, drawingArea.Y + drawingArea.Height * 5 / 6);
+                Point p1 = new Point(drawingArea.X + (drawingArea.Width / 2), drawingArea.Y + (drawingArea.Height / 6));
+                Point p2 = new Point(drawingArea.X + (drawingArea.Width / 6), drawingArea.Y + (drawingArea.Height * 5 / 6));
+                Point p3 = new Point(drawingArea.X + (drawingArea.Width * 5 / 6), drawingArea.Y + (drawingArea.Height * 5 / 6));
                 Point[] pArr = { p1, p2, p3 };
                 g.FillPolygon(sBrush, pArr);
                 sBrush.Dispose();
@@ -423,7 +456,7 @@ namespace MyMapObjects
             {
                 SolidBrush sBrush = new SolidBrush(symbol.Color);
                 Pen pen = new Pen(symbol.Color);
-                Rectangle dot = new Rectangle(drawingArea.X + drawingArea.Width *5 / 12, drawingArea.Y + drawingArea.Height * 5 / 12, drawingArea.Width / 4, drawingArea.Width / 4);
+                Rectangle dot = new Rectangle(drawingArea.X + (drawingArea.Width * 5 / 12), drawingArea.Y + (drawingArea.Height * 5 / 12), drawingArea.Width / 4, drawingArea.Width / 4);
                 g.DrawEllipse(pen, drawingArea);
                 g.FillEllipse(sBrush, dot);
                 pen.Dispose();
@@ -432,7 +465,7 @@ namespace MyMapObjects
             else if (symbol.Style == moSimpleMarkerSymbolStyleConstant.CircleCircle)
             {
                 Pen pen = new Pen(symbol.Color);
-                Rectangle circle = new Rectangle(drawingArea.X + drawingArea.Width * 3 / 16, drawingArea.Y + drawingArea.Height * 3 / 16, drawingArea.Width * 3 / 4, drawingArea.Height * 3 / 4);
+                Rectangle circle = new Rectangle(drawingArea.X + (drawingArea.Width * 3 / 16), drawingArea.Y + (drawingArea.Height * 3 / 16), drawingArea.Width * 3 / 4, drawingArea.Height * 3 / 4);
                 g.DrawEllipse(pen, drawingArea);
                 g.DrawEllipse(pen, circle);
                 pen.Dispose();

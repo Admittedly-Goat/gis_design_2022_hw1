@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MyMapObjects
+﻿namespace MyMapObjects
 {
     public class moPoint : moGeometry
     {
         #region 字段
 
-        private double _X, _Y;
 
         #endregion
 
@@ -25,8 +19,8 @@ namespace MyMapObjects
         /// <param name="y"></param>
         public moPoint(double x, double y)
         {
-            _X = x;
-            _Y = y;
+            X = x;
+            Y = y;
         }
 
         #endregion
@@ -36,20 +30,12 @@ namespace MyMapObjects
         /// <summary>
         /// 获取或设置X坐标
         /// </summary>
-        public double X
-        {
-            get { return _X; }
-            set { _X = value; }
-        }
+        public double X { get; set; }
 
         /// <summary>
         /// 获取或设置Y坐标
         /// </summary>
-        public double Y
-        {
-            get { return _Y; }
-            set { _Y = value; }
-        }
+        public double Y { get; set; }
 
         #endregion
 
@@ -61,7 +47,7 @@ namespace MyMapObjects
         /// <returns></returns>
         public moPoint Clone()
         {
-            moPoint sPoint = new moPoint(_X, _Y);
+            moPoint sPoint = new moPoint(X, Y);
             return sPoint;
         }
 

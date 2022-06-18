@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MyMapObjectsDemo2022
@@ -12,22 +7,25 @@ namespace MyMapObjectsDemo2022
     public partial class propertyTable : Form
     {
         // 回调函数，令属性表为空
-        Action frmMainSetPropertyTableNullMethod;
+        private readonly Action frmMainSetPropertyTableNullMethod;
+
         // 回调函数，重绘地图
-        Action RedrawMoMap;
+        private readonly Action RedrawMoMap;
+
         // 目标图层
-        MyMapObjects.moMapLayer Layer;
+        private readonly MyMapObjects.moMapLayer Layer;
         // 当前是否需要影响地图的选择情况，应对刷新属性表时出现的选择丢失
         public bool CanAffectLayerSelection = false;
+
         // 是否仅展示选择
-        bool ShowOnlySelected = false;
+        private bool ShowOnlySelected = false;
 
         public propertyTable(MyMapObjects.moMapLayer layer, Action frmMainSetPropertyTableNullMethod, Action redrawMoMap)
         {
             InitializeComponent();
-            this.Layer = layer;
+            Layer = layer;
             this.frmMainSetPropertyTableNullMethod = frmMainSetPropertyTableNullMethod;
-            this.RedrawMoMap = redrawMoMap;
+            RedrawMoMap = redrawMoMap;
             ReloadPropList();
         }
 
@@ -39,12 +37,12 @@ namespace MyMapObjectsDemo2022
             propertyGrid.Columns.Clear();
             bool isColumnEmpty = true;
             //新建表头
-            propertyGrid.Columns.Add("要素内部ID", "要素内部ID");
+            _ = propertyGrid.Columns.Add("要素内部ID", "要素内部ID");
             propertyGrid.Columns["要素内部ID"].Frozen = true;
             propertyGrid.Columns["要素内部ID"].ReadOnly = true;
             for (int i = 0; i < Layer.AttributeFields.Count; i++)
             {
-                propertyGrid.Columns.Add(i.ToString(), Layer.AttributeFields.GetItem(i).Name);
+                _ = propertyGrid.Columns.Add(i.ToString(), Layer.AttributeFields.GetItem(i).Name);
                 isColumnEmpty = false;
             }
             if (isColumnEmpty)
@@ -62,7 +60,7 @@ namespace MyMapObjectsDemo2022
                 {
                     values[j + 1] = Layer.Features.GetItem(i).Attributes.GetItem(j);
                 }
-                propertyGrid.Rows.Add(values);
+                _ = propertyGrid.Rows.Add(values);
                 for (int j = 0; j < Layer.SelectedFeatures.Count; j++)
                 {
                     if (Layer.SelectedFeatures.GetItem(j) == Layer.Features.GetItem(i))
@@ -90,46 +88,39 @@ namespace MyMapObjectsDemo2022
         {
             //展示输入框
             addFieldDialogBox fieldDialogBox = new addFieldDialogBox();
-            fieldDialogBox.ShowDialog();
+            _ = fieldDialogBox.ShowDialog();
             //名字
             string inputName = fieldDialogBox.FieldName;
             if ((inputName != null) && (inputName != ""))
             {
-                MyMapObjects.moValueTypeConstant selectedAttributeType;
                 for (int i = 0; i < Layer.AttributeFields.Count; i++)
                 {
                     if (Layer.AttributeFields.GetItem(i).Name == inputName)
                     {
-                        MessageBox.Show("字段已经存在。");
+                        _ = MessageBox.Show("字段已经存在。");
                         return;
                     }
                 }
-                int selectedTypeIndex = -1;
                 //字段类型
-                selectedTypeIndex = fieldDialogBox.TypeIndex;
+                int selectedTypeIndex = fieldDialogBox.TypeIndex;
                 if (selectedTypeIndex == 0)
                 {
-                    selectedAttributeType = MyMapObjects.moValueTypeConstant.dSingle;
                 }
                 else if (selectedTypeIndex == 1)
                 {
-                    selectedAttributeType = MyMapObjects.moValueTypeConstant.dDouble;
                 }
                 else if (selectedTypeIndex == 2)
                 {
-                    selectedAttributeType = MyMapObjects.moValueTypeConstant.dInt32;
                 }
                 else if (selectedTypeIndex == 3)
                 {
-                    selectedAttributeType = MyMapObjects.moValueTypeConstant.dInt64;
                 }
                 else if (selectedTypeIndex == 4)
                 {
-                    selectedAttributeType = MyMapObjects.moValueTypeConstant.dText;
                 }
                 else
                 {
-                    MessageBox.Show("您输入的类型无效。");
+                    _ = MessageBox.Show("您输入的类型无效。");
                     return;
                 }
                 string inputDefaultValue;
@@ -160,13 +151,13 @@ namespace MyMapObjectsDemo2022
                     }
                     else
                     {
-                        MessageBox.Show("输入的默认值有误。");
+                        _ = MessageBox.Show("输入的默认值有误。");
                         return;
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("输入的默认值有误。");
+                    _ = MessageBox.Show("输入的默认值有误。");
                     return;
                 }
                 //操作图层，增加新字段
@@ -180,18 +171,18 @@ namespace MyMapObjectsDemo2022
             }
             else
             {
-                MessageBox.Show("输入的字段名称无效。");
+                _ = MessageBox.Show("输入的字段名称无效。");
             }
         }
 
         private void 删除字段ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SelectAttributeFields attributeFieldsForm = new SelectAttributeFields(Layer);
-            attributeFieldsForm.ShowDialog();
+            _ = attributeFieldsForm.ShowDialog();
             int inputIndex = attributeFieldsForm.SelectedFieldIndex;
             if (inputIndex == -1)
             {
-                MessageBox.Show("字段有误。");
+                _ = MessageBox.Show("字段有误。");
                 return;
             }
             Layer.AttributeFields.RemoveAt(inputIndex);
@@ -201,7 +192,7 @@ namespace MyMapObjectsDemo2022
 
         private void 排列字段顺序ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (new AttrSequenceChanger(Layer)).ShowDialog();
+            _ = new AttrSequenceChanger(Layer).ShowDialog();
             ReloadPropList();
         }
 
@@ -209,8 +200,8 @@ namespace MyMapObjectsDemo2022
         private void propertyGrid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             //劫持输入到自定义输入框
-            propertyGrid.CancelEdit();
-            var i = e.ColumnIndex - 1;
+            _ = propertyGrid.CancelEdit();
+            int i = e.ColumnIndex - 1;
             //开始修改
             while (true)
             {
@@ -246,7 +237,7 @@ namespace MyMapObjectsDemo2022
                 }
                 catch
                 {
-                    MessageBox.Show($"输入数据有误，数据未更改。该字段的类型为：{Layer.AttributeFields.GetItem(i).ValueType.ToString()}");
+                    _ = MessageBox.Show($"输入数据有误，数据未更改。该字段的类型为：{Layer.AttributeFields.GetItem(i).ValueType}");
                     ReloadPropList();
                     break;
                 }
@@ -258,13 +249,13 @@ namespace MyMapObjectsDemo2022
         {
             // 获得输入
             ChangeFieldName changeFieldName = new ChangeFieldName(Layer);
-            changeFieldName.ShowDialog();
+            _ = changeFieldName.ShowDialog();
             int inputIndex = changeFieldName.SelectedFieldIndex;
 
             // 检查输入是否合理
             if (inputIndex == -1)
             {
-                MessageBox.Show("选择字段有误。");
+                _ = MessageBox.Show("选择字段有误。");
                 return;
             }
             string valueNew = changeFieldName.NewName;
@@ -272,13 +263,13 @@ namespace MyMapObjectsDemo2022
             {
                 if (Layer.AttributeFields.GetItem(j).Name == valueNew)
                 {
-                    MessageBox.Show("字段名重复。");
+                    _ = MessageBox.Show("字段名重复。");
                     return;
                 }
             }
             if (valueNew == "")
             {
-                MessageBox.Show("字段名无效。");
+                _ = MessageBox.Show("字段名无效。");
                 return;
             }
 
@@ -326,28 +317,28 @@ namespace MyMapObjectsDemo2022
             //排除未选择的行
             if (ShowOnlySelected == true)
             {
-                var selectedRows = new List<DataGridViewRow>();
+                List<DataGridViewRow> selectedRows = new List<DataGridViewRow>();
                 for (int i = 0; i < propertyGrid.SelectedRows.Count; i++)
                 {
                     selectedRows.Add(propertyGrid.SelectedRows[i]);
                 }
                 propertyGrid.Rows.Clear();
-                foreach (var i in selectedRows)
+                foreach (DataGridViewRow i in selectedRows)
                 {
-                    propertyGrid.Rows.Add(i);
+                    _ = propertyGrid.Rows.Add(i);
                 }
             }
         }
 
         private void 反选ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            List<int> selectedFeatureId=new List<int>();
+            List<int> selectedFeatureId = new List<int>();
             for (int i = 0; i < propertyGrid.SelectedRows.Count; i++)
             {
                 selectedFeatureId.Add(Convert.ToInt32(propertyGrid.SelectedRows[i].Cells[0].Value));
             }
             Layer.SelectedFeatures.Clear();
-            for(int i = 0; i < Layer.Features.Count; i++)
+            for (int i = 0; i < Layer.Features.Count; i++)
             {
                 Layer.SelectedFeatures.Add(Layer.Features.GetItem(i));
             }

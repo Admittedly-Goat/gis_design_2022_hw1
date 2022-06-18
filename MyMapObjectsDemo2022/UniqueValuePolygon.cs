@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MyMapObjectsDemo2022
 {
     public partial class UniqueValuePolygon : Form
     {
-        private MyMapObjects.moMapLayer moMapLayer;
-        private MyMapObjects.moSimpleFillSymbol moSimpleFillSymbol;
-        private MyMapObjects.moUniqueValueRenderer moUniqueValueRenderer;
+        private readonly MyMapObjects.moMapLayer moMapLayer;
+        private readonly MyMapObjects.moSimpleFillSymbol moSimpleFillSymbol;
+        private readonly MyMapObjects.moUniqueValueRenderer moUniqueValueRenderer;
         public UniqueValuePolygon(MyMapObjects.moMapLayer moMapLayer, MyMapObjects.moUniqueValueRenderer moUniqueValueRenderer, MyMapObjects.moSimpleFillSymbol moSimpleFillSymbol)
         {
             InitializeComponent();
@@ -23,7 +19,7 @@ namespace MyMapObjectsDemo2022
             int count = moMapLayer.AttributeFields.Count;
             for (int i = 0; i < count; i++)
             {
-                listBox1.Items.Add(moMapLayer.AttributeFields.GetItem(i).Name);
+                _ = listBox1.Items.Add(moMapLayer.AttributeFields.GetItem(i).Name);
             }
         }
 
@@ -31,34 +27,34 @@ namespace MyMapObjectsDemo2022
         {
             if (listBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("未选择绑定字段");
+                _ = MessageBox.Show("未选择绑定字段");
             }
             else
             {
                 moUniqueValueRenderer.Field = listBox1.SelectedItem.ToString();
                 List<object> sNames = new List<object>();
-                Int32 sFeatureCount = moMapLayer.Features.Count;
-                for (Int32 i = 0; i <= sFeatureCount - 1; i++)
+                int sFeatureCount = moMapLayer.Features.Count;
+                for (int i = 0; i <= sFeatureCount - 1; i++)
                 {
                     object sName = moMapLayer.Features.GetItem(i).Attributes.GetItem(listBox1.SelectedIndex);
                     sNames.Add(sName);
                 }
-                sNames.Distinct().ToList();
-                Int32 sValueCount = sNames.Count;
-                for (Int32 i = 0; i <= sValueCount - 1; i++)
+                _ = sNames.Distinct().ToList();
+                int sValueCount = sNames.Count;
+                for (int i = 0; i <= sValueCount - 1; i++)
                 {
                     MyMapObjects.moSimpleFillSymbol sSymbol = new MyMapObjects.moSimpleFillSymbol();
                     moUniqueValueRenderer.AddUniqueValue(sNames[i].ToString(), sSymbol);
                 }
                 moUniqueValueRenderer.DefaultSymbol = new MyMapObjects.moSimpleFillSymbol();
-                this.Close();
+                Close();
             }
-            
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)

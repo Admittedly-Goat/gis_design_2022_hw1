@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace MyMapObjects
 {
-    public class moPoints:moGeometry
+    public class moPoints : moGeometry
     {
         #region 字段
 
-        private List<moPoint> _Points;  //点集合
-        private double _MinX = double.MaxValue;
-        private double _MaxX = double.MinValue;
-        private double _MinY = double.MaxValue;
-        private double _MaxY = double.MinValue;
+        private readonly List<moPoint> _Points;  //点集合
 
         #endregion
 
@@ -37,42 +30,27 @@ namespace MyMapObjects
         /// <summary>
         /// 获取点数目
         /// </summary>
-        public Int32 Count
-        {
-            get { return _Points.Count; }
-        }
+        public int Count => _Points.Count;
 
         /// <summary>
         /// 获取最小X坐标
         /// </summary>
-        public double MinX
-        {
-            get { return _MinX; }
-        }
+        public double MinX { get; private set; } = double.MaxValue;
 
         /// <summary>
         /// 获取最大X坐标
         /// </summary>
-        public double MaxX
-        {
-            get { return _MaxX; }
-        }
+        public double MaxX { get; private set; } = double.MinValue;
 
         /// <summary>
         /// 获取最小Y坐标
         /// </summary>
-        public double MinY
-        {
-            get { return _MinY; }
-        }
+        public double MinY { get; private set; } = double.MaxValue;
 
         /// <summary>
         /// 获取最大Y坐标
         /// </summary>
-        public double MaxY
-        {
-            get { return _MaxY; }
-        }
+        public double MaxY { get; private set; } = double.MinValue;
 
         #endregion
 
@@ -83,7 +61,7 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index">索引号</param>
         /// <returns></returns>
-        public moPoint GetItem(Int32 index)
+        public moPoint GetItem(int index)
         {
             return _Points[index];
         }
@@ -111,7 +89,7 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <param name="points"></param>
-        public void InsertRange(Int32 index,
+        public void InsertRange(int index,
             moPoint[] points)
         {
             _Points.InsertRange(index, points);
@@ -122,7 +100,7 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <param name="point"></param>
-        public void Insert(Int32 index, moPoint point)
+        public void Insert(int index, moPoint point)
         {
             _Points.Insert(index, point);
         }
@@ -131,7 +109,7 @@ namespace MyMapObjects
         /// 删除指定索引号的元素
         /// </summary>
         /// <param name="index"></param>
-        public void RemoveAt(Int32 index)
+        public void RemoveAt(int index)
         {
             _Points.RemoveAt(index);
         }
@@ -159,8 +137,8 @@ namespace MyMapObjects
         /// <returns></returns>
         public moRectangle GetEnvelope()
         {
-            moRectangle sRect = new moRectangle(_MinX,
-                _MaxX, _MinY, _MaxY);
+            moRectangle sRect = new moRectangle(MinX,
+                MaxX, MinY, MaxY);
             return sRect;
         }
 
@@ -179,16 +157,16 @@ namespace MyMapObjects
         public moPoints Clone()
         {
             moPoints sPoints = new moPoints();
-            Int32 sPointCount = _Points.Count;
-            for (Int32 i = 0; i <= sPointCount - 1; i++)
+            int sPointCount = _Points.Count;
+            for (int i = 0; i <= sPointCount - 1; i++)
             {
                 moPoint sPoint = new moPoint(_Points[i].X, _Points[i].Y);
                 sPoints.Add(sPoint);
             }
-            sPoints._MinX = _MinX;
-            sPoints._MaxX = _MaxX;
-            sPoints._MinY = _MinY;
-            sPoints._MaxY = _MaxY;
+            sPoints.MinX = MinX;
+            sPoints.MaxX = MaxX;
+            sPoints.MinY = MinY;
+            sPoints.MaxY = MaxY;
             return sPoints;
         }
 
@@ -203,22 +181,33 @@ namespace MyMapObjects
             double sMaxX = double.MinValue;
             double sMinY = double.MaxValue;
             double sMaxY = double.MinValue;
-            Int32 sPointCount = _Points.Count;
-            for (Int32 i = 0; i <= sPointCount - 1; i++)
+            int sPointCount = _Points.Count;
+            for (int i = 0; i <= sPointCount - 1; i++)
             {
                 if (_Points[i].X < sMinX)
+                {
                     sMinX = _Points[i].X;
+                }
+
                 if (_Points[i].X > sMaxX)
+                {
                     sMaxX = _Points[i].X;
+                }
+
                 if (_Points[i].Y < sMinY)
+                {
                     sMinY = _Points[i].Y;
+                }
+
                 if (_Points[i].Y > sMaxY)
+                {
                     sMaxY = _Points[i].Y;
+                }
             }
-            _MinX = sMinX;
-            _MaxX = sMaxX;
-            _MinY = sMinY;
-            _MaxY = sMaxY;
+            MinX = sMinX;
+            MaxX = sMaxX;
+            MinY = sMinY;
+            MaxY = sMaxY;
 
         }
 

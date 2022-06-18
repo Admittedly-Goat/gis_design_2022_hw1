@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MyMapObjects
 {
@@ -12,12 +10,8 @@ namespace MyMapObjects
     {
         #region 字段
 
-        private string _Field = ""; //绑定字段
         private string _HeadTitle = ""; //在图层显示控件中的标题
         private bool _ShowHead = true; //在图层显示控件中是否显示标题
-        private List<string> _Values = new List<string>();
-        private List<moSymbol> _Symbols = new List<moSymbol>();
-        private moSymbol _DefaultSymbol;    //默认符号
         private bool _ShowDefaultSymbol = false;
         //在图层显示控件中是否显示默认符号 
 
@@ -34,51 +28,26 @@ namespace MyMapObjects
         /// <summary>
         /// 获取渲染类型
         /// </summary>
-        public override moRendererTypeConstant RendererType
-        {
-            get
-            {
-                return moRendererTypeConstant.UniqueValue;
-            }
-        }
+        public override moRendererTypeConstant RendererType => moRendererTypeConstant.UniqueValue;
 
         /// <summary>
         /// 获取或设置绑定字段
         /// </summary>
-        public string Field
-        {
-            get { return _Field; }
-            set { _Field = value; }
-        }
+        public string Field { get; set; } = "";
 
         /// <summary>
         /// 获取唯一值数目
         /// </summary>
-        public Int32 ValueCount
-        {
-            get { return _Values.Count; }
-        }
+        public int ValueCount => Values.Count;
 
         /// <summary>
         /// 获取或设置默认符号
         /// </summary>
-        public moSymbol DefaultSymbol
-        {
-            get { return _DefaultSymbol; }
-            set { _DefaultSymbol = value; }
-        }
+        public moSymbol DefaultSymbol { get; set; }
         //其他属性不再编写,自行添加
-        public List<moSymbol> Symbols
-        {
-            get { return _Symbols; }
-            set { _Symbols = value; }
-        }
+        public List<moSymbol> Symbols { get; set; } = new List<moSymbol>();
 
-        public List<string> Values
-        {
-            get { return _Values; }
-            set { _Values = value; }
-        }
+        public List<string> Values { get; set; } = new List<string>();
         #endregion
 
         #region 方法
@@ -88,9 +57,9 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public string GetValue(Int32 index)
+        public string GetValue(int index)
         {
-            return _Values[index];
+            return Values[index];
         }
 
         /// <summary>
@@ -98,18 +67,18 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <param name="value"></param>
-        public void SetValue(Int32 index, string value)
+        public void SetValue(int index, string value)
         {
-            _Values[index] = value;
+            Values[index] = value;
         }
         /// <summary>
         /// 获取指定索引号的符号
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public moSymbol GetSymbol(Int32 index)
+        public moSymbol GetSymbol(int index)
         {
-            return _Symbols[index];
+            return Symbols[index];
         }
 
         /// <summary>
@@ -117,9 +86,9 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <param name="symbol"></param>
-        public void SetSymbol(Int32 index, moSymbol symbol)
+        public void SetSymbol(int index, moSymbol symbol)
         {
-            _Symbols[index] = symbol;
+            Symbols[index] = symbol;
         }
         /// <summary>
         /// 增加一个唯一值及对应符号
@@ -128,8 +97,8 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void AddUniqueValue(string value, moSymbol symbol)
         {
-            _Values.Add(value);
-            _Symbols.Add(symbol);
+            Values.Add(value);
+            Symbols.Add(symbol);
         }
 
         /// <summary>
@@ -145,8 +114,8 @@ namespace MyMapObjects
                 throw new Exception
                     ("the length of the two arrays is not equal!");
             }
-            _Values.AddRange(values);
-            _Symbols.AddRange(symbols);
+            Values.AddRange(values);
+            Symbols.AddRange(symbols);
         }
 
         /// <summary>
@@ -156,13 +125,15 @@ namespace MyMapObjects
         /// <returns></returns>
         public moSymbol FindSymbol(string value)
         {
-            Int32 sValueCount = _Values.Count;
-            for (Int32 i = 0; i <= sValueCount - 1; i++)
+            int sValueCount = Values.Count;
+            for (int i = 0; i <= sValueCount - 1; i++)
             {
-                if (_Values[i] == value)
-                    return _Symbols[i];
+                if (Values[i] == value)
+                {
+                    return Symbols[i];
+                }
             }
-            return _DefaultSymbol;
+            return DefaultSymbol;
         }
 
         /// <summary>
@@ -171,42 +142,58 @@ namespace MyMapObjects
         /// <returns></returns>
         public override moRenderer Clone()
         {
-            moUniqueValueRenderer sRenderer = new moUniqueValueRenderer();
-            sRenderer._Field = _Field;
-            sRenderer._HeadTitle = _HeadTitle;
-            sRenderer._ShowHead = _ShowHead;
-            Int32 sValueCount = _Values.Count;
-            for (Int32 i = 0; i <= sValueCount - 1; i++)
+            moUniqueValueRenderer sRenderer = new moUniqueValueRenderer
             {
-                string sValue = _Values[i];
+                Field = Field,
+                _HeadTitle = _HeadTitle,
+                _ShowHead = _ShowHead
+            };
+            int sValueCount = Values.Count;
+            for (int i = 0; i <= sValueCount - 1; i++)
+            {
+                string sValue = Values[i];
                 moSymbol sSymbol = null;
-                if (_Symbols[i] != null)
-                    sSymbol = _Symbols[i].Clone();
+                if (Symbols[i] != null)
+                {
+                    sSymbol = Symbols[i].Clone();
+                }
+
                 sRenderer.AddUniqueValue(sValue, sSymbol);
             }
-            if (_DefaultSymbol != null)
-                sRenderer.DefaultSymbol = _DefaultSymbol.Clone();
+            if (DefaultSymbol != null)
+            {
+                sRenderer.DefaultSymbol = DefaultSymbol.Clone();
+            }
+
             sRenderer._ShowDefaultSymbol = _ShowDefaultSymbol;
             return sRenderer;
 
         }
         public moUniqueValueRenderer Clone1()
         {
-            moUniqueValueRenderer sRenderer = new moUniqueValueRenderer();
-            sRenderer._Field = _Field;
-            sRenderer._HeadTitle = _HeadTitle;
-            sRenderer._ShowHead = _ShowHead;
-            Int32 sValueCount = _Values.Count;
-            for (Int32 i = 0; i <= sValueCount - 1; i++)
+            moUniqueValueRenderer sRenderer = new moUniqueValueRenderer
             {
-                string sValue = _Values[i];
+                Field = Field,
+                _HeadTitle = _HeadTitle,
+                _ShowHead = _ShowHead
+            };
+            int sValueCount = Values.Count;
+            for (int i = 0; i <= sValueCount - 1; i++)
+            {
+                string sValue = Values[i];
                 moSymbol sSymbol = null;
-                if (_Symbols[i] != null)
-                    sSymbol = _Symbols[i].Clone();
+                if (Symbols[i] != null)
+                {
+                    sSymbol = Symbols[i].Clone();
+                }
+
                 sRenderer.AddUniqueValue(sValue, sSymbol);
             }
-            if (_DefaultSymbol != null)
-                sRenderer.DefaultSymbol = _DefaultSymbol.Clone();
+            if (DefaultSymbol != null)
+            {
+                sRenderer.DefaultSymbol = DefaultSymbol.Clone();
+            }
+
             sRenderer._ShowDefaultSymbol = _ShowDefaultSymbol;
             return sRenderer;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace MyMapObjects
 {
@@ -10,7 +7,7 @@ namespace MyMapObjects
     {
         #region 字段
 
-        private List<object> _Attributes;   //属性值集合
+        private readonly List<object> _Attributes;   //属性值集合
 
         #endregion
 
@@ -34,7 +31,7 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public object GetItem(Int32 index)
+        public object GetItem(int index)
         {
             return _Attributes[index];
         }
@@ -44,7 +41,7 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <param name="attributeValue"></param>
-        public void SetItem(Int32 index, object attributeValue)
+        public void SetItem(int index, object attributeValue)
         {
             _Attributes[index] = attributeValue;
         }
@@ -81,7 +78,7 @@ namespace MyMapObjects
         /// 删除指定索引号的元素
         /// </summary>
         /// <param name="index"></param>
-        public void RemoveAt(Int32 index)
+        public void RemoveAt(int index)
         {
             _Attributes.RemoveAt(index);
         }

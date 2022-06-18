@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MyMapObjectsDemo2022
@@ -21,13 +15,15 @@ namespace MyMapObjectsDemo2022
         private void button1_Click(object sender, EventArgs e)
         {
             MyMapObjects.moMapLayer sLayer = new MyMapObjects.moMapLayer();
-            var renderer = new MyMapObjects.moSimpleRenderer();
-            renderer.Symbol = new MyMapObjects.moSimpleFillSymbol();
+            MyMapObjects.moSimpleRenderer renderer = new MyMapObjects.moSimpleRenderer
+            {
+                Symbol = new MyMapObjects.moSimpleFillSymbol()
+            };
             sLayer.Renderer = renderer;
             sLayer.changeName(textBox1.Text);
             sLayer.changeShapeType(MyMapObjects.moGeometryTypeConstant.MultiPolygon);
             newLayer(sLayer);
-            this.Close();
+            Close();
         }
 
         private void newLayer(MyMapObjects.moMapLayer layer)

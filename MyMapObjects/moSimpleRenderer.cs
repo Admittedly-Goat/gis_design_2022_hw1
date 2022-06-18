@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MyMapObjects
+﻿namespace MyMapObjects
 {
     /// <summary>
     /// 简单渲染
@@ -11,7 +6,6 @@ namespace MyMapObjects
     public class moSimpleRenderer : moRenderer
     {
         #region 字段
-        private moSymbol _Symbol;
         #endregion
 
         #region 构造函数
@@ -24,22 +18,12 @@ namespace MyMapObjects
         /// <summary>
         /// 获取渲染类型
         /// </summary>
-        public override moRendererTypeConstant RendererType
-        {
-            get
-            {
-                return moRendererTypeConstant.Simple;
-            }
-        }
+        public override moRendererTypeConstant RendererType => moRendererTypeConstant.Simple;
 
         /// <summary>
         /// 获取或设置符号
         /// </summary>
-        public moSymbol Symbol
-        {
-            get { return _Symbol; }
-            set { _Symbol = value; }
-        }
+        public moSymbol Symbol { get; set; }
         #endregion
 
         #region 方法
@@ -50,8 +34,10 @@ namespace MyMapObjects
         /// <returns></returns>
         public override moRenderer Clone()
         {
-            moSimpleRenderer sRenderer = new moSimpleRenderer();
-            sRenderer._Symbol = _Symbol.Clone();
+            moSimpleRenderer sRenderer = new moSimpleRenderer
+            {
+                Symbol = Symbol.Clone()
+            };
             return sRenderer;
         }
 

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MyMapObjectsDemo2022
@@ -12,14 +6,14 @@ namespace MyMapObjectsDemo2022
     public partial class VertexEditor : Form
     {
         public MyMapObjects.moPoints HighlightedPoints;
-        Action RedrawMap;
-        Action CallMoMapEditVertex;
-        Action NewPartMoMap;
-        Action AddNewVertexMoMap;
-        Action FindByGeometryMoMap;
-        Action CloseWindow;
+        private readonly Action RedrawMap;
+        private readonly Action CallMoMapEditVertex;
+        private readonly Action NewPartMoMap;
+        private readonly Action AddNewVertexMoMap;
+        private readonly Action FindByGeometryMoMap;
+        private readonly Action CloseWindow;
         private MyMapObjects.moPoint MovingVertex;
-        private MyMapObjects.moFeature SelectedFeature;
+        private readonly MyMapObjects.moFeature SelectedFeature;
         public MyMapObjects.moPoints NewPart;
         public int RemainingPartPointNumber;
         private int AddVertexPartIndex;
@@ -29,29 +23,29 @@ namespace MyMapObjectsDemo2022
             listBox1.Items.Clear();
             if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
             {
-                listBox1.Items.Add("[0] 第1节点");
+                _ = listBox1.Items.Add("[0] 第1节点");
             }
             else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
-                var multiPolyline = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                MyMapObjects.moMultiPolyline multiPolyline = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                 for (int i = 0; i < multiPolyline.Parts.Count; i++)
                 {
-                    listBox1.Items.Add($"[{i}] 第{i + 1}部分");
+                    _ = listBox1.Items.Add($"[{i}] 第{i + 1}部分");
                     for (int j = 0; j < multiPolyline.Parts.GetItem(i).Count; j++)
                     {
-                        listBox1.Items.Add($"    [{i}-{j}] 第{j + 1}节点");
+                        _ = listBox1.Items.Add($"    [{i}-{j}] 第{j + 1}节点");
                     }
                 }
             }
             else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
-                var multiPolygon = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                MyMapObjects.moMultiPolygon multiPolygon = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                 for (int i = 0; i < multiPolygon.Parts.Count; i++)
                 {
-                    listBox1.Items.Add($"[{i}] 第{i + 1}部分");
+                    _ = listBox1.Items.Add($"[{i}] 第{i + 1}部分");
                     for (int j = 0; j < multiPolygon.Parts.GetItem(i).Count; j++)
                     {
-                        listBox1.Items.Add($"    [{i}-{j}] 第{j + 1}节点");
+                        _ = listBox1.Items.Add($"    [{i}-{j}] 第{j + 1}节点");
                     }
                 }
             }
@@ -90,7 +84,7 @@ namespace MyMapObjectsDemo2022
                 int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1]);
                 if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
-                    var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                     HighlightedPoints.Clear();
                     for (int i = 0; i < featureGeom.Parts.GetItem(selectedPartIndex).Count; i++)
                     {
@@ -99,7 +93,7 @@ namespace MyMapObjectsDemo2022
                 }
                 else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
-                    var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolygon featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                     HighlightedPoints.Clear();
                     for (int i = 0; i < featureGeom.Parts.GetItem(selectedPartIndex).Count; i++)
                     {
@@ -112,14 +106,14 @@ namespace MyMapObjectsDemo2022
                 HighlightedPoints.Clear();
                 if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
                 {
-                    var featureGeom = (MyMapObjects.moPoint)SelectedFeature.Geometry;
+                    MyMapObjects.moPoint featureGeom = (MyMapObjects.moPoint)SelectedFeature.Geometry;
                     HighlightedPoints.Add(featureGeom);
                 }
                 else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
                     int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
                     int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                     HighlightedPoints.Add(featureGeom.Parts.GetItem(selectedPartIndex).GetItem(selectedPointIndex));
 
                 }
@@ -127,7 +121,7 @@ namespace MyMapObjectsDemo2022
                 {
                     int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
                     int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolygon featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                     HighlightedPoints.Add(featureGeom.Parts.GetItem(selectedPartIndex).GetItem(selectedPointIndex));
 
                 }
@@ -140,13 +134,13 @@ namespace MyMapObjectsDemo2022
         {
             if (listBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("没有选择节点，无法修改。");
+                _ = MessageBox.Show("没有选择节点，无法修改。");
                 return;
             }
             string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
             if (selectedText.EndsWith("部分"))
             {
-                MessageBox.Show("您选择的是部分，请选择节点。");
+                _ = MessageBox.Show("您选择的是部分，请选择节点。");
                 return;
             }
             else if (selectedText.EndsWith("节点"))
@@ -159,7 +153,7 @@ namespace MyMapObjectsDemo2022
                 {
                     int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
                     int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                     MovingVertex = featureGeom.Parts.GetItem(selectedPartIndex).GetItem(selectedPointIndex);
 
                 }
@@ -167,7 +161,7 @@ namespace MyMapObjectsDemo2022
                 {
                     int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
                     int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolygon featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                     MovingVertex = featureGeom.Parts.GetItem(selectedPartIndex).GetItem(selectedPointIndex);
 
                 }
@@ -187,7 +181,7 @@ namespace MyMapObjectsDemo2022
         {
             if (listBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("没有选择部分，无法删除。");
+                _ = MessageBox.Show("没有选择部分，无法删除。");
                 return;
             }
             string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
@@ -196,7 +190,7 @@ namespace MyMapObjectsDemo2022
                 if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
                 {
                     int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                     featureGeom.Parts.RemoveAt(selectedPartIndex);
                     featureGeom.UpdateExtent();
 
@@ -204,7 +198,7 @@ namespace MyMapObjectsDemo2022
                 else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
                 {
                     int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolygon featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                     featureGeom.Parts.RemoveAt(selectedPartIndex);
                     featureGeom.UpdateExtent();
                 }
@@ -214,7 +208,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (selectedText.EndsWith("节点"))
             {
-                MessageBox.Show("您选择的是节点，请选择部分。");
+                _ = MessageBox.Show("您选择的是节点，请选择部分。");
             }
         }
 
@@ -222,7 +216,7 @@ namespace MyMapObjectsDemo2022
         {
             if (listBox1.SelectedIndex == -1)
             {
-                MessageBox.Show("没有选择节点，无法删除。");
+                _ = MessageBox.Show("没有选择节点，无法删除。");
                 return;
             }
             string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
@@ -232,10 +226,10 @@ namespace MyMapObjectsDemo2022
                 {
                     int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
                     int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                     if (featureGeom.Parts.GetItem(selectedPartIndex).Count <= 2)
                     {
-                        MessageBox.Show("线段少于2个点，无法继续操作，请直接删除部分。");
+                        _ = MessageBox.Show("线段少于2个点，无法继续操作，请直接删除部分。");
                         return;
                     }
                     featureGeom.Parts.GetItem(selectedPartIndex).RemoveAt(selectedPointIndex);
@@ -246,10 +240,10 @@ namespace MyMapObjectsDemo2022
                 {
                     int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[0]);
                     int selectedPointIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1].Split('-')[1]);
-                    var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                    MyMapObjects.moMultiPolygon featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                     if (featureGeom.Parts.GetItem(selectedPartIndex).Count <= 3)
                     {
-                        MessageBox.Show("多边形少于3个点，无法继续操作，请直接删除部分。");
+                        _ = MessageBox.Show("多边形少于3个点，无法继续操作，请直接删除部分。");
                         return;
                     }
                     featureGeom.Parts.GetItem(selectedPartIndex).RemoveAt(selectedPointIndex);
@@ -257,7 +251,7 @@ namespace MyMapObjectsDemo2022
                 }
                 else
                 {
-                    MessageBox.Show("单点无法添加新节点。");
+                    _ = MessageBox.Show("单点无法添加新节点。");
                     return;
                 }
                 HighlightedPoints.Clear();
@@ -266,7 +260,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (selectedText.EndsWith("部分"))
             {
-                MessageBox.Show("您选择的是部分，请选择节点。");
+                _ = MessageBox.Show("您选择的是部分，请选择节点。");
             }
         }
 
@@ -283,7 +277,7 @@ namespace MyMapObjectsDemo2022
             }
             else
             {
-                MessageBox.Show("单点无法添加新节点。");
+                _ = MessageBox.Show("单点无法添加新节点。");
                 return;
             }
             HighlightedPoints.Clear();
@@ -297,7 +291,7 @@ namespace MyMapObjectsDemo2022
         {
             if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
-                var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                 featureGeom.Parts.Add(NewPart);
                 HighlightedPoints.Clear();
                 RedrawMap();
@@ -307,7 +301,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
-                var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                MyMapObjects.moMultiPolygon featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                 featureGeom.Parts.Add(NewPart);
                 HighlightedPoints.Clear();
                 RedrawMap();
@@ -350,7 +344,7 @@ namespace MyMapObjectsDemo2022
                 }
                 else
                 {
-                    MessageBox.Show("单点无法添加新节点。");
+                    _ = MessageBox.Show("单点无法添加新节点。");
                     return;
                 }
                 RedrawMap();
@@ -358,7 +352,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (selectedText.EndsWith("部分"))
             {
-                MessageBox.Show("您选择的是部分，请选择节点。");
+                _ = MessageBox.Show("您选择的是部分，请选择节点。");
             }
         }
 
@@ -366,13 +360,13 @@ namespace MyMapObjectsDemo2022
         {
             if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
-                var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                 featureGeom.Parts.GetItem(AddVertexPartIndex).Insert(AddVertexPointIndex, newPoint);
 
             }
             else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
-                var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                MyMapObjects.moMultiPolygon featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                 featureGeom.Parts.GetItem(AddVertexPartIndex).Insert(AddVertexPointIndex, newPoint);
             }
             ReloadAllPartsAndPoints();
@@ -389,7 +383,7 @@ namespace MyMapObjectsDemo2022
         {
             if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
-                var featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
+                MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
                 int selectedPart = -1;
                 int selectedPoint = -1;
                 double currentMinDist = double.MaxValue;
@@ -417,7 +411,7 @@ namespace MyMapObjectsDemo2022
             }
             else if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolygon)
             {
-                var featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
+                MyMapObjects.moMultiPolygon featureGeom = (MyMapObjects.moMultiPolygon)SelectedFeature.Geometry;
                 int selectedPart = -1;
                 int selectedPoint = -1;
                 double currentMinDist = double.MaxValue;

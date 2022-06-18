@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MyMapObjects
+﻿namespace MyMapObjects
 {
     /// <summary>
     /// 值类型常数
@@ -116,5 +111,5 @@ namespace MyMapObjects
         Kilometers = 4
     }
 
-    
+
 }

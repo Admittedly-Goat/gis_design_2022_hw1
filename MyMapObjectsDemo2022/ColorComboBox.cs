@@ -13,9 +13,9 @@ namespace MyMapObjectsDemo2022
     public partial class ColorComboBox : ComboBox
     {
         private PopupWindow popupWnd;
-        private ColorPopup colors = new ColorPopup();
+        private readonly ColorPopup colors = new ColorPopup();
         private Color selectedColor = Color.Black;
-        private Timer timer = new Timer();
+        private readonly Timer timer = new Timer();
         public event ColorChangedHandler ColorChanged;
 
         //constructor...
@@ -26,28 +26,28 @@ namespace MyMapObjectsDemo2022
 
         public ColorComboBox(Color selectedColor)
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // ColorCombo
             // 
-            this.AutoSize = false;
-            this.Size = new Size(39, 22);
-            this.Text = string.Empty;
-            this.DrawMode = DrawMode.OwnerDrawFixed;
-            this.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.ItemHeight = 16;
+            AutoSize = false;
+            Size = new Size(39, 22);
+            Text = string.Empty;
+            DrawMode = DrawMode.OwnerDrawFixed;
+            DropDownStyle = ComboBoxStyle.DropDownList;
+            ItemHeight = 16;
 
             timer.Tick += new EventHandler(OnCheckStatus);
             timer.Interval = 50;
             timer.Start();
             colors.SelectedColor = this.selectedColor = selectedColor;
-            this.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         [DefaultValue(typeof(Color), "Black")]
         public Color SelectedColor
         {
-            get { return selectedColor; }
+            get => selectedColor;
             set
             {
                 selectedColor = value;
@@ -62,7 +62,10 @@ namespace MyMapObjectsDemo2022
             if (m.Msg == 256 || m.Msg == 513 || m.Msg == 515)
             {
                 if (m.Msg == 513)
+                {
                     PopupColorPalette();
+                }
+
                 return;
             }
             base.WndProc(ref m);
@@ -75,7 +78,7 @@ namespace MyMapObjectsDemo2022
 
             //calculate its position in screen coordinates
             Rectangle rect = Bounds;
-            rect = this.Parent.RectangleToScreen(rect);
+            rect = Parent.RectangleToScreen(rect);
             Point pt = new Point(rect.Left, rect.Bottom);
 
             //tell it that we want the ColorChanged event
@@ -85,8 +88,8 @@ namespace MyMapObjectsDemo2022
             popupWnd.Show(pt);
             //disable the button so that the user can't click it
             //while the popup is being displayed
-            this.Enabled = false;
-            this.timer.Start();
+            Enabled = false;
+            timer.Start();
         }
 
         //event handler for the color change event from the popup window
@@ -95,21 +98,23 @@ namespace MyMapObjectsDemo2022
         {
             //if a someone wants the event, and the color has actually changed
             //call the event handler
-            if (ColorChanged != null && e.color != this.selectedColor)
+            if (ColorChanged != null && e.color != selectedColor)
             {
-                this.selectedColor = e.color;
+                selectedColor = e.color;
                 ColorChanged(this, e);
             }
             else //otherwise simply make note of the new color
-                this.selectedColor = e.color;
+            {
+                selectedColor = e.color;
+            }
         }
 
         protected override void OnDrawItem(DrawItemEventArgs e)
         {
-            var g = e.Graphics;
+            Graphics g = e.Graphics;
             e.DrawBackground();
-            var brush = new SolidBrush(this.selectedColor);
-            var rect = e.Bounds;
+            SolidBrush brush = new SolidBrush(selectedColor);
+            Rectangle rect = e.Bounds;
             rect.Width -= 1;
             rect.Height -= 1;
             g.FillRectangle(brush, rect);
@@ -124,8 +129,8 @@ namespace MyMapObjectsDemo2022
         {
             if (popupWnd != null && !popupWnd.Visible)
             {
-                this.timer.Stop();
-                this.Enabled = true;
+                timer.Stop();
+                Enabled = true;
             }
         }
 
@@ -136,22 +141,22 @@ namespace MyMapObjectsDemo2022
         {
             public ColorRadioButton(Color color, Color backColor)
             {
-                this.ClientSize = new Size(21, 21);
-                this.Appearance = Appearance.Button;
-                this.Name = "button";
-                this.Visible = true;
-                this.ForeColor = color;
-                this.FlatAppearance.BorderColor = backColor;
-                this.FlatAppearance.BorderSize = 0;
-                this.FlatStyle = FlatStyle.Flat;
-                this.Paint += new PaintEventHandler(OnPaintButton);
+                ClientSize = new Size(21, 21);
+                Appearance = Appearance.Button;
+                Name = "button";
+                Visible = true;
+                ForeColor = color;
+                FlatAppearance.BorderColor = backColor;
+                FlatAppearance.BorderSize = 0;
+                FlatStyle = FlatStyle.Flat;
+                Paint += new PaintEventHandler(OnPaintButton);
             }
 
             private void OnPaintButton(object sender, PaintEventArgs e)
             {
                 //paint a square on the face of the button using the controls foreground color
                 Rectangle colorRect = new Rectangle(ClientRectangle.Left + 5, ClientRectangle.Top + 5, ClientRectangle.Width - 9, ClientRectangle.Height - 9);
-                e.Graphics.FillRectangle(new SolidBrush(this.ForeColor), colorRect);
+                e.Graphics.FillRectangle(new SolidBrush(ForeColor), colorRect);
                 e.Graphics.DrawRectangle(Pens.DarkGray, colorRect);
             }
         }
@@ -163,28 +168,22 @@ namespace MyMapObjectsDemo2022
         private class PopupWindow : ToolStripDropDown
         {
             public event ColorChangedHandler ColorChanged;
-            private ToolStripControlHost host;
-            private ColorPopup content;
+            private readonly ToolStripControlHost host;
+            private readonly ColorPopup content;
 
-            public Color SelectedColor
-            {
-                get { return content.SelectedColor; }
-            }
+            public Color SelectedColor => content.SelectedColor;
 
             public PopupWindow(ColorPopup content)
             {
-                if (content == null)
-                    throw new ArgumentNullException("content");
-
-                this.content = content;
-                this.AutoSize = false;
-                this.DoubleBuffered = true;
-                this.ResizeRedraw = true;
+                this.content = content ?? throw new ArgumentNullException("content");
+                AutoSize = false;
+                DoubleBuffered = true;
+                ResizeRedraw = true;
                 //create a host that will host the content
                 host = new ToolStripControlHost(content);
 
-                this.Padding = Margin = host.Padding = host.Margin = Padding.Empty;
-                this.MinimumSize = content.MinimumSize;
+                Padding = Margin = host.Padding = host.Margin = Padding.Empty;
+                MinimumSize = content.MinimumSize;
                 content.MinimumSize = content.Size;
                 MaximumSize = new Size(content.Size.Width + 1, content.Size.Height + 1);
                 content.MaximumSize = new Size(content.Size.Width + 1, content.Size.Height + 1);
@@ -192,14 +191,13 @@ namespace MyMapObjectsDemo2022
 
                 content.Location = Point.Empty;
                 //add the host to the list
-                Items.Add(host);
+                _ = Items.Add(host);
             }
 
             protected override void OnClosed(ToolStripDropDownClosedEventArgs e)
             {
                 //when the window close tell the parent that the color changed
-                if (ColorChanged != null)
-                    ColorChanged(this, new ColorChangeArgs(this.SelectedColor));
+                ColorChanged?.Invoke(this, new ColorChangeArgs(SelectedColor));
             }
         }
 
@@ -210,21 +208,21 @@ namespace MyMapObjectsDemo2022
         private class ColorPopup : UserControl
         {
             //private Color[] colors = { Color.Black, Color.Gray, Color.Maroon, Color.Olive, Color.Green, Color.Teal, Color.Navy, Color.Purple, Color.White, Color.Silver, Color.Red, Color.Yellow, Color.Lime, Color.Aqua, Color.Blue, Color.Fuchsia };
-            private Color[] colors = {
+            private readonly Color[] colors = {
                 Color.Black, Color.Navy, Color.DarkGreen, Color.DarkCyan, Color.DarkRed, Color.DarkMagenta, Color.Olive,
                 Color.LightGray, Color.DarkGray, Color.Blue, Color.Lime, Color.Cyan, Color.Red, Color.Fuchsia,
                 Color.Yellow, Color.White, Color.RoyalBlue, Color.MediumBlue,  Color.LightGreen, Color.MediumSpringGreen, Color.Chocolate,
                 Color.Pink, Color.Khaki, Color.WhiteSmoke, Color.BlueViolet, Color.DeepSkyBlue, Color.OliveDrab, Color.SteelBlue,
                 Color.DarkOrange, Color.Tomato, Color.HotPink, Color.DimGray,
             };
-            private string[] colorNames = {
+            private readonly string[] colorNames = {
                 "黑色", "藏青", "深绿", "深青", "红褐", "洋红", "褐绿",
                 "浅灰", "灰色", "蓝色", "绿色", "青色", "红色", "紫红",
                 "黄色", "白色", "蓝灰", "藏蓝", "淡绿", "青绿", "黄褐",
                 "粉红", "嫩黄", "银白", "紫色", "天蓝", "灰绿", "青蓝",
                 "橙黄", "桃红", "英红", "深灰"
             };
-            private ToolTip toolTip = new ToolTip();
+            private readonly ToolTip toolTip = new ToolTip();
             private ColorRadioButton[] buttons;
             private Button moreColorsBtn;
             private Color selectedColor = Color.Black;
@@ -234,22 +232,24 @@ namespace MyMapObjectsDemo2022
             ///</summary>
             public Color SelectedColor
             {
-                get { return selectedColor; }
+                get => selectedColor;
                 set
                 {
                     selectedColor = value;
                     Color[] colors = this.colors;
                     for (int i = 0; i < colors.Length; i++)
+                    {
                         buttons[i].Checked = selectedColor == colors[i];
+                    }
                 }
             }
 
             private void InitializeComponent()
             {
-                this.SuspendLayout();
-                this.Name = "Color Popup";
-                this.Text = string.Empty;
-                this.ResumeLayout(false);
+                SuspendLayout();
+                Name = "Color Popup";
+                Text = string.Empty;
+                ResumeLayout(false);
             }
 
             public ColorPopup()
@@ -257,7 +257,7 @@ namespace MyMapObjectsDemo2022
                 InitializeComponent();
 
                 SetupButtons();
-                this.Paint += new PaintEventHandler(OnPaintBorder);
+                Paint += new PaintEventHandler(OnPaintBorder);
             }
 
             //place the buttons on the window.
@@ -269,8 +269,8 @@ namespace MyMapObjectsDemo2022
                 int y = 2;
                 int breakCount = 7;
                 Color[] colors = this.colors;
-                this.buttons = new ColorRadioButton[colors.Length];
-                this.ClientSize = new Size(139, 137);
+                buttons = new ColorRadioButton[colors.Length];
+                ClientSize = new Size(139, 137);
                 //color buttons
                 for (int i = 0; i < colors.Length; i++)
                 {
@@ -279,41 +279,50 @@ namespace MyMapObjectsDemo2022
                         y += 19;
                         x = 1;
                     }
-                    buttons[i] = new ColorRadioButton(colors[i], this.BackColor);
-                    buttons[i].Location = new Point(x, y);
+                    buttons[i] = new ColorRadioButton(colors[i], BackColor)
+                    {
+                        Location = new Point(x, y)
+                    };
                     // toolTip.SetToolTip(buttons[i], colorNames[i]);
                     Controls.Add(buttons[i]);
                     buttons[i].Click += new EventHandler(BtnClicked);
                     if (selectedColor == colors[i])
+                    {
                         buttons[i].Checked = true;
+                    }
+
                     x += 19;
                 }
 
                 //line...
                 y += 24;
-                var label = new Label();
-                label.AutoSize = false;
-                label.Text = string.Empty;
-                label.Width = this.Width - 5;
-                label.Height = 2;
-                label.BorderStyle = BorderStyle.Fixed3D;
-                label.Location = new Point(4, y);
+                Label label = new Label
+                {
+                    AutoSize = false,
+                    Text = string.Empty,
+                    Width = Width - 5,
+                    Height = 2,
+                    BorderStyle = BorderStyle.Fixed3D,
+                    Location = new Point(4, y)
+                };
                 Controls.Add(label);
 
                 //button
                 y += 7;
-                moreColorsBtn = new Button();
-                moreColorsBtn.FlatStyle = FlatStyle.Popup;
-                moreColorsBtn.Text = "其它颜色...";
-                moreColorsBtn.Location = new Point(6, y);
-                moreColorsBtn.ClientSize = new Size(127, 23);
+                moreColorsBtn = new Button
+                {
+                    FlatStyle = FlatStyle.Popup,
+                    Text = "其它颜色...",
+                    Location = new Point(6, y),
+                    ClientSize = new Size(127, 23)
+                };
                 moreColorsBtn.Click += new EventHandler(OnMoreClicked);
                 Controls.Add(moreColorsBtn);
             }
 
             private void OnPaintBorder(object sender, PaintEventArgs e)
             {
-                var rect = this.ClientRectangle;
+                Rectangle rect = ClientRectangle;
                 rect.Width -= 1;
                 rect.Height -= 1;
                 e.Graphics.DrawRectangle(new Pen(SystemColors.WindowFrame), rect);
@@ -327,11 +336,14 @@ namespace MyMapObjectsDemo2022
 
             public void OnMoreClicked(object sender, EventArgs e)
             {
-                ColorDialog dlg = new ColorDialog();
-                dlg.Color = SelectedColor;
+                ColorDialog dlg = new ColorDialog
+                {
+                    Color = SelectedColor
+                };
                 if (dlg.ShowDialog(this) == DialogResult.OK)
+                {
                     selectedColor = dlg.Color;
-                ((ToolStripDropDown)Parent).Close();
+                } ((ToolStripDropDown)Parent).Close();
             }
         }
     }

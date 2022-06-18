@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 
 namespace MyMapObjects
 {
@@ -15,9 +14,6 @@ namespace MyMapObjects
         private string _Field = ""; //绑定字段
         private string _HeadTitle = "";     //在图层显示控件中的标题
         private bool _ShowHead = true;      //在图层显示控件是否显示标题
-        private List<double> _BreakValues = new List<double>();       //分割值集合
-        private List<moSymbol> _Symbols = new List<moSymbol>();//符号集合，小于第一个分割值对应第一个符号，依此类推
-        private moSymbol _DefaultSymbol;    //默认符号
         private bool _ShowDefaultSymbol = true; //在图层显示控件中是否显示默认符号
 
         #endregion
@@ -33,21 +29,15 @@ namespace MyMapObjects
         /// <summary>
         /// 获取渲染类型
         /// </summary>
-        public override moRendererTypeConstant RendererType
-        {
-            get
-            {
-                return moRendererTypeConstant.ClassBreaks;
-            }
-        }
-        
+        public override moRendererTypeConstant RendererType => moRendererTypeConstant.ClassBreaks;
+
 
         /// <summary>
         /// 获取或设置绑定字段名称
         /// </summary>
         public string Field
         {
-            get { return _Field; }
+            get => _Field;
             set
             {
                 _Field = value;
@@ -58,30 +48,15 @@ namespace MyMapObjects
         /// <summary>
         /// 获取分割值数目
         /// </summary>
-        public Int32 BreakCount
-        {
-            get { return _BreakValues.Count; }
-        }
+        public int BreakCount => BreakValues.Count;
 
         /// <summary>
         /// 获取或设置默认符号
         /// </summary>
-        public moSymbol DefaultSymbol
-        {
-            get { return _DefaultSymbol; }
-            set { _DefaultSymbol = value; }
-        }
+        public moSymbol DefaultSymbol { get; set; }
 
-        public List<moSymbol> Symbols
-        {
-            get { return _Symbols; }
-            set { _Symbols = value; }
-        }
-        public List<double> BreakValues
-        {
-            get { return _BreakValues; }
-            set { _BreakValues = value; }
-        }
+        public List<moSymbol> Symbols { get; set; } = new List<moSymbol>();
+        public List<double> BreakValues { get; set; } = new List<double>();
 
         #endregion
 
@@ -92,9 +67,9 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public double GetBreakValue(Int32 index)
+        public double GetBreakValue(int index)
         {
-            return _BreakValues[index];
+            return BreakValues[index];
         }
 
         /// <summary>
@@ -102,9 +77,9 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <param name="value"></param>
-        public void SetBreakValue(Int32 index, double breakValue)
+        public void SetBreakValue(int index, double breakValue)
         {
-            _BreakValues[index] = breakValue;
+            BreakValues[index] = breakValue;
         }
 
         /// <summary>
@@ -112,9 +87,9 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public moSymbol GetSymbol(Int32 index)
+        public moSymbol GetSymbol(int index)
         {
-            return _Symbols[index];
+            return Symbols[index];
         }
 
         /// <summary>
@@ -122,9 +97,9 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <param name="value"></param>
-        public void SetSymbol(Int32 index, moSymbol symbol)
+        public void SetSymbol(int index, moSymbol symbol)
         {
-            _Symbols[index] = symbol;
+            Symbols[index] = symbol;
         }
 
         /// <summary>
@@ -134,8 +109,8 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void AddBreakValue(double value, moSymbol symbol)
         {
-            _BreakValues.Add(value);
-            _Symbols.Add(symbol);
+            BreakValues.Add(value);
+            Symbols.Add(symbol);
         }
 
         /// <summary>
@@ -149,8 +124,8 @@ namespace MyMapObjects
             {
                 throw new Exception("the length of the two arrays is not equal!");
             }
-            _BreakValues.AddRange(values);
-            _Symbols.AddRange(symbols);
+            BreakValues.AddRange(values);
+            Symbols.AddRange(symbols);
         }
 
         /// <summary>
@@ -160,24 +135,31 @@ namespace MyMapObjects
         /// <returns></returns>
         public moSymbol FindSymbol(double value)
         {
-            Int32 sBreakCount = _BreakValues.Count;
+            int sBreakCount = BreakValues.Count;
             if (sBreakCount == 0)
-                return _DefaultSymbol;
-            if (value < _BreakValues[0])    //小于第一个分割值
             {
-                return _Symbols[0];
+                return DefaultSymbol;
+            }
+
+            if (value < BreakValues[0])    //小于第一个分割值
+            {
+                return Symbols[0];
             }
             else
             {
-                for (Int32 i = 0; i <= sBreakCount - 2; i++)
+                for (int i = 0; i <= sBreakCount - 2; i++)
                 {
-                    if (i < sBreakCount - 2 && value >= _BreakValues[i] && value < _BreakValues[i + 1])
-                        return _Symbols[i + 1];
-                    else if (i == sBreakCount - 2 && value >= _BreakValues[i] && value <= _BreakValues[i + 1])
-                        return _Symbols[i + 1];
+                    if (i < sBreakCount - 2 && value >= BreakValues[i] && value < BreakValues[i + 1])
+                    {
+                        return Symbols[i + 1];
+                    }
+                    else if (i == sBreakCount - 2 && value >= BreakValues[i] && value <= BreakValues[i + 1])
+                    {
+                        return Symbols[i + 1];
+                    }
                 }
             }
-            return _DefaultSymbol;
+            return DefaultSymbol;
         }
         /// <summary>
         /// 为所有点、线符号赋予渐变尺寸
@@ -185,38 +167,40 @@ namespace MyMapObjects
         /// <param name="size"></param>
         public void RampSize(double size)
         {
-            Int32 sBreakCount = _BreakValues.Count;
+            int sBreakCount = BreakValues.Count;
             double[] Size = new double[sBreakCount];
             if (sBreakCount <= 0)
+            {
                 return;
-            else if(sBreakCount <=4)
+            }
+            else if (sBreakCount <= 4)
             {
                 double minSize = size * 2 / sBreakCount;
-                for(int i =0;i<sBreakCount;i++)
+                for (int i = 0; i < sBreakCount; i++)
                 {
-                    Size[i] = (i+1) * minSize;
+                    Size[i] = (i + 1) * minSize;
                 }
             }
             else
             {
                 double minSize = size / 4;
-                for(int i=0;i<sBreakCount;i++)
+                for (int i = 0; i < sBreakCount; i++)
                 {
-                    Size[i] = (i+1) * minSize;
+                    Size[i] = (i + 1) * minSize;
                 }
             }
-            for (Int32 i = 0; i < sBreakCount ; i++)
+            for (int i = 0; i < sBreakCount; i++)
             {
-                if (_Symbols[i] != null)
+                if (Symbols[i] != null)
                 {
-                    if (_Symbols[i].SymbolType == moSymbolTypeConstant.SimpleMarkerSymbol)
+                    if (Symbols[i].SymbolType == moSymbolTypeConstant.SimpleMarkerSymbol)
                     {
-                        moSimpleMarkerSymbol sSymbol = (moSimpleMarkerSymbol)_Symbols[i];
+                        moSimpleMarkerSymbol sSymbol = (moSimpleMarkerSymbol)Symbols[i];
                         sSymbol.Size = Size[i];
                     }
-                    else if (_Symbols[i].SymbolType == moSymbolTypeConstant.SimpleLineSymbol)
+                    else if (Symbols[i].SymbolType == moSymbolTypeConstant.SimpleLineSymbol)
                     {
-                        moSimpleLineSymbol sSymbol = (moSimpleLineSymbol)_Symbols[i];
+                        moSimpleLineSymbol sSymbol = (moSimpleLineSymbol)Symbols[i];
                         sSymbol.Size = Size[i];
                     }
                 }
@@ -231,16 +215,27 @@ namespace MyMapObjects
         /// <param name="endColor"></param>
         public void RampColor(Color startColor, Color endColor)
         {
-            Int32 sBreakCount = _BreakValues.Count;
+            int sBreakCount = BreakValues.Count;
             if (sBreakCount <= 0)
+            {
                 return;
-            Int32 A1 = startColor.A, R1 = startColor.R, G1 = startColor.G, B1 = startColor.B;
-            Int32 A2 = endColor.A, R2 = endColor.R, G2 = endColor.G, B2 = endColor.B;
-            Int32 A, R, G, B;
+            }
+
+            int A1 = startColor.A;
+            _ = startColor.R;
+            _ = startColor.G;
+            _ = startColor.B;
+            int A2 = endColor.A;
+            _ = endColor.R;
+            _ = endColor.G;
+            _ = endColor.B;
+            int A, R, G, B;
             double H, S, V;
             Color[] sColors = new Color[sBreakCount];
             if (sBreakCount == 1)
+            {
                 sColors[0] = startColor;
+            }
             else
             {
                 //将起始和终止颜色转换为HSV
@@ -248,36 +243,36 @@ namespace MyMapObjects
                 double[] sEndHSV = RGBToHSV(endColor.R, endColor.G, endColor.B);
                 sColors[0] = startColor;
                 sColors[sBreakCount - 1] = endColor;
-                for (Int32 i = 1; i <= sBreakCount - 2; i++)
+                for (int i = 1; i <= sBreakCount - 2; i++)
                 {
-                    H = sStartHSV[0] + i * (sEndHSV[0] - sStartHSV[0]) / sBreakCount;
-                    S = sStartHSV[1] + i * (sEndHSV[1] - sStartHSV[1]) / sBreakCount;
-                    V = sStartHSV[2] + i * (sEndHSV[2] - sStartHSV[2]) / sBreakCount;
+                    H = sStartHSV[0] + (i * (sEndHSV[0] - sStartHSV[0]) / sBreakCount);
+                    S = sStartHSV[1] + (i * (sEndHSV[1] - sStartHSV[1]) / sBreakCount);
+                    V = sStartHSV[2] + (i * (sEndHSV[2] - sStartHSV[2]) / sBreakCount);
                     byte[] sRGB = HSVToRGB(H, S, V);
-                    A = A1 + i * (A2 - A1) / sBreakCount;
+                    A = A1 + (i * (A2 - A1) / sBreakCount);
                     R = sRGB[0];
                     G = sRGB[1];
                     B = sRGB[2];
                     sColors[i] = Color.FromArgb(A, R, G, B);
                 }
             }
-            for (Int32 i = 0; i <= sBreakCount - 1; i++)
+            for (int i = 0; i <= sBreakCount - 1; i++)
             {
-                if (_Symbols[i] != null)
+                if (Symbols[i] != null)
                 {
-                    if (_Symbols[i].SymbolType == moSymbolTypeConstant.SimpleMarkerSymbol)
+                    if (Symbols[i].SymbolType == moSymbolTypeConstant.SimpleMarkerSymbol)
                     {
-                        moSimpleMarkerSymbol sSymbol = (moSimpleMarkerSymbol)_Symbols[i];
+                        moSimpleMarkerSymbol sSymbol = (moSimpleMarkerSymbol)Symbols[i];
                         sSymbol.Color = sColors[i];
                     }
-                    else if (_Symbols[i].SymbolType == moSymbolTypeConstant.SimpleLineSymbol)
+                    else if (Symbols[i].SymbolType == moSymbolTypeConstant.SimpleLineSymbol)
                     {
-                        moSimpleLineSymbol sSymbol = (moSimpleLineSymbol)_Symbols[i];
+                        moSimpleLineSymbol sSymbol = (moSimpleLineSymbol)Symbols[i];
                         sSymbol.Color = sColors[i];
                     }
-                    else if (_Symbols[i].SymbolType == moSymbolTypeConstant.SimpleFillSymbol)
+                    else if (Symbols[i].SymbolType == moSymbolTypeConstant.SimpleFillSymbol)
                     {
-                        moSimpleFillSymbol sSymbol = (moSimpleFillSymbol)_Symbols[i];
+                        moSimpleFillSymbol sSymbol = (moSimpleFillSymbol)Symbols[i];
                         sSymbol.Color = sColors[i];
                     }
                 }
@@ -291,46 +286,52 @@ namespace MyMapObjects
         /// <returns></returns>
         public override moRenderer Clone()
         {
-            moClassBreaksRenderer sRenderer = new moClassBreaksRenderer();
-            sRenderer._Field = _Field;
-            sRenderer._HeadTitle = _HeadTitle;
-            sRenderer._ShowHead = _ShowHead;
-
-            Int32 sBreakCount = _BreakValues.Count;
-            for (Int32 i = 0; i <= sBreakCount - 1; i++)
+            moClassBreaksRenderer sRenderer = new moClassBreaksRenderer
             {
-                double sBreakValue = _BreakValues[i];
-                moSymbol sSymbol = null;
-                if (_Symbols[i] != null)
-                    sSymbol = _Symbols[i].Clone();
+                _Field = _Field,
+                _HeadTitle = _HeadTitle,
+                _ShowHead = _ShowHead
+            };
+
+            int sBreakCount = BreakValues.Count;
+            for (int i = 0; i <= sBreakCount - 1; i++)
+            {
+                _ = BreakValues[i];
+                if (Symbols[i] != null)
+                {
+                    _ = Symbols[i].Clone();
+                }
                 //sRenderer.AddUniqueValue(sValue, sSymbol);
             }
-            if (_DefaultSymbol != null)
+            if (DefaultSymbol != null)
             {
-                sRenderer.DefaultSymbol = _DefaultSymbol.Clone();
+                sRenderer.DefaultSymbol = DefaultSymbol.Clone();
             }
             sRenderer._ShowDefaultSymbol = _ShowDefaultSymbol;
             return sRenderer;
         }
         public moClassBreaksRenderer Clone1()
         {
-            moClassBreaksRenderer sRenderer = new moClassBreaksRenderer();
-            sRenderer._Field = _Field;
-            sRenderer._HeadTitle = _HeadTitle;
-            sRenderer._ShowHead = _ShowHead;
-
-            Int32 sBreakCount = _BreakValues.Count;
-            for (Int32 i = 0; i <= sBreakCount - 1; i++)
+            moClassBreaksRenderer sRenderer = new moClassBreaksRenderer
             {
-                double sBreakValue = _BreakValues[i];
-                moSymbol sSymbol = null;
-                if (_Symbols[i] != null)
-                    sSymbol = _Symbols[i].Clone();
+                _Field = _Field,
+                _HeadTitle = _HeadTitle,
+                _ShowHead = _ShowHead
+            };
+
+            int sBreakCount = BreakValues.Count;
+            for (int i = 0; i <= sBreakCount - 1; i++)
+            {
+                _ = BreakValues[i];
+                if (Symbols[i] != null)
+                {
+                    _ = Symbols[i].Clone();
+                }
                 //sRenderer.AddUniqueValue(sValue, sSymbol);
             }
-            if (_DefaultSymbol != null)
+            if (DefaultSymbol != null)
             {
-                sRenderer.DefaultSymbol = _DefaultSymbol.Clone();
+                sRenderer.DefaultSymbol = DefaultSymbol.Clone();
             }
             sRenderer._ShowDefaultSymbol = _ShowDefaultSymbol;
             return sRenderer;
@@ -346,18 +347,18 @@ namespace MyMapObjects
             double H, S, V;
             byte sMax = sRGB.Max();
             byte sMin = sRGB.Min();
-            V = (double)sMax;
+            V = sMax;
             if (sMax != sMin)
             {
                 S = (sMax - sMin) / sMax;
-                if (R == sMax)
-                    H = (G - B) / (sMax - sMin) * 60;
-                else if (G == sMax)
-                    H = 120 + (B - R) / (sMax - sMin) * 60;
-                else
-                    H = 240 + (R - G) / (sMax - sMin) * 60;
+                H = R == sMax
+                    ? (G - B) / (sMax - sMin) * 60
+                    : G == sMax ? 120 + ((B - R) / (sMax - sMin) * 60) : 240 + ((R - G) / (sMax - sMin) * 60);
+
                 if (H < 0)
-                    H = H + 360;
+                {
+                    H += 360;
+                }
             }
             else
             {
@@ -382,12 +383,12 @@ namespace MyMapObjects
             }
             else
             {
-                H = H / 60;
-                Int32 i = (Int32)H;
+                H /= 60;
+                int i = (int)H;
                 double f = H - i;
                 double aa = V * (1 - S);
-                double bb = V * (1 - S * f);
-                double cc = V * (1 - S * (1 - f));
+                double bb = V * (1 - (S * f));
+                double cc = V * (1 - (S * (1 - f)));
                 switch (i)
                 {
                     case 0:

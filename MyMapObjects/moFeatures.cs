@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace MyMapObjects
 {
@@ -9,7 +6,7 @@ namespace MyMapObjects
     {
         #region 字段
 
-        private List<moFeature> _Features;   //要素集合
+        private readonly List<moFeature> _Features;   //要素集合
         #endregion
 
         #region 构造函数
@@ -25,10 +22,7 @@ namespace MyMapObjects
         /// <summary>
         /// 获取要素数目
         /// </summary>
-        public Int32 Count
-        {
-            get { return _Features.Count; }
-        }
+        public int Count => _Features.Count;
 
         #endregion
 
@@ -39,7 +33,7 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public moFeature GetItem(Int32 index)
+        public moFeature GetItem(int index)
         {
             return _Features[index];
         }
@@ -49,7 +43,7 @@ namespace MyMapObjects
         /// </summary>
         /// <param name="index"></param>
         /// <param name="feature"></param>
-        public void SetItem(Int32 index, moFeature feature)
+        public void SetItem(int index, moFeature feature)
         {
             _Features[index] = feature;
         }
@@ -67,7 +61,7 @@ namespace MyMapObjects
         /// 删除指定索引号的元素
         /// </summary>
         /// <param name="index"></param>
-        public void RemoveAt(Int32 index)
+        public void RemoveAt(int index)
         {
             _Features.RemoveAt(index);
         }
@@ -78,7 +72,7 @@ namespace MyMapObjects
         /// <param name="features"></param>
         public void Remove(moFeature feature)
         {
-            _Features.Remove(feature);
+            _ = _Features.Remove(feature);
         }
 
         /// <summary>

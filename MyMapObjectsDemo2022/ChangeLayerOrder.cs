@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MyMapObjectsDemo2022
 {
     public partial class ChangeLayerOrder : Form
     {
-        private MyMapObjects.moLayers moLayers;
-        private MyMapObjects.moMapControl moMap;
+        private readonly MyMapObjects.moLayers moLayers;
+        private readonly MyMapObjects.moMapControl moMap;
         private const int ITEM_PADDING = 10;//各项之间的边距
 
         public ChangeLayerOrder(MyMapObjects.moLayers moLayers, MyMapObjects.moMapControl moMap)
@@ -26,7 +21,7 @@ namespace MyMapObjectsDemo2022
             for (int i = 0; i < moLayers.Count; i++)
             {
                 MyMapObjects.moMapLayer moMapLayer = moLayers.GetItem(i);
-                string item = moLayers.GetItem(i).Name+"\n" + "\n";
+                string item = moLayers.GetItem(i).Name + "\n" + "\n";
                 item += "  - 图层类型：" + moMapLayer.ShapeType.ToString() + "\n" + "\n";
                 item += "  - 图层字段：";
                 for (int j = 0; j < moMapLayer.AttributeFields.Count; j++)
@@ -40,11 +35,11 @@ namespace MyMapObjectsDemo2022
                     {
                         item += moMapLayer.AttributeFields.GetItem(j).Name + ",";
                     }
- 
+
 
                 }
 
-                item += "\n"+"\n"+"  - 渲染类型：" + moMapLayer.Renderer.RendererType.ToString() + "\n" + "\n";
+                item += "\n" + "\n" + "  - 渲染类型：" + moMapLayer.Renderer.RendererType.ToString() + "\n" + "\n";
 
                 if (moMapLayer.LabelRenderer == null)
                 {
@@ -61,10 +56,10 @@ namespace MyMapObjectsDemo2022
 
                 }
 
-                
 
 
-                this.listBox1.Items.Add(item);
+
+                _ = listBox1.Items.Add(item);
             }
 
         }
@@ -80,13 +75,13 @@ namespace MyMapObjectsDemo2022
             //超范围后⾃动换⾏
             Size size = TextRenderer.MeasureText("[" + index + "]" + text, listBox.Font, listBox.Size, TextFormatFlags.WordBreak);
             e.ItemWidth = size.Width;
-            if (index == this.listBox1.Items.Count - 1)
+            if (index == listBox1.Items.Count - 1)
             {
-                e.ItemHeight = size.Height + ITEM_PADDING * 3;//适当多⼀点⾼度，避免太挤s
+                e.ItemHeight = size.Height + (ITEM_PADDING * 3);//适当多⼀点⾼度，避免太挤s
             }
             else
             {
-                e.ItemHeight = size.Height + ITEM_PADDING * 2;//适当多⼀点⾼度，避免太挤s
+                e.ItemHeight = size.Height + (ITEM_PADDING * 2);//适当多⼀点⾼度，避免太挤s
             }
         }
 
@@ -120,42 +115,42 @@ namespace MyMapObjectsDemo2022
         private void listBox1_DragDrop(object sender, DragEventArgs e)
         {
             Point point = listBox1.PointToClient(new Point(e.X, e.Y));
-            int index_to = this.listBox1.IndexFromPoint(point);
+            int index_to = listBox1.IndexFromPoint(point);
             if (index_to < 0)
             {
-                index_to = this.listBox1.Items.Count - 1;
+                index_to = listBox1.Items.Count - 1;
             }
             //获取拖放的数据内容
             object data = e.Data.GetData(typeof(string));
             //获取拖放的数据在原先图层中的顺序
             int index_from = -1;
-            for (int i = 0; i < this.listBox1.Items.Count; i++)
+            for (int i = 0; i < listBox1.Items.Count; i++)
             {
-                if (this.listBox1.Items[i] == data)
+                if (listBox1.Items[i] == data)
                 {
                     index_from = i;
                     break;
                 }
             }
             //删除元数据
-            this.listBox1.Items.Remove(data);
+            listBox1.Items.Remove(data);
             //插入目标数据
-            this.listBox1.Items.Insert(index_to, data);
+            listBox1.Items.Insert(index_to, data);
 
-            this.moLayers.MoveTo(index_from, index_to);
-            this.moMap.RefreshLayerList();
-            this.moMap.RedrawMap();
+            moLayers.MoveTo(index_from, index_to);
+            moMap.RefreshLayerList();
+            moMap.RedrawMap();
         }
 
         private void listBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (this.listBox1.SelectedItem == null)
+            if (listBox1.SelectedItem == null)
             {
                 return;
             }
             //开始拖放操作，DragDropEffects为枚举类型。
             //DragDropEffects.Move 为将源数据移动到目标数据
-            this.listBox1.DoDragDrop(this.listBox1.SelectedItem, DragDropEffects.Move);
+            _ = listBox1.DoDragDrop(listBox1.SelectedItem, DragDropEffects.Move);
         }
     }
 }

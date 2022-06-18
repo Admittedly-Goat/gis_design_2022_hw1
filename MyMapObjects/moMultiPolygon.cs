@@ -1,19 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MyMapObjects
+﻿namespace MyMapObjects
 {
     public class moMultiPolygon : moGeometry
     {
         #region 字段
 
-        private moParts _Parts; //部件集合
-        double _MinX = double.MaxValue;
-        double _MaxX = double.MinValue;
-        double _MinY = double.MaxValue;
-        double _MaxY = double.MinValue;
 
         #endregion
 
@@ -21,18 +11,18 @@ namespace MyMapObjects
 
         public moMultiPolygon()
         {
-            _Parts = new moParts();
+            Parts = new moParts();
         }
 
         public moMultiPolygon(moPoints points)
         {
-            _Parts = new moParts();
-            _Parts.Add(points);
+            Parts = new moParts();
+            Parts.Add(points);
         }
 
         public moMultiPolygon(moParts parts)
         {
-            _Parts = parts;
+            Parts = parts;
         }
 
         #endregion
@@ -42,43 +32,27 @@ namespace MyMapObjects
         /// <summary>
         /// 获取或设置部件集合
         /// </summary>
-        public moParts Parts
-        {
-            get { return _Parts; }
-            set { _Parts = value; }
-        }
+        public moParts Parts { get; set; }
 
         /// <summary>
         /// 获取最小X坐标
         /// </summary>
-        public double MinX
-        {
-            get { return _MinX; }
-        }
+        public double MinX { get; private set; } = double.MaxValue;
 
         /// <summary>
         /// 获取最大X坐标
         /// </summary>
-        public double MaxX
-        {
-            get { return _MaxX; }
-        }
+        public double MaxX { get; private set; } = double.MinValue;
 
         /// <summary>
         /// 获取最小Y坐标
         /// </summary>
-        public double MinY
-        {
-            get { return _MinY; }
-        }
+        public double MinY { get; private set; } = double.MaxValue;
 
         /// <summary>
         /// 获取最大Y坐标
         /// </summary>
-        public double MaxY
-        {
-            get { return _MaxY; }
-        }
+        public double MaxY { get; private set; } = double.MinValue;
 
         #endregion
 
@@ -90,8 +64,8 @@ namespace MyMapObjects
         /// <returns></returns>
         public moRectangle GetEnvelope()
         {
-            moRectangle sRect = new moRectangle(_MinX,
-                _MaxX, _MinY, _MaxY);
+            moRectangle sRect = new moRectangle(MinX,
+                MaxX, MinY, MaxY);
             return sRect;
         }
 
@@ -109,12 +83,14 @@ namespace MyMapObjects
         /// <returns></returns>
         public moMultiPolygon Clone()
         {
-            moMultiPolygon sMultiPolygon = new moMultiPolygon();
-            sMultiPolygon.Parts = _Parts.Clone();
-            sMultiPolygon._MinX = _MinX;
-            sMultiPolygon._MaxX = _MaxX;
-            sMultiPolygon._MinY = _MinY;
-            sMultiPolygon._MaxY = _MaxY;
+            moMultiPolygon sMultiPolygon = new moMultiPolygon
+            {
+                Parts = Parts.Clone(),
+                MinX = MinX,
+                MaxX = MaxX,
+                MinY = MinY,
+                MaxY = MaxY
+            };
             return sMultiPolygon;
         }
 
@@ -127,23 +103,34 @@ namespace MyMapObjects
         {
             double sMinX = double.MaxValue, sMaxX = double.MinValue;
             double sMinY = double.MaxValue, sMaxY = double.MinValue;
-            Int32 sPartCount = _Parts.Count;
-            for (Int32 i = 0; i <= sPartCount - 1; i++)
+            int sPartCount = Parts.Count;
+            for (int i = 0; i <= sPartCount - 1; i++)
             {
-                _Parts.GetItem(i).UpdateExtent();
-                if (_Parts.GetItem(i).MinX < sMinX)
-                    sMinX = _Parts.GetItem(i).MinX;
-                if (_Parts.GetItem(i).MaxX > sMaxX)
-                    sMaxX = _Parts.GetItem(i).MaxX;
-                if (_Parts.GetItem(i).MinY < sMinY)
-                    sMinY = _Parts.GetItem(i).MinY;
-                if (_Parts.GetItem(i).MaxY > sMaxY)
-                    sMaxY = _Parts.GetItem(i).MaxY;
+                Parts.GetItem(i).UpdateExtent();
+                if (Parts.GetItem(i).MinX < sMinX)
+                {
+                    sMinX = Parts.GetItem(i).MinX;
+                }
+
+                if (Parts.GetItem(i).MaxX > sMaxX)
+                {
+                    sMaxX = Parts.GetItem(i).MaxX;
+                }
+
+                if (Parts.GetItem(i).MinY < sMinY)
+                {
+                    sMinY = Parts.GetItem(i).MinY;
+                }
+
+                if (Parts.GetItem(i).MaxY > sMaxY)
+                {
+                    sMaxY = Parts.GetItem(i).MaxY;
+                }
             }
-            _MinX = sMinX;
-            _MaxX = sMaxX;
-            _MinY = sMinY;
-            _MaxY = sMaxY;
+            MinX = sMinX;
+            MaxX = sMaxX;
+            MinY = sMinY;
+            MaxY = sMaxY;
         }
 
         #endregion

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+﻿using System.Drawing;
 
 namespace MyMapObjects
 {
@@ -10,54 +6,32 @@ namespace MyMapObjects
     public class moUserDrawingTool
     {
         #region 字段
-        private Graphics _MyGraphics;               //绘图对象
-        private moRectangle _Extent;              //绘图区域左上点（0，0）对应的投影坐标系中的点，即投影坐标系相对屏幕坐标系的平移量
-        private double _MapScale = 10000;               //比例尺的倒数
-        private double _dpm = 96 / 0.0254;              //屏幕上每米代表的象素数
-        private double _mpu = 1.0;                      //1个地图坐标单位代表的米数，一般为1.
         #endregion
 
         #region 构造函数
 
         internal moUserDrawingTool(Graphics graphics, moRectangle extent, double mapScale, double dpm, double mpu)
         {
-            _MyGraphics = graphics;
-            _Extent = extent;
-            _MapScale = mapScale;
-            _dpm = dpm;
-            _mpu = mpu;
+            MyGraphics = graphics;
+            Extent = extent;
+            MapScale = mapScale;
+            this.dpm = dpm;
+            this.mpu = mpu;
         }
 
         #endregion
 
         #region 属性
 
-        internal Graphics MyGraphics
-        {
-            get { return _MyGraphics; }
-            set { _MyGraphics = value; }
-        }
+        internal Graphics MyGraphics { get; set; }
 
-        internal moRectangle Extent
-        {
-            get { return _Extent; }
-            set { _Extent = value; }
-        }
+        internal moRectangle Extent { get; set; }
 
-        internal double MapScale
-        {
-            get { return _MapScale; }
-        }
+        internal double MapScale { get; } = 10000;
 
-        internal double dpm
-        {
-            get { return _dpm; }
-        }
+        internal double dpm { get; } = 96 / 0.0254;
 
-        internal double mpu
-        {
-            get { return _mpu; }
-        }
+        internal double mpu { get; } = 1.0;
 
         #endregion
 
@@ -71,7 +45,7 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void DrawPoint(moPoint point, moSymbol symbol)
         {
-            moMapDrawingTools.DrawPoint(_MyGraphics, _Extent, _MapScale, _dpm, _mpu, point, symbol);
+            moMapDrawingTools.DrawPoint(MyGraphics, Extent, MapScale, dpm, mpu, point, symbol);
         }
 
         /// <summary>
@@ -81,7 +55,7 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void DrawPoints(moPoints points, moSymbol symbol)
         {
-            moMapDrawingTools.DrawPoints(_MyGraphics, _Extent, _MapScale, _dpm, _mpu, points, symbol);
+            moMapDrawingTools.DrawPoints(MyGraphics, Extent, MapScale, dpm, mpu, points, symbol);
         }
 
         /// <summary>
@@ -91,7 +65,7 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void DrawRectangle(moRectangle rectangle, moSymbol symbol)
         {
-            moMapDrawingTools.DrawRectangle(_MyGraphics, _Extent, _MapScale, _dpm, _mpu, rectangle, symbol);
+            moMapDrawingTools.DrawRectangle(MyGraphics, Extent, MapScale, dpm, mpu, rectangle, symbol);
         }
 
         /// <summary>
@@ -102,7 +76,7 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void DrawLine(moPoint point1, moPoint point2, moSymbol symbol)
         {
-            moMapDrawingTools.DrawLine(_MyGraphics, _Extent, _MapScale, _dpm, _mpu, point1, point2, symbol);
+            moMapDrawingTools.DrawLine(MyGraphics, Extent, MapScale, dpm, mpu, point1, point2, symbol);
         }
 
         /// <summary>
@@ -112,7 +86,7 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void DrawPolyline(moPoints points, moSymbol symbol)
         {
-            moMapDrawingTools.DrawPolyline(_MyGraphics, _Extent, _MapScale, _dpm, _mpu, points, symbol);
+            moMapDrawingTools.DrawPolyline(MyGraphics, Extent, MapScale, dpm, mpu, points, symbol);
         }
 
         /// <summary>
@@ -122,7 +96,7 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void DrawPolygon(moPoints points, moSymbol symbol)
         {
-            moMapDrawingTools.DrawPolygon(_MyGraphics, _Extent, _MapScale, _dpm, _mpu, points, symbol);
+            moMapDrawingTools.DrawPolygon(MyGraphics, Extent, MapScale, dpm, mpu, points, symbol);
         }
 
         /// <summary>
@@ -132,7 +106,7 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void DrawMultiPolyline(moMultiPolyline multiPolyline, moSymbol symbol)
         {
-            moMapDrawingTools.DrawMultiPolyline(_MyGraphics, _Extent, _MapScale, _dpm, _mpu, multiPolyline, symbol);
+            moMapDrawingTools.DrawMultiPolyline(MyGraphics, Extent, MapScale, dpm, mpu, multiPolyline, symbol);
         }
 
         /// <summary>
@@ -142,7 +116,7 @@ namespace MyMapObjects
         /// <param name="symbol"></param>
         public void DrawMultiPolygon(moMultiPolygon multiPolygon, moSymbol symbol)
         {
-            moMapDrawingTools.DrawMultiPolygon(_MyGraphics, _Extent, _MapScale, _dpm, _mpu, multiPolygon, symbol);
+            moMapDrawingTools.DrawMultiPolygon(MyGraphics, Extent, MapScale, dpm, mpu, multiPolygon, symbol);
         }
 
         #endregion
