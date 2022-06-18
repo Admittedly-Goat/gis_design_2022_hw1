@@ -136,38 +136,21 @@ namespace MyMapObjectsDemo2022
 
         private string getSymbolStyleString(string style)
         {
-            if (style == "Circle")
-            {
-
-                return buttonShowSymbol.Text = "○";
-            }
-            else if (style == "SolidCircle")
-            {
-
-                return buttonShowSymbol.Text = "●";
-            }
-            else if (style == "Triangle")
-            {
-
-                return buttonShowSymbol.Text = "△";
-            }
-
-            else if (style == "SolidTriangle")
-            {
-
-                return buttonShowSymbol.Text = "▲";
-            }
-
-            else
-            {
-                return style == "Square"
-                    ? (buttonShowSymbol.Text = "□")
-                    : style == "SolidSquare"
-                                    ? (buttonShowSymbol.Text = "■")
-                                    : style == "CircleDot"
-                                                    ? (buttonShowSymbol.Text = "☉")
-                                                    : style == "CircleCircle" ? (buttonShowSymbol.Text = "◎") : (buttonShowSymbol.Text = "●");
-            }
+            return style == "Circle"
+                ? (buttonShowSymbol.Text = "○")
+                : style == "SolidCircle"
+                    ? (buttonShowSymbol.Text = "●")
+                    : style == "Triangle"
+                                    ? (buttonShowSymbol.Text = "△")
+                                    : style == "SolidTriangle"
+                                                    ? (buttonShowSymbol.Text = "▲")
+                                                    : style == "Square"
+                                                                    ? (buttonShowSymbol.Text = "□")
+                                                                    : style == "SolidSquare"
+                                                                                    ? (buttonShowSymbol.Text = "■")
+                                                                                    : style == "CircleDot"
+                                                                                                    ? (buttonShowSymbol.Text = "☉")
+                                                                                                    : style == "CircleCircle" ? (buttonShowSymbol.Text = "◎") : (buttonShowSymbol.Text = "●");
 
 
         }
@@ -200,6 +183,11 @@ namespace MyMapObjectsDemo2022
                 Close();
             }
 
+
+        }
+
+        private void buttonShowSymbol_Click(object sender, EventArgs e)
+        {
 
         }
     }

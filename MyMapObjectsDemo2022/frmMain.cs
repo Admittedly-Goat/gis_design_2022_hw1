@@ -1795,6 +1795,17 @@ namespace MyMapObjectsDemo2022
             }
             else
             {
+                DisableAllButton();
+                menuStrip1.Enabled = true;
+                导出ToolStripMenuItem.Enabled = false;
+                图层ToolStripMenuItem.Enabled = false;
+                删除已选择的图形ToolStripMenuItem.Enabled = false;
+                查询ToolStripMenuItem.Enabled = false;
+                坐标系统设置ToolStripMenuItem.Enabled = false;
+                删除ToolStripMenuItem.Enabled = false;
+                移动已选择ToolStripMenuItem.Enabled = false;
+                增加新要素ToolStripMenuItem.Enabled = false;
+                编辑节点ToolStripMenuItem.Enabled = false;
                 btnSketchPolygon_Click(sender, e);
                 checkedListBox1.SelectedIndex = selectedIndex;
             }
@@ -1816,6 +1827,17 @@ namespace MyMapObjectsDemo2022
             }
             else
             {
+                DisableAllButton();
+                menuStrip1.Enabled = true;
+                导出ToolStripMenuItem.Enabled = false;
+                图层ToolStripMenuItem.Enabled = false;
+                查询ToolStripMenuItem.Enabled = false;
+                删除已选择的图形ToolStripMenuItem.Enabled = false;
+                坐标系统设置ToolStripMenuItem.Enabled = false;
+                删除ToolStripMenuItem.Enabled = false;
+                移动已选择ToolStripMenuItem.Enabled = false;
+                增加新要素ToolStripMenuItem.Enabled = false;
+                编辑节点ToolStripMenuItem.Enabled = false;
                 checkedListBox1.SelectedIndex = selectedIndex;
                 mMapOpStyle = 9;
             }
@@ -1837,6 +1859,17 @@ namespace MyMapObjectsDemo2022
             }
             else
             {
+                DisableAllButton();
+                menuStrip1.Enabled = true;
+                导出ToolStripMenuItem.Enabled = false;
+                图层ToolStripMenuItem.Enabled = false;
+                查询ToolStripMenuItem.Enabled = false;
+                坐标系统设置ToolStripMenuItem.Enabled = false;
+                删除已选择的图形ToolStripMenuItem.Enabled = false;
+                删除ToolStripMenuItem.Enabled = false;
+                移动已选择ToolStripMenuItem.Enabled = false;
+                增加新要素ToolStripMenuItem.Enabled = false;
+                编辑节点ToolStripMenuItem.Enabled = false;
                 checkedListBox1.SelectedIndex = selectedIndex;
                 mMapOpStyle = 10;
             }
@@ -1921,6 +1954,16 @@ namespace MyMapObjectsDemo2022
                 btnEndPointSketch_Click(sender, e);
             }
             checkedListBox1.SelectedIndex = selectedIndex;
+            EnableAllButton();
+            导出ToolStripMenuItem.Enabled = true;
+            图层ToolStripMenuItem.Enabled = true;
+            查询ToolStripMenuItem.Enabled = true;
+            坐标系统设置ToolStripMenuItem.Enabled = true;
+            删除ToolStripMenuItem.Enabled = true;
+            删除已选择的图形ToolStripMenuItem.Enabled = true;
+            移动已选择ToolStripMenuItem.Enabled = true;
+            增加新要素ToolStripMenuItem.Enabled = true;
+            编辑节点ToolStripMenuItem.Enabled = true;
         }
 
         private void 停止部分ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2328,6 +2371,7 @@ namespace MyMapObjectsDemo2022
             vertexEditorForm = new VertexEditor(RedrawMapForVertexEditing, sLayer.SelectedFeatures.GetItem(0), CallBackMovingVertex, CallBackNewPartMoMap, AddNewVertexMoMap, GeomSelect, ExitEditing);
             vertexEditorForm.Show();
             checkedListBox1.SelectedIndex = layerIndex;
+            DisableAllButton();
         }
 
         private void CallBackMovingVertex()
@@ -2354,11 +2398,8 @@ namespace MyMapObjectsDemo2022
         private void ExitEditing()
         {
             mEditingGeometry = null;
-            if (vertexEditorForm != null)
-            {
-                vertexEditorForm.Close();
-            }
             RedrawMapForVertexEditing();
+            EnableAllButton();
         }
 
         private void 简单渲染ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2827,15 +2868,25 @@ namespace MyMapObjectsDemo2022
                 _ = cForm.ShowDialog();
             }
             checkedListBox1.SelectedIndex = identifySelectedLayerIndex;
-
-
-
-
         }
 
         private void 修改样式ToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void DisableAllButton()
+        {
+            toolStrip1.Enabled = false;
+            menuStrip1.Enabled = false;
+            checkedListBox1.Enabled = false;
+        }
+
+        private void EnableAllButton()
+        {
+            toolStrip1.Enabled = true;
+            menuStrip1.Enabled = true;
+            checkedListBox1.Enabled = true;
         }
     }
 }

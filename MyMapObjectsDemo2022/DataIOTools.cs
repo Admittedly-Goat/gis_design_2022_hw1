@@ -65,26 +65,19 @@ namespace MyMapObjectsDemo2022
             foreach (dynamic i in geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>().Keys)
             {
                 int sValueType = -1;
-                if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(short))
-                {
-                    sValueType = 0;
-                }
-                else if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(int))
-                {
-                    sValueType = 1;
-                }
-                else
-                {
-                    sValueType = geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(long)
-                        ? 2
-                        : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(float)
-                                            ? 3
-                                            : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(double)
-                                                                ? 4
-                                                                : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(string)
-                                                                                    ? 5
-                                                                                    : throw new Exception("无法识别本程序所支持GeoJSON子集的属性信息类型");
-                }
+                sValueType = geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(short)
+                    ? 0
+                    : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(int)
+                        ? 1
+                        : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(long)
+                                            ? 2
+                                            : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(float)
+                                                                ? 3
+                                                                : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(double)
+                                                                                    ? 4
+                                                                                    : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(string)
+                                                                                                        ? 5
+                                                                                                        : throw new Exception("无法识别本程序所支持GeoJSON子集的属性信息类型");
                 MyMapObjects.moField sField = new MyMapObjects.moField(i, (MyMapObjects.moValueTypeConstant)sValueType);
                 sFields.Append(sField);
             }
@@ -165,6 +158,7 @@ namespace MyMapObjectsDemo2022
 
         internal static void SaveLayerAsGeoJSON(string fileLocation, MyMapObjects.moMapLayer layer)
         {
+            // 请参见GeoJSON的定义以理解其层次结构。代码完全按照其层次逐层添加数据而来
             List<string> geojsonPropertyNameList = new List<string>();
             List<MyMapObjects.moValueTypeConstant> geojsonPropertyValueList = new List<MyMapObjects.moValueTypeConstant>();
             for (int i = 0; i < layer.AttributeFields.Count; i++)
@@ -930,26 +924,19 @@ namespace MyMapObjectsDemo2022
             foreach (dynamic i in geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>().Keys)
             {
                 int sValueType = -1;
-                if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(short))
-                {
-                    sValueType = 0;
-                }
-                else if (geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(int))
-                {
-                    sValueType = 1;
-                }
-                else
-                {
-                    sValueType = geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(long)
-                        ? 2
-                        : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(float)
-                                            ? 3
-                                            : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(double)
-                                                                ? 4
-                                                                : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(string)
-                                                                                    ? 5
-                                                                                    : throw new Exception("无法识别本程序所支持GeoJSON子集的属性信息类型");
-                }
+                sValueType = geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(short)
+                    ? 0
+                    : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(int)
+                        ? 1
+                        : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(long)
+                                            ? 2
+                                            : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(float)
+                                                                ? 3
+                                                                : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(double)
+                                                                                    ? 4
+                                                                                    : geojsonData.features[0].properties.ToObject<Dictionary<string, dynamic>>()[i].GetType() == typeof(string)
+                                                                                                        ? 5
+                                                                                                        : throw new Exception("无法识别本程序所支持GeoJSON子集的属性信息类型");
                 MyMapObjects.moField sField = new MyMapObjects.moField(i, (MyMapObjects.moValueTypeConstant)sValueType);
                 sFields.Append(sField);
             }

@@ -20,6 +20,7 @@ namespace MyMapObjectsDemo2022
         private int AddVertexPointIndex;
         private void ReloadAllPartsAndPoints()
         {
+            // 向列表中添加全部的节点和部分信息
             listBox1.Items.Clear();
             if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
             {
@@ -71,6 +72,7 @@ namespace MyMapObjectsDemo2022
 
         private void listBox1_SelectedValueChanged(object sender, EventArgs e)
         {
+            // 更改选定值的行为
             if (listBox1.SelectedIndex == -1)
             {
                 HighlightedPoints.Clear();
@@ -79,6 +81,7 @@ namespace MyMapObjectsDemo2022
                 return;
             }
             string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
+            // 选中的为部分，高亮部分
             if (selectedText.EndsWith("部分"))
             {
                 int selectedPartIndex = Convert.ToInt32(selectedText.Split(']')[0].Split('[')[1]);
@@ -101,6 +104,7 @@ namespace MyMapObjectsDemo2022
                     }
                 }
             }
+            // 选中的为节点，高亮该节点
             else if (selectedText.EndsWith("节点"))
             {
                 HighlightedPoints.Clear();
@@ -132,6 +136,7 @@ namespace MyMapObjectsDemo2022
 
         private void 移动节点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //判断输入有效性
             if (listBox1.SelectedIndex == -1)
             {
                 _ = MessageBox.Show("没有选择节点，无法修改。");
@@ -143,6 +148,7 @@ namespace MyMapObjectsDemo2022
                 _ = MessageBox.Show("您选择的是部分，请选择节点。");
                 return;
             }
+            //选择的是节点，开启节点编辑回调
             else if (selectedText.EndsWith("节点"))
             {
                 if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.Point)
@@ -171,6 +177,7 @@ namespace MyMapObjectsDemo2022
 
         public void MoveVertexCallBack(MyMapObjects.moPoint newPointLocation)
         {
+            //节点编辑回调
             MovingVertex.X = newPointLocation.X;
             MovingVertex.Y = newPointLocation.Y;
             HighlightedPoints.UpdateExtent();
@@ -179,12 +186,14 @@ namespace MyMapObjectsDemo2022
 
         private void 删除部分ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //边界条件判断
             if (listBox1.SelectedIndex == -1)
             {
                 _ = MessageBox.Show("没有选择部分，无法删除。");
                 return;
             }
             string selectedText = listBox1.Items[listBox1.SelectedIndex].ToString();
+            //直接删除该部分在Feature内对应的列表
             if (selectedText.EndsWith("部分"))
             {
                 if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
@@ -289,6 +298,7 @@ namespace MyMapObjectsDemo2022
 
         public void AddPartCallBack()
         {
+            //添加部分的回调
             if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
                 MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
@@ -323,7 +333,7 @@ namespace MyMapObjectsDemo2022
 
         private void AddVertex(int pointIndexDelta)
         {
-            // TODO!!!
+            // 添加节点
             if (listBox1.SelectedIndex == -1)
             {
                 return;
@@ -358,6 +368,7 @@ namespace MyMapObjectsDemo2022
 
         public void AddVertexCallBack(MyMapObjects.moPoint newPoint)
         {
+            //添加节点的回调
             if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
                 MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
@@ -375,12 +386,14 @@ namespace MyMapObjectsDemo2022
 
         private void 图上选点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //调用图上选点frmmain传来的回调
             ReloadAllPartsAndPoints();
             FindByGeometryMoMap();
         }
 
         public void SelectByGeometryCallBack(MyMapObjects.moPoint position)
         {
+            //图上选点在frmmain里的的回调
             if (SelectedFeature.ShapeType == MyMapObjects.moGeometryTypeConstant.MultiPolyline)
             {
                 MyMapObjects.moMultiPolyline featureGeom = (MyMapObjects.moMultiPolyline)SelectedFeature.Geometry;
@@ -444,6 +457,14 @@ namespace MyMapObjectsDemo2022
 
         private void 结束并保存ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //需要调用自己的close，并且调用frmmain里的回调进行修正
+            Close();
+            CloseWindow();
+        }
+
+        private void VertexEditor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            //本身这就是close函数，只需要调用frmmain的回调即可
             CloseWindow();
         }
     }

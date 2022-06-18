@@ -77,13 +77,9 @@ namespace MyMapObjectsDemo2022
 
         private MyMapObjects.moSimpleLineSymbolStyleConstant getSymbolStyleConstant(string style)
         {
-            if (style == "Solid")
-            {
-                return MyMapObjects.moSimpleLineSymbolStyleConstant.Solid;
-            }
-            else
-            {
-                return style == "Dash"
+            return style == "Solid"
+                ? MyMapObjects.moSimpleLineSymbolStyleConstant.Solid
+                : style == "Dash"
                     ? MyMapObjects.moSimpleLineSymbolStyleConstant.Dash
                     : style == "Dot"
                                     ? MyMapObjects.moSimpleLineSymbolStyleConstant.Dot
@@ -92,24 +88,17 @@ namespace MyMapObjectsDemo2022
                                                     : style == "DashDotDot"
                                                                     ? MyMapObjects.moSimpleLineSymbolStyleConstant.DashDotDot
                                                                     : MyMapObjects.moSimpleLineSymbolStyleConstant.Solid;
-            }
         }
 
         private string getSymbolStyleString(string style)
         {
-            if (style == "Solid")
-            {
-
-                return "———————————";
-            }
-            else
-            {
-                return style == "Dash"
-                    ? "-----------"
+            return style == "Solid"
+                ? "-----------"
+                : style == "Dash"
+                    ? "———————————"
                     : style == "Dot"
                                     ? "••••••••••••••••"
                                     : style == "DashDot" ? "-•-•-•-•-•-•-•-•" : style == "DashDotDot" ? "-••-••-••-••-••" : "——————————————";
-            }
 
 
         }
@@ -177,6 +166,16 @@ namespace MyMapObjectsDemo2022
         private void colorComboBoxBackColor_ColorChanged(object sender, ColorChangeArgs e)
         {
             buttonShowSymbol.BackColor = colorComboBoxBackColor.SelectedColor;
+
+        }
+
+        private void buttonShowSymbol_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBoxStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
         }
     }

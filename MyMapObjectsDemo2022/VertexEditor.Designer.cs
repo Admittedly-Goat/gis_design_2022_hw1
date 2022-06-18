@@ -62,35 +62,35 @@
             // 图上选点ToolStripMenuItem
             // 
             this.图上选点ToolStripMenuItem.Name = "图上选点ToolStripMenuItem";
-            this.图上选点ToolStripMenuItem.Size = new System.Drawing.Size(113, 19);
+            this.图上选点ToolStripMenuItem.Size = new System.Drawing.Size(77, 19);
             this.图上选点ToolStripMenuItem.Text = "图上选点";
             this.图上选点ToolStripMenuItem.Click += new System.EventHandler(this.图上选点ToolStripMenuItem_Click);
             // 
             // 移动节点ToolStripMenuItem
             // 
             this.移动节点ToolStripMenuItem.Name = "移动节点ToolStripMenuItem";
-            this.移动节点ToolStripMenuItem.Size = new System.Drawing.Size(113, 19);
+            this.移动节点ToolStripMenuItem.Size = new System.Drawing.Size(77, 19);
             this.移动节点ToolStripMenuItem.Text = "移动节点";
             this.移动节点ToolStripMenuItem.Click += new System.EventHandler(this.移动节点ToolStripMenuItem_Click);
             // 
             // 删除部分ToolStripMenuItem
             // 
             this.删除部分ToolStripMenuItem.Name = "删除部分ToolStripMenuItem";
-            this.删除部分ToolStripMenuItem.Size = new System.Drawing.Size(113, 19);
+            this.删除部分ToolStripMenuItem.Size = new System.Drawing.Size(77, 19);
             this.删除部分ToolStripMenuItem.Text = "删除部分";
             this.删除部分ToolStripMenuItem.Click += new System.EventHandler(this.删除部分ToolStripMenuItem_Click);
             // 
             // 删除节点ToolStripMenuItem
             // 
             this.删除节点ToolStripMenuItem.Name = "删除节点ToolStripMenuItem";
-            this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(113, 19);
+            this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(77, 19);
             this.删除节点ToolStripMenuItem.Text = "删除节点";
             this.删除节点ToolStripMenuItem.Click += new System.EventHandler(this.删除节点ToolStripMenuItem_Click);
             // 
             // 添加部分ToolStripMenuItem
             // 
             this.添加部分ToolStripMenuItem.Name = "添加部分ToolStripMenuItem";
-            this.添加部分ToolStripMenuItem.Size = new System.Drawing.Size(113, 19);
+            this.添加部分ToolStripMenuItem.Size = new System.Drawing.Size(77, 19);
             this.添加部分ToolStripMenuItem.Text = "添加部分";
             this.添加部分ToolStripMenuItem.Click += new System.EventHandler(this.添加部分ToolStripMenuItem_Click);
             // 
@@ -100,7 +100,7 @@
             this.在上部ToolStripMenuItem1,
             this.在下部ToolStripMenuItem1});
             this.添加节点ToolStripMenuItem.Name = "添加节点ToolStripMenuItem";
-            this.添加节点ToolStripMenuItem.Size = new System.Drawing.Size(113, 19);
+            this.添加节点ToolStripMenuItem.Size = new System.Drawing.Size(77, 19);
             this.添加节点ToolStripMenuItem.Text = "添加节点";
             // 
             // 在上部ToolStripMenuItem1
@@ -120,7 +120,7 @@
             // 结束并保存ToolStripMenuItem
             // 
             this.结束并保存ToolStripMenuItem.Name = "结束并保存ToolStripMenuItem";
-            this.结束并保存ToolStripMenuItem.Size = new System.Drawing.Size(113, 19);
+            this.结束并保存ToolStripMenuItem.Size = new System.Drawing.Size(77, 19);
             this.结束并保存ToolStripMenuItem.Text = "结束并保存";
             this.结束并保存ToolStripMenuItem.Click += new System.EventHandler(this.结束并保存ToolStripMenuItem_Click);
             // 
@@ -145,6 +145,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "VertexEditor";
             this.Text = "VertexEditor";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.VertexEditor_FormClosed);
             this.Load += new System.EventHandler(this.VertexEditor_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

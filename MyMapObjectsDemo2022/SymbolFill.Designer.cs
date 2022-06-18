@@ -63,13 +63,14 @@ namespace MyMapObjectsDemo2022
             // buttonShowSymbol
             // 
             this.buttonShowSymbol.BackColor = System.Drawing.SystemColors.Control;
-            this.buttonShowSymbol.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonShowSymbol.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonShowSymbol.ForeColor = System.Drawing.Color.Black;
             this.buttonShowSymbol.Location = new System.Drawing.Point(36, 29);
             this.buttonShowSymbol.Name = "buttonShowSymbol";
             this.buttonShowSymbol.Size = new System.Drawing.Size(158, 50);
             this.buttonShowSymbol.TabIndex = 0;
             this.buttonShowSymbol.UseVisualStyleBackColor = false;
+            this.buttonShowSymbol.Click += new System.EventHandler(this.buttonShowSymbol_Click);
             // 
             // groupBox2
             // 
@@ -119,7 +120,7 @@ namespace MyMapObjectsDemo2022
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("宋体", 10F);
+            this.label4.Font = new System.Drawing.Font("SimSun", 10F);
             this.label4.Location = new System.Drawing.Point(168, 89);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 14);
@@ -129,7 +130,7 @@ namespace MyMapObjectsDemo2022
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("宋体", 10F);
+            this.label3.Font = new System.Drawing.Font("SimSun", 10F);
             this.label3.Location = new System.Drawing.Point(23, 88);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 14);
@@ -150,12 +151,13 @@ namespace MyMapObjectsDemo2022
             this.comboBoxStyle.Size = new System.Drawing.Size(121, 20);
             this.comboBoxStyle.TabIndex = 3;
             this.comboBoxStyle.Text = "Solid";
+            this.comboBoxStyle.SelectedIndexChanged += new System.EventHandler(this.comboBoxStyle_SelectedIndexChanged);
             this.comboBoxStyle.TextChanged += new System.EventHandler(this.comboBoxStyle_TextChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("宋体", 10F);
+            this.label2.Font = new System.Drawing.Font("SimSun", 10F);
             this.label2.Location = new System.Drawing.Point(23, 60);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 14);
@@ -168,7 +170,7 @@ namespace MyMapObjectsDemo2022
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(23, 31);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 16);
+            this.label1.Size = new System.Drawing.Size(52, 16);
             this.label1.TabIndex = 1;
             this.label1.Text = "颜色：";
             // 

@@ -477,13 +477,6 @@ namespace MyMapObjectsDemo2022
         }
         #endregion
 
-
-
-
-
-
-
-
         #region 私有函数
         /// <summary>
         /// 获取一个属性值的字符串形式
@@ -673,28 +666,15 @@ namespace MyMapObjectsDemo2022
         /// <returns></returns>
         private string getMarkerSymbolStyleString(string style)
         {
-            if (style == "Circle")
-            {
-                return "○";
-            }
-            else if (style == "SolidCircle")
-            {
-                return "●";
-            }
-            else if (style == "Triangle")
-            {
-                return "△";
-            }
-
-            else if (style == "SolidTriangle")
-            {
-                return "▲";
-            }
-
-            else
-            {
-                return style == "Square" ? "□" : style == "SolidSquare" ? "■" : style == "CircleDot" ? "☉" : style == "CircleCircle" ? "◎" : "●";
-            }
+            return style == "Circle"
+                ? "○"
+                : style == "SolidCircle"
+                    ? "●"
+                    : style == "Triangle"
+                                    ? "△"
+                                    : style == "SolidTriangle"
+                                                    ? "▲"
+                                                    : style == "Square" ? "□" : style == "SolidSquare" ? "■" : style == "CircleDot" ? "☉" : style == "CircleCircle" ? "◎" : "●";
 
 
         }
@@ -705,19 +685,13 @@ namespace MyMapObjectsDemo2022
         /// <returns></returns>
         private string getLineSymbolStyleString(string style)
         {
-            if (style == "Solid")
-            {
-
-                return "——————————————";
-            }
-            else
-            {
-                return style == "Dash"
-                    ? "----------------"
+            return style == "Solid"
+                ? "----------------"
+                : style == "Dash"
+                    ? "——————————————"
                     : style == "Dot"
                                     ? "••••••••••••••••"
                                     : style == "DashDot" ? "-•-•-•-•-•-•-•-•" : style == "DashDotDot" ? "-••-••-••-••-••" : "——————————————";
-            }
 
 
         }
