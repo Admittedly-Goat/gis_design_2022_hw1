@@ -115,12 +115,12 @@ namespace MyMapObjectsDemo2022
             if (style == "Solid")
             {
 
-                return "———————————";
+                return "-----------";
             }
             else if (style == "Dash")
             {
 
-                return "-----------";
+                return "———————————";
             }
             else if (style == "Dot")
             {
@@ -175,6 +175,11 @@ namespace MyMapObjectsDemo2022
                 this.Close();
 
             }
+
+        }
+
+        private void SymbolLine_Load(object sender, EventArgs e)
+        {
 
         }
     }

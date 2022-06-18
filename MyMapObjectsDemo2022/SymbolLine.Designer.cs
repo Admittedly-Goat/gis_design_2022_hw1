@@ -38,9 +38,9 @@ namespace MyMapObjectsDemo2022
             this.comboBoxStyle = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.colorComboBox1 = new MyMapObjectsDemo2022.ColorComboBox();
             this.buttonChange = new System.Windows.Forms.Button();
             this.buttonConfirm = new System.Windows.Forms.Button();
+            this.colorComboBox1 = new MyMapObjectsDemo2022.ColorComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSize)).BeginInit();
@@ -58,7 +58,7 @@ namespace MyMapObjectsDemo2022
             // 
             // buttonShowSymbol
             // 
-            this.buttonShowSymbol.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonShowSymbol.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonShowSymbol.Location = new System.Drawing.Point(36, 29);
             this.buttonShowSymbol.Name = "buttonShowSymbol";
             this.buttonShowSymbol.Size = new System.Drawing.Size(158, 50);
@@ -113,7 +113,7 @@ namespace MyMapObjectsDemo2022
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("宋体", 10F);
+            this.label4.Font = new System.Drawing.Font("SimSun", 10F);
             this.label4.Location = new System.Drawing.Point(168, 89);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 14);
@@ -123,7 +123,7 @@ namespace MyMapObjectsDemo2022
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("宋体", 10F);
+            this.label3.Font = new System.Drawing.Font("SimSun", 10F);
             this.label3.Location = new System.Drawing.Point(23, 88);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 14);
@@ -134,8 +134,8 @@ namespace MyMapObjectsDemo2022
             // 
             this.comboBoxStyle.FormattingEnabled = true;
             this.comboBoxStyle.Items.AddRange(new object[] {
-            "Solid",
             "Dash",
+            "Solid",
             "Dot",
             "DashDot",
             "DashDotDot"});
@@ -149,7 +149,7 @@ namespace MyMapObjectsDemo2022
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("宋体", 10F);
+            this.label2.Font = new System.Drawing.Font("SimSun", 10F);
             this.label2.Location = new System.Drawing.Point(23, 60);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 14);
@@ -162,21 +162,9 @@ namespace MyMapObjectsDemo2022
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(23, 31);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 16);
+            this.label1.Size = new System.Drawing.Size(52, 16);
             this.label1.TabIndex = 1;
             this.label1.Text = "颜色：";
-            // 
-            // colorComboBox1
-            // 
-            this.colorComboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.colorComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.colorComboBox1.FormattingEnabled = true;
-            this.colorComboBox1.ItemHeight = 16;
-            this.colorComboBox1.Location = new System.Drawing.Point(82, 25);
-            this.colorComboBox1.Name = "colorComboBox1";
-            this.colorComboBox1.Size = new System.Drawing.Size(39, 22);
-            this.colorComboBox1.TabIndex = 0;
-            this.colorComboBox1.ColorChanged += new MyMapObjectsDemo2022.ColorChangedHandler(this.colorComboBox1_ColorChanged);
             // 
             // buttonChange
             // 
@@ -198,6 +186,18 @@ namespace MyMapObjectsDemo2022
             this.buttonConfirm.UseVisualStyleBackColor = true;
             this.buttonConfirm.Click += new System.EventHandler(this.buttonConfirm_Click);
             // 
+            // colorComboBox1
+            // 
+            this.colorComboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.colorComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.colorComboBox1.FormattingEnabled = true;
+            this.colorComboBox1.ItemHeight = 16;
+            this.colorComboBox1.Location = new System.Drawing.Point(82, 25);
+            this.colorComboBox1.Name = "colorComboBox1";
+            this.colorComboBox1.Size = new System.Drawing.Size(39, 22);
+            this.colorComboBox1.TabIndex = 0;
+            this.colorComboBox1.ColorChanged += new MyMapObjectsDemo2022.ColorChangedHandler(this.colorComboBox1_ColorChanged);
+            // 
             // SymbolLine
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -209,6 +209,7 @@ namespace MyMapObjectsDemo2022
             this.Controls.Add(this.groupBox1);
             this.Name = "SymbolLine";
             this.Text = "线符号设置";
+            this.Load += new System.EventHandler(this.SymbolLine_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

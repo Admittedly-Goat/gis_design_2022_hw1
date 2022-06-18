@@ -83,7 +83,7 @@
             this.Controls.Add(this.MoveUp);
             this.Controls.Add(this.listBox1);
             this.Name = "AttrSequenceChanger";
-            this.Text = "AttrSequenceChanger";
+            this.Text = "字段排列";
             this.Load += new System.EventHandler(this.AttrSequenceChanger_Load);
             this.ResumeLayout(false);
 

@@ -48,11 +48,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="addFieldDialogBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="addFieldDialogBox.Designer.cs">
+      <DependentUpon>addFieldDialogBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="AttrSequenceChanger.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AttrSequenceChanger.Designer.cs">
       <DependentUpon>AttrSequenceChanger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChangeFieldName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeFieldName.Designer.cs">
+      <DependentUpon>ChangeFieldName.cs</DependentUpon>
     </Compile>
     <Compile Include="ChangeLayerOrder.cs">
       <SubType>Form</SubType>
@@ -153,12 +165,6 @@
     <Compile Include="SelectAttributeFields.Designer.cs">
       <DependentUpon>SelectAttributeFields.cs</DependentUpon>
     </Compile>
-    <Compile Include="SelectAttributeType.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SelectAttributeType.Designer.cs">
-      <DependentUpon>SelectAttributeType.cs</DependentUpon>
-    </Compile>
     <Compile Include="SimpleRendererLine.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -213,8 +219,14 @@
     <Compile Include="VertexEditor.Designer.cs">
       <DependentUpon>VertexEditor.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="addFieldDialogBox.resx">
+      <DependentUpon>addFieldDialogBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AttrSequenceChanger.resx">
       <DependentUpon>AttrSequenceChanger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChangeFieldName.resx">
+      <DependentUpon>ChangeFieldName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ChangeLayerOrder.resx">
       <DependentUpon>ChangeLayerOrder.cs</DependentUpon>
@@ -269,9 +281,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectAttributeFields.resx">
       <DependentUpon>SelectAttributeFields.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SelectAttributeType.resx">
-      <DependentUpon>SelectAttributeType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SimpleRendererLine.resx">
       <DependentUpon>SimpleRendererLine.cs</DependentUpon>

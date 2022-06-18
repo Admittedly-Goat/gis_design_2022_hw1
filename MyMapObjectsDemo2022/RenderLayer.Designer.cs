@@ -103,7 +103,7 @@ namespace MyMapObjectsDemo2022
             // 
             // buttonSimpleConfirm
             // 
-            this.buttonSimpleConfirm.Location = new System.Drawing.Point(153, 258);
+            this.buttonSimpleConfirm.Location = new System.Drawing.Point(206, 182);
             this.buttonSimpleConfirm.Name = "buttonSimpleConfirm";
             this.buttonSimpleConfirm.Size = new System.Drawing.Size(75, 23);
             this.buttonSimpleConfirm.TabIndex = 1;
@@ -113,7 +113,7 @@ namespace MyMapObjectsDemo2022
             // 
             // buttonSimpleShowSymbol
             // 
-            this.buttonSimpleShowSymbol.Location = new System.Drawing.Point(61, 57);
+            this.buttonSimpleShowSymbol.Location = new System.Drawing.Point(163, 90);
             this.buttonSimpleShowSymbol.Name = "buttonSimpleShowSymbol";
             this.buttonSimpleShowSymbol.Size = new System.Drawing.Size(158, 50);
             this.buttonSimpleShowSymbol.TabIndex = 0;
@@ -137,7 +137,7 @@ namespace MyMapObjectsDemo2022
             // 
             // buttonUniqueValueConfirm
             // 
-            this.buttonUniqueValueConfirm.Location = new System.Drawing.Point(295, 285);
+            this.buttonUniqueValueConfirm.Location = new System.Drawing.Point(343, 286);
             this.buttonUniqueValueConfirm.Name = "buttonUniqueValueConfirm";
             this.buttonUniqueValueConfirm.Size = new System.Drawing.Size(75, 23);
             this.buttonUniqueValueConfirm.TabIndex = 5;
@@ -149,7 +149,7 @@ namespace MyMapObjectsDemo2022
             // 
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -162,7 +162,7 @@ namespace MyMapObjectsDemo2022
             this.ColumnCount});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -173,7 +173,7 @@ namespace MyMapObjectsDemo2022
             this.dataGridViewUniqueValue.Name = "dataGridViewUniqueValue";
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -207,7 +207,7 @@ namespace MyMapObjectsDemo2022
             // 
             // buttonUniqueValueLoadAll
             // 
-            this.buttonUniqueValueLoadAll.Location = new System.Drawing.Point(34, 286);
+            this.buttonUniqueValueLoadAll.Location = new System.Drawing.Point(51, 286);
             this.buttonUniqueValueLoadAll.Name = "buttonUniqueValueLoadAll";
             this.buttonUniqueValueLoadAll.Size = new System.Drawing.Size(75, 23);
             this.buttonUniqueValueLoadAll.TabIndex = 3;
@@ -250,7 +250,7 @@ namespace MyMapObjectsDemo2022
             // 
             // buttonClassBreakConfirm
             // 
-            this.buttonClassBreakConfirm.Location = new System.Drawing.Point(384, 285);
+            this.buttonClassBreakConfirm.Location = new System.Drawing.Point(376, 286);
             this.buttonClassBreakConfirm.Name = "buttonClassBreakConfirm";
             this.buttonClassBreakConfirm.Size = new System.Drawing.Size(75, 23);
             this.buttonClassBreakConfirm.TabIndex = 6;
@@ -272,7 +272,7 @@ namespace MyMapObjectsDemo2022
             // 
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.BottomCenter;
             dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -288,7 +288,7 @@ namespace MyMapObjectsDemo2022
             this.dataGridViewClassBreak.Name = "dataGridViewClassBreak";
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -366,7 +366,7 @@ namespace MyMapObjectsDemo2022
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(531, 406);
             this.Controls.Add(this.tabControlRenderType);
             this.Name = "RenderLayer";
             this.Text = "图层符号设置";

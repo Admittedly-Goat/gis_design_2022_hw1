@@ -40,6 +40,7 @@
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.反选ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.propertyGrid)).BeginInit();
@@ -52,7 +53,8 @@
             this.删除字段ToolStripMenuItem,
             this.修改字段ToolStripMenuItem,
             this.排列字段顺序ToolStripMenuItem,
-            this.显示所有已选择要素ToolStripMenuItem});
+            this.显示所有已选择要素ToolStripMenuItem,
+            this.反选ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(965, 24);
@@ -109,7 +111,6 @@
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(98, 17);
             this.toolStripStatusLabel1.Text = "已选择要素数：";
-            this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // propertyGrid
             // 
@@ -127,8 +128,6 @@
             this.propertyGrid.Size = new System.Drawing.Size(965, 569);
             this.propertyGrid.TabIndex = 2;
             this.propertyGrid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.propertyGrid_CellBeginEdit);
-            this.propertyGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            this.propertyGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.propertyGrid_CellEndEdit);
             this.propertyGrid.SelectionChanged += new System.EventHandler(this.propertyGrid_SelectionChanged);
             // 
             // Column1
@@ -146,6 +145,13 @@
             this.Column3.HeaderText = "Column3";
             this.Column3.Name = "Column3";
             // 
+            // 反选ToolStripMenuItem
+            // 
+            this.反选ToolStripMenuItem.Name = "反选ToolStripMenuItem";
+            this.反选ToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.反选ToolStripMenuItem.Text = "反选";
+            this.反选ToolStripMenuItem.Click += new System.EventHandler(this.反选ToolStripMenuItem_Click);
+            // 
             // propertyTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -155,8 +161,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Name = "propertyTable";
-            this.Text = "propertyTable";
-            this.Deactivate += new System.EventHandler(this.propertyTable_Deactivate);
+            this.Text = "属性表";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.propertyTable_FormClosed);
             this.Load += new System.EventHandler(this.propertyTable_Load);
             this.menuStrip1.ResumeLayout(false);
@@ -183,5 +188,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.ToolStripMenuItem 修改字段ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 排列字段顺序ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 反选ToolStripMenuItem;
     }
 }

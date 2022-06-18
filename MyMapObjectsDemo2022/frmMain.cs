@@ -12,7 +12,6 @@ namespace MyMapObjectsDemo2022
 {
     public partial class frmMain : Form
     {
-        #region 字段
         // 选项变量
         private Color mZoomBoxColor = Color.DeepPink; // 缩放盒颜色
         private double mZoomBoxWidth = 0.53; // 缩放盒边界宽度，单位毫米
@@ -62,17 +61,13 @@ namespace MyMapObjectsDemo2022
                 return propertyTableForm != null;
             }
         }
-        #endregion
 
-        #region 构造函数
         public frmMain()
         {
             InitializeComponent();
             moMap.MouseWheel += moMap_MouseWheel;
         }
-        #endregion
 
-        #region 窗体和控件事件处理
         private void lay文件课上实习格式ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!(moMap.ProjectionCS.ProjType == MyMapObjects.moProjectionTypeConstant.None))
@@ -1127,12 +1122,7 @@ namespace MyMapObjectsDemo2022
                 moMap.ZoomByCenter(sPoint, 1 / mZoomRatioMouseWheel);
             }
         }
-        #endregion
 
-        #region 地图事件处理
-        #endregion
-
-        #region 私有函数
         // 初始化符号
         private void InitializeSymbols()
         {
@@ -1389,8 +1379,6 @@ namespace MyMapObjectsDemo2022
                 drawingTool.DrawPoints(sPoints, mEditingVertexSymbol);
             }
         }
-
-        #endregion
 
         private void btnProjection_Click(object sender, EventArgs e)
         {
